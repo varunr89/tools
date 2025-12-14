@@ -1,6 +1,7 @@
 # Virtual environment
 venv/
 .venv/
+venv311/
 
 # Python
 __pycache__/
@@ -14,6 +15,9 @@ __pycache__/
 
 # Output files
 transcripts/
+
+# OCR temp files
+.ocr_tmp/
 
 # Claude Code
 .claude/
