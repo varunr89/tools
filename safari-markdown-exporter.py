@@ -1,20 +1,29 @@
 #!/Users/varunr/projects/test/venv311/bin/python3
 """
 Safari Markdown Exporter
-Extracts main content from HTML and saves as markdown with frontmatter.
+Extracts main content from HTML/PDF and saves as markdown with frontmatter.
+Supports image downloading for web pages and PDF archival.
 """
 
 import sys
 import re
+import shutil
 from datetime import date
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urljoin, unquote
+from urllib.request import urlopen, Request
+from urllib.error import URLError
 
 try:
     from trafilatura import extract
 except ImportError:
     print("ERROR: trafilatura not installed. Run: pip install trafilatura", file=sys.stderr)
     sys.exit(1)
+
+try:
+    import fitz  # pymupdf
+except ImportError:
+    fitz = None  # PDF support optional
 
 
 # Base path for saving markdown files
@@ -23,11 +32,8 @@ OBSIDIAN_BASE = Path.home() / "Library/Mobile Documents/iCloud~md~obsidian/Docum
 
 def sanitize_filename(title: str, max_length: int = 100) -> str:
     """Remove/replace characters invalid for filenames."""
-    # Replace problematic characters
     cleaned = re.sub(r'[/:*?"<>|\\]', '-', title)
-    # Collapse multiple spaces/dashes
     cleaned = re.sub(r'[-\s]+', ' ', cleaned).strip()
-    # Truncate
     if len(cleaned) > max_length:
         cleaned = cleaned[:max_length].rsplit(' ', 1)[0]
     return cleaned.strip(' -')
@@ -50,8 +56,6 @@ def get_next_counter(folder: Path) -> int:
             return int(counter_file.read_text().strip()) + 1
     except (ValueError, IOError):
         pass
-
-    # Fallback: count existing files
     existing = list(folder.glob("*.md"))
     return len(existing) + 1
 
@@ -62,38 +66,124 @@ def save_counter(folder: Path, value: int):
     counter_file.write_text(str(value))
 
 
-def create_frontmatter(title: str, url: str, domain: str) -> str:
+def create_frontmatter(title: str, url: str, domain: str, source_pdf: str = None) -> str:
     """Create YAML frontmatter."""
     today = date.today().isoformat()
-    # Escape quotes in title
     safe_title = title.replace('"', '\\"')
-    return f'''---
-title: "{safe_title}"
-url: {url}
-domain: {domain}
-date_saved: {today}
----
 
-'''
+    lines = [
+        '---',
+        f'title: "{safe_title}"',
+        f'url: {url}',
+        f'domain: {domain}',
+        f'date_saved: {today}',
+    ]
+
+    if source_pdf:
+        lines.append(f'source_pdf: "[[{source_pdf}]]"')
+
+    lines.append('---')
+    lines.append('')
+    lines.append('')
+
+    return '\n'.join(lines)
 
 
-def main():
-    if len(sys.argv) < 3:
-        print("Usage: safari-markdown-exporter.py <html_file> <url> [title]", file=sys.stderr)
-        sys.exit(1)
+def extract_pdf_text(pdf_path: Path) -> str:
+    """Extract text from PDF using pymupdf."""
+    if fitz is None:
+        return "*PDF extraction unavailable - pymupdf not installed.*"
 
-    html_file = sys.argv[1]
-    url = sys.argv[2]
-    title = sys.argv[3] if len(sys.argv) > 3 else "Untitled"
-
-    # Read HTML from temp file
     try:
-        with open(html_file, 'r', encoding='utf-8') as f:
-            html_content = f.read()
-    except IOError as e:
-        print(f"ERROR: Cannot read HTML file: {e}", file=sys.stderr)
-        sys.exit(1)
+        doc = fitz.open(pdf_path)
+        text_parts = []
+        for page in doc:
+            text_parts.append(page.get_text())
+        doc.close()
+        return '\n\n'.join(text_parts).strip()
+    except Exception as e:
+        return f"*PDF extraction failed: {e}*"
 
+
+def download_image(img_url: str, asset_folder: Path, base_url: str) -> str | None:
+    """Download an image and return the local filename, or None if failed."""
+    # Resolve relative URLs
+    if not img_url.startswith(('http://', 'https://', 'data:')):
+        img_url = urljoin(base_url, img_url)
+
+    # Skip data URIs and other non-http
+    if not img_url.startswith(('http://', 'https://')):
+        return None
+
+    try:
+        # Extract filename from URL
+        parsed = urlparse(img_url)
+        filename = unquote(Path(parsed.path).name)
+
+        # Skip if no valid filename
+        if not filename or '.' not in filename:
+            filename = f"image_{hash(img_url) % 10000}.jpg"
+
+        # Handle duplicate filenames
+        target_path = asset_folder / filename
+        if target_path.exists():
+            stem = target_path.stem
+            suffix = target_path.suffix
+            counter = 2
+            while target_path.exists():
+                target_path = asset_folder / f"{stem}-{counter}{suffix}"
+                counter += 1
+            filename = target_path.name
+
+        # Download
+        req = Request(img_url, headers={'User-Agent': 'Mozilla/5.0 Safari/537.36'})
+        with urlopen(req, timeout=10) as response:
+            target_path.write_bytes(response.read())
+
+        return filename
+    except (URLError, IOError, ValueError):
+        return None
+
+
+def process_images(markdown: str, asset_folder: Path, base_url: str, folder_name: str) -> str:
+    """Download images and rewrite markdown links to local paths."""
+    # Pattern for markdown images: ![alt](url)
+    img_pattern = re.compile(r'!\[([^\]]*)\]\(([^)]+)\)')
+
+    downloaded_any = False
+
+    def replace_image(match):
+        nonlocal downloaded_any
+        alt_text = match.group(1)
+        img_url = match.group(2)
+
+        # Create asset folder on first successful download
+        if not asset_folder.exists():
+            asset_folder.mkdir(parents=True, exist_ok=True)
+
+        local_filename = download_image(img_url, asset_folder, base_url)
+
+        if local_filename:
+            downloaded_any = True
+            # Use relative path from markdown file to asset folder
+            local_path = f"{folder_name}/{local_filename}"
+            return f'![{alt_text}]({local_path})'
+        else:
+            # Keep original URL if download failed
+            return match.group(0)
+
+    result = img_pattern.sub(replace_image, markdown)
+
+    # Clean up empty asset folder if no images downloaded
+    if not downloaded_any and asset_folder.exists() and not any(asset_folder.iterdir()):
+        asset_folder.rmdir()
+
+    return result
+
+
+def process_html(html_content: str, url: str, title: str, domain_folder: Path,
+                 counter: int, today: str, safe_title: str) -> str:
+    """Process HTML content: extract markdown, download images."""
     # Extract main content as markdown
     markdown_content = extract(
         html_content,
@@ -106,23 +196,89 @@ def main():
     if not markdown_content:
         markdown_content = "*Content extraction failed - page may not have extractable article content.*"
 
-    # Setup folder structure
+    # Setup asset folder name (matches markdown filename without .md)
+    folder_name = f"{counter:03d} - {today} - {safe_title}"
+    asset_folder = domain_folder / folder_name
+
+    # Download images and rewrite links
+    markdown_content = process_images(markdown_content, asset_folder, url, folder_name)
+
+    # Build filename
+    filename = f"{folder_name}.md"
     domain = get_domain(url)
-    domain_folder = OBSIDIAN_BASE / domain
-    domain_folder.mkdir(parents=True, exist_ok=True)
 
-    # Get counter and build filename
-    counter = get_next_counter(domain_folder)
-    today = date.today().isoformat()
-    safe_title = sanitize_filename(title)
-    filename = f"{counter:03d} - {today} - {safe_title}.md"
-
-    # Build full content with frontmatter
+    # Build full content
     full_content = create_frontmatter(title, url, domain) + markdown_content
 
     # Save file
     output_path = domain_folder / filename
     output_path.write_text(full_content, encoding='utf-8')
+
+    return filename
+
+
+def process_pdf(pdf_path: Path, url: str, title: str, domain_folder: Path,
+                counter: int, today: str, safe_title: str) -> str:
+    """Process PDF: extract text, archive original PDF."""
+    # Extract text
+    markdown_content = extract_pdf_text(pdf_path)
+
+    # Setup asset folder
+    folder_name = f"{counter:03d} - {today} - {safe_title}"
+    asset_folder = domain_folder / folder_name
+    asset_folder.mkdir(parents=True, exist_ok=True)
+
+    # Copy PDF to asset folder
+    pdf_dest = asset_folder / "source.pdf"
+    shutil.copy2(pdf_path, pdf_dest)
+
+    # Build filename
+    filename = f"{folder_name}.md"
+    domain = get_domain(url)
+
+    # Relative path for frontmatter link
+    source_pdf_path = f"{folder_name}/source.pdf"
+
+    # Build full content
+    full_content = create_frontmatter(title, url, domain, source_pdf_path) + markdown_content
+
+    # Save file
+    output_path = domain_folder / filename
+    output_path.write_text(full_content, encoding='utf-8')
+
+    return filename
+
+
+def main():
+    if len(sys.argv) < 3:
+        print("Usage: safari-markdown-exporter.py <input_file> <url> [title] [--pdf]", file=sys.stderr)
+        sys.exit(1)
+
+    input_file = Path(sys.argv[1])
+    url = sys.argv[2]
+    title = sys.argv[3] if len(sys.argv) > 3 and not sys.argv[3].startswith('--') else "Untitled"
+    is_pdf = '--pdf' in sys.argv or url.lower().endswith('.pdf')
+
+    # Setup folder structure
+    domain = get_domain(url)
+    domain_folder = OBSIDIAN_BASE / domain
+    domain_folder.mkdir(parents=True, exist_ok=True)
+
+    # Get counter and prepare filename components
+    counter = get_next_counter(domain_folder)
+    today = date.today().isoformat()
+    safe_title = sanitize_filename(title)
+
+    if is_pdf:
+        filename = process_pdf(input_file, url, title, domain_folder, counter, today, safe_title)
+    else:
+        # Read HTML content
+        try:
+            html_content = input_file.read_text(encoding='utf-8')
+        except IOError as e:
+            print(f"ERROR: Cannot read input file: {e}", file=sys.stderr)
+            sys.exit(1)
+        filename = process_html(html_content, url, title, domain_folder, counter, today, safe_title)
 
     # Update counter
     save_counter(domain_folder, counter)

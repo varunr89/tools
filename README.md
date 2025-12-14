@@ -19,11 +19,13 @@ An AppleScript that exports the current Safari page to PDF with auto-incrementin
 
 ### Safari Markdown Exporter (`safari-markdown-exporter.scpt` + `safari-markdown-exporter.py`)
 
-Extracts the main content from Safari web pages and saves as markdown files to Obsidian. Uses Safari's Reader Mode for cleaner extraction and trafilatura for content parsing.
+Extracts the main content from Safari web pages and PDFs, saves as markdown files to Obsidian. Uses Safari's Reader Mode for cleaner extraction and trafilatura for content parsing.
 
 **Features:**
 - Extracts main article content (strips navigation, ads, sidebars)
 - Toggles Safari Reader Mode for cleaner extraction (falls back gracefully)
+- **PDF support**: Extracts text from PDFs and archives the original file
+- **Image downloading**: Downloads linked images and stores locally
 - Saves to Obsidian vault organized by domain
 - YAML frontmatter with title, URL, domain, and date
 - Auto-incrementing counter per domain
@@ -35,19 +37,36 @@ Extracts the main content from Safari web pages and saves as markdown files to O
 ├── example.com/
 │   ├── .counter
 │   ├── 001 - 2024-12-14 - Article Title.md
-│   └── 002 - 2024-12-14 - Another Article.md
+│   ├── 001 - 2024-12-14 - Article Title/
+│   │   ├── hero.jpg              # Downloaded images
+│   │   └── diagram.png
+│   └── 002 - 2024-12-14 - PDF Document.md
+│   └── 002 - 2024-12-14 - PDF Document/
+│       └── source.pdf            # Original PDF archived
 └── docs.python.org/
     └── 001 - 2024-12-14 - Some Doc.md
+```
+
+**PDF Frontmatter:**
+```yaml
+---
+title: "PDF Document"
+url: https://example.com/doc.pdf
+domain: example.com
+date_saved: 2024-12-14
+source_pdf: "[[002 - 2024-12-14 - PDF Document/source.pdf]]"
+---
 ```
 
 **Requirements:**
 - Python 3.11+ (uses venv at `venv311/`)
 - `trafilatura` package
+- `pymupdf` package (for PDF support)
 
 **Setup:**
 ```bash
 source venv311/bin/activate
-pip install trafilatura
+pip install trafilatura pymupdf
 ```
 
 Then create an Automator Quick Action:
