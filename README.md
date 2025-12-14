@@ -17,6 +17,47 @@ An AppleScript that exports the current Safari page to PDF with auto-incrementin
 
 **Setup:** Create an Automator Quick Action to run the script via keyboard shortcut.
 
+### Safari Markdown Exporter (`safari-markdown-exporter.scpt` + `safari-markdown-exporter.py`)
+
+Extracts the main content from Safari web pages and saves as markdown files to Obsidian. Uses Safari's Reader Mode for cleaner extraction and trafilatura for content parsing.
+
+**Features:**
+- Extracts main article content (strips navigation, ads, sidebars)
+- Toggles Safari Reader Mode for cleaner extraction (falls back gracefully)
+- Saves to Obsidian vault organized by domain
+- YAML frontmatter with title, URL, domain, and date
+- Auto-incrementing counter per domain
+- Scrolls page to bottom after export (visual confirmation)
+
+**Output Structure:**
+```
+~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Varun/Saved Pages/
+├── example.com/
+│   ├── .counter
+│   ├── 001 - 2024-12-14 - Article Title.md
+│   └── 002 - 2024-12-14 - Another Article.md
+└── docs.python.org/
+    └── 001 - 2024-12-14 - Some Doc.md
+```
+
+**Requirements:**
+- Python 3.11+ (uses venv at `venv311/`)
+- `trafilatura` package
+
+**Setup:**
+```bash
+source venv311/bin/activate
+pip install trafilatura
+```
+
+Then create an Automator Quick Action:
+1. Open Automator → New → Quick Action
+2. Set "Workflow receives" to **no input** in **Safari**
+3. Add action: Run AppleScript
+4. Paste contents of `safari-markdown-exporter.scpt`
+5. Save as "Export Page as Markdown"
+6. Assign keyboard shortcut in System Settings → Keyboard → Keyboard Shortcuts → Services
+
 ### MP3 Transcriber (`transcribe.py`)
 
 Fast MP3 transcription using MLX Whisper, optimized for Apple Silicon GPU acceleration.
