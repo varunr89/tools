@@ -71,12 +71,83 @@ def save_counter(folder: Path, value: int):
     counter_file.write_text(str(value))
 
 
+def extract_figures_from_html(html_content: str, base_url: str) -> list[dict]:
+    """Extract figures with their labels, images, and captions from HTML.
+
+    Returns list of dicts with keys: label, alt, src, caption
+    """
+    figures = []
+
+    # Pattern to find <figure> elements with their content
+    figure_pattern = re.compile(
+        r'<figure[^>]*>(.*?)</figure>',
+        re.IGNORECASE | re.DOTALL
+    )
+
+    # Patterns for content within figures
+    img_pattern = re.compile(r'<img[^>]*\ssrc=["\']([^"\']+)["\'][^>]*>', re.IGNORECASE)
+    alt_pattern = re.compile(r'\salt=["\']([^"\']*)["\']', re.IGNORECASE)
+    caption_pattern = re.compile(r'<figcaption[^>]*>(.*?)</figcaption>', re.IGNORECASE | re.DOTALL)
+    label_pattern = re.compile(r'(Figure\s+[\d\-\.]+)', re.IGNORECASE)
+
+    for figure_match in figure_pattern.finditer(html_content):
+        figure_content = figure_match.group(1)
+
+        # Find image
+        img_match = img_pattern.search(figure_content)
+        if not img_match:
+            continue
+
+        src = img_match.group(0)
+        src_url_match = re.search(r'src=["\']([^"\']+)["\']', src)
+        if not src_url_match:
+            continue
+
+        src_url = src_url_match.group(1)
+
+        # Skip non-content images
+        if any(skip in src_url.lower() for skip in ['1x1', 'pixel', 'track', 'beacon', '.svg', 'data:']):
+            continue
+
+        # Resolve relative URLs
+        if not src_url.startswith(('http://', 'https://')):
+            src_url = urljoin(base_url, src_url)
+
+        # Get alt text
+        alt_match = alt_pattern.search(src)
+        alt_text = alt_match.group(1) if alt_match else ""
+
+        # Get caption
+        caption_match = caption_pattern.search(figure_content)
+        caption = ""
+        label = ""
+        if caption_match:
+            # Strip HTML tags from caption
+            caption = re.sub(r'<[^>]+>', '', caption_match.group(1)).strip()
+            # Extract figure label (e.g., "Figure 2-1"), strip trailing punctuation
+            label_match = label_pattern.search(caption)
+            if label_match:
+                label = label_match.group(1).rstrip('.')
+
+        figures.append({
+            'label': label,
+            'alt': alt_text,
+            'src': src_url,
+            'caption': caption
+        })
+
+    return figures
+
+
 def extract_images_from_html(html_content: str, base_url: str) -> list[tuple[str, str]]:
-    """Extract image URLs and alt text from HTML.
+    """Extract standalone images (not in figures) from HTML.
 
     Returns list of (alt_text, url) tuples.
     """
     images = []
+
+    # First, remove all figure elements to avoid duplicates
+    html_without_figures = re.sub(r'<figure[^>]*>.*?</figure>', '', html_content, flags=re.IGNORECASE | re.DOTALL)
 
     # Pattern to find img tags with src attribute
     img_pattern = re.compile(
@@ -85,7 +156,7 @@ def extract_images_from_html(html_content: str, base_url: str) -> list[tuple[str
     )
     alt_pattern = re.compile(r'\salt=["\']([^"\']*)["\']', re.IGNORECASE)
 
-    for match in img_pattern.finditer(html_content):
+    for match in img_pattern.finditer(html_without_figures):
         img_tag = match.group(0)
         src = match.group(1)
 
@@ -252,30 +323,65 @@ def process_html(html_content: str, url: str, title: str, domain_folder: Path,
     img_pattern = re.compile(r'!\[[^\]]*\]\([^)]+\)')
     trafilatura_images = img_pattern.findall(markdown_content)
 
-    # If no images from trafilatura, extract from HTML directly
-    if not trafilatura_images:
-        html_images = extract_images_from_html(html_content, url)
-        print(f"DEBUG: trafilatura found 0 images, extracting {len(html_images)} from HTML", file=sys.stderr)
-
-        if html_images:
-            # Create asset folder
-            asset_folder.mkdir(parents=True, exist_ok=True)
-
-            # Download images and build markdown references
-            image_markdown = []
-            for alt_text, img_url in html_images:
-                local_filename = download_image(img_url, asset_folder, url)
-                if local_filename:
-                    local_path = f"{folder_name}/{local_filename}"
-                    image_markdown.append(f"![{alt_text}]({local_path})")
-                    print(f"DEBUG:   Downloaded: {local_filename}", file=sys.stderr)
-
-            # Append images at the end of content
-            if image_markdown:
-                markdown_content += "\n\n---\n\n## Figures\n\n" + "\n\n".join(image_markdown)
-    else:
+    if trafilatura_images:
         # Process images that trafilatura found
         markdown_content = process_images(markdown_content, asset_folder, url, folder_name)
+    else:
+        # trafilatura didn't include images - extract from HTML and insert inline
+        figures = extract_figures_from_html(html_content, url)
+        standalone_images = extract_images_from_html(html_content, url)
+
+        print(f"DEBUG: trafilatura found 0 images, extracting {len(figures)} figures + {len(standalone_images)} standalone from HTML", file=sys.stderr)
+
+        if figures or standalone_images:
+            asset_folder.mkdir(parents=True, exist_ok=True)
+
+        # Process figures - insert inline after their references
+        unmatched_figures = []
+        for fig in figures:
+            local_filename = download_image(fig['src'], asset_folder, url)
+            if not local_filename:
+                continue
+
+            local_path = f"{folder_name}/{local_filename}"
+            img_md = f"\n\n![{fig['alt']}]({local_path})\n*{fig['caption']}*\n"
+            print(f"DEBUG:   Downloaded figure: {local_filename} ({fig['label']})", file=sys.stderr)
+
+            # Try to insert after figure reference in markdown
+            inserted = False
+            if fig['label']:
+                # Look for references like "Figure 2-1" or "[Figure 2-1]"
+                # Insert image on the line after the reference
+                ref_patterns = [
+                    re.compile(r'(\[' + re.escape(fig['label']) + r'\][^\n]*\n)', re.IGNORECASE),
+                    re.compile(r'(' + re.escape(fig['label']) + r'[^\n]*\n)', re.IGNORECASE),
+                ]
+                for ref_pattern in ref_patterns:
+                    if ref_pattern.search(markdown_content):
+                        # Insert after first match only
+                        markdown_content = ref_pattern.sub(r'\1' + img_md, markdown_content, count=1)
+                        inserted = True
+                        break
+
+            if not inserted:
+                unmatched_figures.append((fig['alt'], local_path, fig['caption']))
+
+        # Process standalone images - append at end
+        unmatched_images = []
+        for alt_text, img_url in standalone_images:
+            local_filename = download_image(img_url, asset_folder, url)
+            if local_filename:
+                local_path = f"{folder_name}/{local_filename}"
+                unmatched_images.append((alt_text, local_path))
+                print(f"DEBUG:   Downloaded standalone: {local_filename}", file=sys.stderr)
+
+        # Append any unmatched figures and standalone images at the end
+        if unmatched_figures or unmatched_images:
+            markdown_content += "\n\n---\n\n## Figures\n\n"
+            for alt, path, caption in unmatched_figures:
+                markdown_content += f"![{alt}]({path})\n*{caption}*\n\n"
+            for alt, path in unmatched_images:
+                markdown_content += f"![{alt}]({path})\n\n"
 
     # Build filename
     filename = f"{folder_name}.md"
