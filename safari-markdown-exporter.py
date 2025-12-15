@@ -25,6 +25,11 @@ try:
 except ImportError:
     fitz = None  # PDF support optional
 
+try:
+    from html.parser import HTMLParser
+except ImportError:
+    HTMLParser = None
+
 
 # Base path for saving markdown files
 OBSIDIAN_BASE = Path.home() / "Library/Mobile Documents/iCloud~md~obsidian/Documents/Varun/Saved Pages"
@@ -64,6 +69,41 @@ def save_counter(folder: Path, value: int):
     """Save counter value."""
     counter_file = folder / ".counter"
     counter_file.write_text(str(value))
+
+
+def extract_images_from_html(html_content: str, base_url: str) -> list[tuple[str, str]]:
+    """Extract image URLs and alt text from HTML.
+
+    Returns list of (alt_text, url) tuples.
+    """
+    images = []
+
+    # Pattern to find img tags with src attribute
+    img_pattern = re.compile(
+        r'<img[^>]*\ssrc=["\']([^"\']+)["\'][^>]*>',
+        re.IGNORECASE | re.DOTALL
+    )
+    alt_pattern = re.compile(r'\salt=["\']([^"\']*)["\']', re.IGNORECASE)
+
+    for match in img_pattern.finditer(html_content):
+        img_tag = match.group(0)
+        src = match.group(1)
+
+        # Skip tiny images (likely icons/trackers), data URIs, and SVGs
+        if any(skip in src.lower() for skip in ['1x1', 'pixel', 'track', 'beacon', '.svg', 'data:']):
+            continue
+
+        # Get alt text if present
+        alt_match = alt_pattern.search(img_tag)
+        alt_text = alt_match.group(1) if alt_match else ""
+
+        # Resolve relative URLs
+        if not src.startswith(('http://', 'https://')):
+            src = urljoin(base_url, src)
+
+        images.append((alt_text, src))
+
+    return images
 
 
 def create_frontmatter(title: str, url: str, domain: str, source_pdf: str = None) -> str:
@@ -150,6 +190,12 @@ def process_images(markdown: str, asset_folder: Path, base_url: str, folder_name
     # Pattern for markdown images: ![alt](url)
     img_pattern = re.compile(r'!\[([^\]]*)\]\(([^)]+)\)')
 
+    # Find all images first for logging
+    all_images = img_pattern.findall(markdown)
+    print(f"DEBUG: Found {len(all_images)} image(s) in markdown", file=sys.stderr)
+    for alt, url in all_images:
+        print(f"DEBUG:   [{alt[:30]}...] -> {url[:80]}...", file=sys.stderr)
+
     downloaded_any = False
 
     def replace_image(match):
@@ -167,9 +213,11 @@ def process_images(markdown: str, asset_folder: Path, base_url: str, folder_name
             downloaded_any = True
             # Use relative path from markdown file to asset folder
             local_path = f"{folder_name}/{local_filename}"
+            print(f"DEBUG:   Downloaded: {local_filename}", file=sys.stderr)
             return f'![{alt_text}]({local_path})'
         else:
             # Keep original URL if download failed
+            print(f"DEBUG:   Failed to download: {img_url[:60]}...", file=sys.stderr)
             return match.group(0)
 
     result = img_pattern.sub(replace_image, markdown)
@@ -200,8 +248,34 @@ def process_html(html_content: str, url: str, title: str, domain_folder: Path,
     folder_name = f"{counter:03d} - {today} - {safe_title}"
     asset_folder = domain_folder / folder_name
 
-    # Download images and rewrite links
-    markdown_content = process_images(markdown_content, asset_folder, url, folder_name)
+    # Check if trafilatura included any images
+    img_pattern = re.compile(r'!\[[^\]]*\]\([^)]+\)')
+    trafilatura_images = img_pattern.findall(markdown_content)
+
+    # If no images from trafilatura, extract from HTML directly
+    if not trafilatura_images:
+        html_images = extract_images_from_html(html_content, url)
+        print(f"DEBUG: trafilatura found 0 images, extracting {len(html_images)} from HTML", file=sys.stderr)
+
+        if html_images:
+            # Create asset folder
+            asset_folder.mkdir(parents=True, exist_ok=True)
+
+            # Download images and build markdown references
+            image_markdown = []
+            for alt_text, img_url in html_images:
+                local_filename = download_image(img_url, asset_folder, url)
+                if local_filename:
+                    local_path = f"{folder_name}/{local_filename}"
+                    image_markdown.append(f"![{alt_text}]({local_path})")
+                    print(f"DEBUG:   Downloaded: {local_filename}", file=sys.stderr)
+
+            # Append images at the end of content
+            if image_markdown:
+                markdown_content += "\n\n---\n\n## Figures\n\n" + "\n\n".join(image_markdown)
+    else:
+        # Process images that trafilatura found
+        markdown_content = process_images(markdown_content, asset_folder, url, folder_name)
 
     # Build filename
     filename = f"{folder_name}.md"
