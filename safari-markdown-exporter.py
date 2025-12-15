@@ -282,10 +282,9 @@ def process_images(markdown: str, asset_folder: Path, base_url: str, folder_name
 
         if local_filename:
             downloaded_any = True
-            # Use relative path from markdown file to asset folder
-            local_path = f"{folder_name}/{local_filename}"
             print(f"DEBUG:   Downloaded: {local_filename}", file=sys.stderr)
-            return f'![{alt_text}]({local_path})'
+            # Use Obsidian wiki-link format
+            return f'![[{local_filename}]]'
         else:
             # Keep original URL if download failed
             print(f"DEBUG:   Failed to download: {img_url[:60]}...", file=sys.stderr)
@@ -343,8 +342,8 @@ def process_html(html_content: str, url: str, title: str, domain_folder: Path,
             if not local_filename:
                 continue
 
-            local_path = f"{folder_name}/{local_filename}"
-            img_md = f"\n\n![{fig['alt']}]({local_path})\n*{fig['caption']}*\n"
+            # Use Obsidian wiki-link format
+            img_md = f"\n\n![[{local_filename}]]\n*{fig['caption']}*\n"
             print(f"DEBUG:   Downloaded figure: {local_filename} ({fig['label']})", file=sys.stderr)
 
             # Try to insert after figure reference in markdown
@@ -364,24 +363,23 @@ def process_html(html_content: str, url: str, title: str, domain_folder: Path,
                         break
 
             if not inserted:
-                unmatched_figures.append((fig['alt'], local_path, fig['caption']))
+                unmatched_figures.append((local_filename, fig['caption']))
 
         # Process standalone images - append at end
         unmatched_images = []
         for alt_text, img_url in standalone_images:
             local_filename = download_image(img_url, asset_folder, url)
             if local_filename:
-                local_path = f"{folder_name}/{local_filename}"
-                unmatched_images.append((alt_text, local_path))
+                unmatched_images.append(local_filename)
                 print(f"DEBUG:   Downloaded standalone: {local_filename}", file=sys.stderr)
 
         # Append any unmatched figures and standalone images at the end
         if unmatched_figures or unmatched_images:
             markdown_content += "\n\n---\n\n## Figures\n\n"
-            for alt, path, caption in unmatched_figures:
-                markdown_content += f"![{alt}]({path})\n*{caption}*\n\n"
-            for alt, path in unmatched_images:
-                markdown_content += f"![{alt}]({path})\n\n"
+            for filename, caption in unmatched_figures:
+                markdown_content += f"![[{filename}]]\n*{caption}*\n\n"
+            for filename in unmatched_images:
+                markdown_content += f"![[{filename}]]\n\n"
 
     # Build filename
     filename = f"{folder_name}.md"
