@@ -15,9 +15,19 @@ __pycache__/
 
 # Output files
 transcripts/
+transcript.md
+*.jsonl
+
+# OCR intermediate outputs
+training_plan_ocr.md
 
 # OCR temp files
 .ocr_tmp/
 
 # Claude Code
 .claude/
+
+# Node.js
+node_modules/
+package.json
+package-lock.json
