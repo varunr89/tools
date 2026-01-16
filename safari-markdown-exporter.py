@@ -1,4 +1,4 @@
-#!/Users/varunr/projects/test/venv311/bin/python3
+#!/Users/varunr/projects/tools/venv311/bin/python3
 """
 Safari Markdown Exporter
 Extracts main content from HTML/PDF and saves as markdown with frontmatter.
