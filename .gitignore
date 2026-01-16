@@ -31,3 +31,7 @@ training_plan_ocr.md
 node_modules/
 package.json
 package-lock.json
+
+# Test data and backup environments
+data/
+venv311.bak/

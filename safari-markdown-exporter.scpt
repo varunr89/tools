@@ -147,6 +147,13 @@ on run
 		-- Exit Reader Mode if we toggled it
 		my exitReaderMode(readerWasToggled)
 
+		-- Scroll to bottom of page (visual indicator of completion)
+		tell application "Safari"
+			tell current tab of front window
+				do JavaScript "window.scrollTo(0, document.body.scrollHeight);"
+			end tell
+		end tell
+
 		-- Show success notification
 		display notification "Saved: " & savedFilename with title "Markdown Exported" sound name "Pop"
 	end if
