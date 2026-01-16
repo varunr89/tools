@@ -1,6 +1,7 @@
 -- Safari Markdown Exporter (JavaScript Version)
 -- Extracts page content as markdown and saves to Obsidian
 -- Zero external dependencies - uses embedded JavaScript for HTML-to-Markdown conversion
+-- Downloads images locally and converts to Obsidian wiki-links
 -- Keyboard shortcut: Set up via Automator Quick Action
 
 -- Configuration
@@ -137,6 +138,199 @@ on replaceText(theText, searchStr, replaceStr)
 	set AppleScript's text item delimiters to oldDelims
 	return newText
 end replaceText
+
+-- Extract filename from URL
+on getFilenameFromURL(imageURL)
+	-- Remove query string and fragment
+	set cleanURL to imageURL
+	if cleanURL contains "?" then
+		set cleanURL to text 1 thru ((offset of "?" in cleanURL) - 1) of cleanURL
+	end if
+	if cleanURL contains "#" then
+		set cleanURL to text 1 thru ((offset of "#" in cleanURL) - 1) of cleanURL
+	end if
+
+	-- Get last path component
+	set oldDelims to AppleScript's text item delimiters
+	set AppleScript's text item delimiters to "/"
+	set pathParts to text items of cleanURL
+	set AppleScript's text item delimiters to oldDelims
+
+	if (count of pathParts) > 0 then
+		set fileName to last item of pathParts
+		-- URL decode the filename using printf (no Python needed)
+		try
+			set fileName to do shell script "printf '%b' \"$(echo " & quoted form of fileName & " | sed 's/+/ /g; s/%\\([0-9A-Fa-f][0-9A-Fa-f]\\)/\\\\x\\1/g')\""
+		end try
+		-- If no extension or invalid, generate one
+		if fileName does not contain "." or length of fileName < 3 then
+			set fileName to "image_" & (random number from 1000 to 9999) & ".jpg"
+		end if
+		return fileName
+	end if
+
+	return "image_" & (random number from 1000 to 9999) & ".jpg"
+end getFilenameFromURL
+
+-- Download image and return local filename (or empty string on failure)
+on downloadImage(imageURL, assetFolder, pageURL)
+	-- Skip data URIs, SVGs, tracking pixels
+	if imageURL starts with "data:" then return ""
+	if imageURL contains "1x1" then return ""
+	if imageURL contains "pixel" then return ""
+	if imageURL contains "track" then return ""
+	if imageURL contains "beacon" then return ""
+	if imageURL ends with ".svg" then return ""
+
+	-- Resolve relative URLs
+	set fullURL to imageURL
+	if imageURL does not start with "http://" and imageURL does not start with "https://" then
+		-- Build absolute URL from page URL
+		if imageURL starts with "//" then
+			set fullURL to "https:" & imageURL
+		else if imageURL starts with "/" then
+			-- Get origin from page URL
+			try
+				set origin to do shell script "echo " & quoted form of pageURL & " | sed 's|^\\(https\\{0,1\\}://[^/]*\\).*|\\1|'"
+				set fullURL to origin & imageURL
+			on error
+				return ""
+			end try
+		else
+			-- Relative path - get base URL
+			try
+				set baseURL to do shell script "echo " & quoted form of pageURL & " | sed 's|/[^/]*$|/|'"
+				set fullURL to baseURL & imageURL
+			on error
+				return ""
+			end try
+		end if
+	end if
+
+	-- Get filename
+	set fileName to my getFilenameFromURL(fullURL)
+
+	-- Check if file already exists, add counter if so
+	set targetPath to assetFolder & "/" & fileName
+	set fileExists to false
+	try
+		do shell script "test -f " & quoted form of targetPath
+		set fileExists to true
+	end try
+
+	if fileExists then
+		-- Add counter to filename
+		set oldDelims to AppleScript's text item delimiters
+		set AppleScript's text item delimiters to "."
+		set nameParts to text items of fileName
+		set AppleScript's text item delimiters to oldDelims
+
+		if (count of nameParts) > 1 then
+			set baseName to items 1 thru -2 of nameParts as text
+			set ext to last item of nameParts
+			set counter to 2
+			repeat while fileExists
+				set fileName to baseName & "-" & counter & "." & ext
+				set targetPath to assetFolder & "/" & fileName
+				try
+					do shell script "test -f " & quoted form of targetPath
+					set counter to counter + 1
+				on error
+					set fileExists to false
+				end try
+			end repeat
+		end if
+	end if
+
+	-- Download with curl
+	try
+		do shell script "curl -L -s --max-time 15 -A 'Mozilla/5.0 Safari/537.36' -o " & quoted form of targetPath & " " & quoted form of fullURL
+		-- Verify file was created and has content
+		set fileSize to do shell script "stat -f%z " & quoted form of targetPath & " 2>/dev/null || echo 0"
+		if (fileSize as integer) < 100 then
+			-- Too small, probably an error
+			do shell script "rm -f " & quoted form of targetPath
+			return ""
+		end if
+		return fileName
+	on error
+		return ""
+	end try
+end downloadImage
+
+-- Extract image references from markdown and return as list
+on extractImageURLs(markdownText)
+	-- Use grep to find all markdown image patterns ![...](...)
+	try
+		set imageURLs to do shell script "echo " & quoted form of markdownText & " | grep -oE '!\\[[^]]*\\]\\([^)]+\\)' | sed 's/!\\[[^]]*\\](\\([^)]*\\))/\\1/' || true"
+		if imageURLs is "" then return {}
+
+		set oldDelims to AppleScript's text item delimiters
+		set AppleScript's text item delimiters to linefeed
+		set urlList to text items of imageURLs
+		set AppleScript's text item delimiters to oldDelims
+
+		return urlList
+	on error
+		return {}
+	end try
+end extractImageURLs
+
+-- Process images: download and rewrite markdown
+on processImages(markdownText, assetFolder, folderName, pageURL)
+	set imageURLs to my extractImageURLs(markdownText)
+
+	if (count of imageURLs) is 0 then
+		return markdownText
+	end if
+
+	-- Create asset folder
+	do shell script "mkdir -p " & quoted form of assetFolder
+
+	set processedMarkdown to markdownText
+	set downloadedAny to false
+
+	repeat with imageURL in imageURLs
+		set imageURL to imageURL as text
+		if imageURL is not "" then
+			set localFilename to my downloadImage(imageURL, assetFolder, pageURL)
+
+			if localFilename is not "" then
+				set downloadedAny to true
+				-- Replace markdown image with Obsidian wiki-link
+				-- Find the full markdown image syntax for this URL
+				set oldPattern to "![" -- We'll do a simpler replacement
+				-- Replace ![anything](imageURL) with ![[folderName/localFilename]]
+				set processedMarkdown to do shell script "echo " & quoted form of processedMarkdown & " | sed 's|!\\[[^]]*\\](" & my escapeForSed(imageURL) & ")|![[" & folderName & "/" & localFilename & "]]|g'"
+			end if
+		end if
+	end repeat
+
+	-- Clean up empty asset folder if no images downloaded
+	if not downloadedAny then
+		try
+			do shell script "rmdir " & quoted form of assetFolder & " 2>/dev/null"
+		end try
+	end if
+
+	return processedMarkdown
+end processImages
+
+-- Escape special characters for sed
+on escapeForSed(theText)
+	-- Escape sed special chars: \ / & [ ] . * ^ $
+	set escaped to theText
+	set escaped to my replaceText(escaped, "\\", "\\\\")
+	set escaped to my replaceText(escaped, "/", "\\/")
+	set escaped to my replaceText(escaped, "&", "\\&")
+	set escaped to my replaceText(escaped, "[", "\\[")
+	set escaped to my replaceText(escaped, "]", "\\]")
+	set escaped to my replaceText(escaped, ".", "\\.")
+	set escaped to my replaceText(escaped, "*", "\\*")
+	set escaped to my replaceText(escaped, "^", "\\^")
+	set escaped to my replaceText(escaped, "$", "\\$")
+	return escaped
+end escapeForSed
 
 -- JavaScript HTML-to-Markdown converter (embedded)
 on getMarkdownConverterJS()
@@ -392,8 +586,13 @@ on run
 	set today to do shell script "date +%Y-%m-%d"
 	set safeTitle to my sanitizeFilename(pageTitle)
 	set paddedCounter to text -3 thru -1 of ("000" & counter)
-	set filename to paddedCounter & " - " & today & " - " & safeTitle & ".md"
+	set folderName to paddedCounter & " - " & today & " - " & safeTitle
+	set filename to folderName & ".md"
 	set filePath to domainFolder & "/" & filename
+	set assetFolder to domainFolder & "/" & folderName
+
+	-- Process images: download and rewrite markdown links
+	set markdownContent to my processImages(markdownContent, assetFolder, folderName, pageURL)
 
 	-- Build full content with frontmatter
 	set frontmatter to my createFrontmatter(pageTitle, pageURL, theDomain)
