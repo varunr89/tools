@@ -35,3 +35,4 @@ package-lock.json
 # Test data and backup environments
 data/
 venv311.bak/
+claude-transcript-viewer/node_modules
