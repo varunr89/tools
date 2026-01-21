@@ -1,0 +1,5 @@
+{"type":"user","message":{"role":"user","content":"How do I use async/await?"}}
+{"type":"assistant","message":{"role":"assistant","content":[{"type":"text","text":"Async/await handles promises."}]}}
+{"type":"assistant","message":{"role":"assistant","content":[{"type":"tool_use","name":"Read"}]}}
+{"type":"user","message":{"role":"user","content":"Thanks!"}}
+{"type":"result","result":"some tool output"}
