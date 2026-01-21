@@ -1,5 +1,10 @@
 import { getDatabase } from '../db/index.js';
 import { sanitizeFTSQuery } from '../db/chunks.js';
+import {
+  getRecentConversations,
+  listConversations,
+  Conversation,
+} from '../db/conversations.js';
 
 export interface SearchOptions {
   project?: string;
@@ -68,4 +73,27 @@ export function searchFTS(query: string, opts: SearchOptions): SearchResult[] {
   params.push(limit, offset);
 
   return db.prepare(sql).all(...params) as SearchResult[];
+}
+
+export interface SearchWithFallbackResult {
+  type: 'search' | 'recent';
+  results?: SearchResult[];
+  conversations?: Conversation[];
+}
+
+export function searchWithFallback(
+  query: string,
+  opts: SearchOptions
+): SearchWithFallbackResult {
+  const trimmed = query.trim();
+
+  if (!trimmed) {
+    const conversations = opts.project
+      ? listConversations(opts.project)
+      : getRecentConversations(opts.limit || 20);
+    return { type: 'recent', conversations };
+  }
+
+  const results = searchFTS(query, opts);
+  return { type: 'search', results };
 }
