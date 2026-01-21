@@ -1,9 +1,12 @@
 import Database from 'better-sqlite3';
-import { SCHEMA_SQL, SCHEMA_VERSION, FTS_TABLE_SQL, TRIGGER_SQL } from './schema';
+import { SCHEMA_SQL, SCHEMA_VERSION, FTS_TABLE_SQL, TRIGGER_SQL } from './schema.js';
 
 let db: Database.Database | null = null;
 
 export function createDatabase(dbPath: string): Database.Database {
+  if (db) {
+    db.close();
+  }
   db = new Database(dbPath);
   db.pragma('journal_mode = WAL');
   db.pragma('foreign_keys = ON');

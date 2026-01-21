@@ -4,6 +4,8 @@ import { existsSync, unlinkSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
 
+interface TableRow { name: string }
+
 const TEST_DB = join(tmpdir(), 'test-schema.db');
 
 describe('Database Schema', () => {
@@ -23,7 +25,7 @@ describe('Database Schema', () => {
     const tables = db
       .prepare("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")
       .all()
-      .map((r: any) => r.name);
+      .map((r: TableRow) => r.name);
 
     expect(tables).toContain('metadata');
     expect(tables).toContain('conversations');
@@ -37,7 +39,7 @@ describe('Database Schema', () => {
     const tables = db
       .prepare("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")
       .all()
-      .map((r: any) => r.name);
+      .map((r: TableRow) => r.name);
     expect(tables).toContain('chunks_fts');
 
     db.prepare("INSERT INTO conversations (id, project, file_path, content_hash, source_mtime) VALUES ('c1', 'p', '/f', 'h', 1000)").run();
@@ -69,7 +71,7 @@ describe('Database Schema', () => {
     const triggers = db
       .prepare("SELECT name FROM sqlite_master WHERE type='trigger'")
       .all()
-      .map((r: any) => r.name);
+      .map((r: TableRow) => r.name);
 
     expect(triggers).toContain('chunks_ai');
     expect(triggers).toContain('chunks_ad');
