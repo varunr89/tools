@@ -26,18 +26,26 @@ const defaults: Config = {
   EMBEDDING_DIM: 2048,
 };
 
+// Helper to parse integer env vars with NaN fallback to default
+function parseIntOrDefault(envValue: string | undefined, defaultValue: number): number {
+  if (envValue === undefined) return defaultValue;
+  const parsed = parseInt(envValue, 10);
+  return Number.isNaN(parsed) ? defaultValue : parsed;
+}
+
 export function getConfig(): Config {
   return {
     ARCHIVE_DIR: process.env.ARCHIVE_DIR || defaults.ARCHIVE_DIR,
     SOURCE_DIR: process.env.SOURCE_DIR || defaults.SOURCE_DIR,
     DATABASE_PATH: process.env.DATABASE_PATH || defaults.DATABASE_PATH,
     EMBED_SOCKET: process.env.EMBED_SOCKET || defaults.EMBED_SOCKET,
+    // AUTO_UPDATE is enabled by default; only explicitly setting to 'false' disables it
     AUTO_UPDATE: process.env.AUTO_UPDATE !== 'false',
     PYTHON_CMD: process.env.PYTHON_CMD || defaults.PYTHON_CMD,
-    CHUNK_SIZE: parseInt(process.env.CHUNK_SIZE || String(defaults.CHUNK_SIZE), 10),
-    CHUNK_OVERLAP: parseInt(process.env.CHUNK_OVERLAP || String(defaults.CHUNK_OVERLAP), 10),
+    CHUNK_SIZE: parseIntOrDefault(process.env.CHUNK_SIZE, defaults.CHUNK_SIZE),
+    CHUNK_OVERLAP: parseIntOrDefault(process.env.CHUNK_OVERLAP, defaults.CHUNK_OVERLAP),
     EMBEDDING_MODEL: process.env.EMBEDDING_MODEL || defaults.EMBEDDING_MODEL,
-    EMBEDDING_DIM: parseInt(process.env.EMBEDDING_DIM || String(defaults.EMBEDDING_DIM), 10),
+    EMBEDDING_DIM: parseIntOrDefault(process.env.EMBEDDING_DIM, defaults.EMBEDDING_DIM),
   };
 }
 
