@@ -19,7 +19,7 @@ Before starting, ensure these are installed:
 
 ---
 
-## Phase 1: Test Infrastructure Setup
+## Phase 1: Configuration & Test Infrastructure
 
 ### Task 1.1: Add Vitest Test Framework
 
@@ -94,6 +94,180 @@ git add -A && git commit -m "chore: add vitest test framework"
 
 ---
 
+### Task 1.2: Configuration Module
+
+**Files:**
+- Create: `src/config.ts`
+- Create: `tests/config.test.ts`
+
+**Step 1: Write the failing test**
+
+Create `tests/config.test.ts`:
+```typescript
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { getConfig, validateConfig, Config } from '../src/config';
+
+describe('Configuration', () => {
+  const originalEnv = process.env;
+
+  beforeEach(() => {
+    process.env = { ...originalEnv };
+  });
+
+  afterEach(() => {
+    process.env = originalEnv;
+  });
+
+  it('should load default configuration', () => {
+    const config = getConfig();
+    expect(config.CHUNK_SIZE).toBe(300);
+    expect(config.CHUNK_OVERLAP).toBe(50);
+    expect(config.EMBEDDING_DIM).toBe(2048);
+  });
+
+  it('should load configuration from environment', () => {
+    process.env.ARCHIVE_DIR = '/custom/archive';
+    process.env.SOURCE_DIR = '/custom/source';
+    process.env.DATABASE_PATH = '/custom/db.sqlite';
+    process.env.EMBED_SOCKET = '/custom/embed.sock';
+
+    const config = getConfig();
+    expect(config.ARCHIVE_DIR).toBe('/custom/archive');
+    expect(config.SOURCE_DIR).toBe('/custom/source');
+    expect(config.DATABASE_PATH).toBe('/custom/db.sqlite');
+    expect(config.EMBED_SOCKET).toBe('/custom/embed.sock');
+  });
+
+  it('should load AUTO_UPDATE from environment', () => {
+    process.env.AUTO_UPDATE = 'false';
+    const config = getConfig();
+    expect(config.AUTO_UPDATE).toBe(false);
+  });
+
+  it('should validate required paths exist', () => {
+    const config: Config = {
+      ARCHIVE_DIR: '/nonexistent/path',
+      SOURCE_DIR: '/nonexistent/source',
+      DATABASE_PATH: '/tmp/test.db',
+      EMBED_SOCKET: '/tmp/embed.sock',
+      AUTO_UPDATE: true,
+      PYTHON_CMD: 'python3',
+      CHUNK_SIZE: 300,
+      CHUNK_OVERLAP: 50,
+      EMBEDDING_MODEL: 'qwen3-medium',
+      EMBEDDING_DIM: 2048,
+    };
+
+    const errors = validateConfig(config);
+    expect(errors.length).toBeGreaterThan(0);
+    expect(errors.some(e => e.includes('ARCHIVE_DIR'))).toBe(true);
+  });
+
+  it('should accept valid configuration', () => {
+    const config: Config = {
+      ARCHIVE_DIR: '/tmp',  // exists
+      SOURCE_DIR: '/tmp',   // exists
+      DATABASE_PATH: '/tmp/test.db',
+      EMBED_SOCKET: '/tmp/embed.sock',
+      AUTO_UPDATE: true,
+      PYTHON_CMD: 'python3',
+      CHUNK_SIZE: 300,
+      CHUNK_OVERLAP: 50,
+      EMBEDDING_MODEL: 'qwen3-medium',
+      EMBEDDING_DIM: 2048,
+    };
+
+    const errors = validateConfig(config);
+    expect(errors).toHaveLength(0);
+  });
+});
+```
+
+**Step 2: Run test to verify it fails**
+
+Run: `npm test`
+Expected: FAIL with "Cannot find module '../src/config'"
+
+**Step 3: Implement configuration module**
+
+Create `src/config.ts`:
+```typescript
+import { existsSync } from 'fs';
+
+export interface Config {
+  ARCHIVE_DIR: string;
+  SOURCE_DIR: string;
+  DATABASE_PATH: string;
+  EMBED_SOCKET: string;
+  AUTO_UPDATE: boolean;
+  PYTHON_CMD: string;
+  CHUNK_SIZE: number;
+  CHUNK_OVERLAP: number;
+  EMBEDDING_MODEL: string;
+  EMBEDDING_DIM: number;
+}
+
+const defaults: Config = {
+  ARCHIVE_DIR: './archive',
+  SOURCE_DIR: './source',
+  DATABASE_PATH: './search.db',
+  EMBED_SOCKET: '/tmp/qwen3-embed.sock',
+  AUTO_UPDATE: true,
+  PYTHON_CMD: 'python3',
+  CHUNK_SIZE: 300,
+  CHUNK_OVERLAP: 50,
+  EMBEDDING_MODEL: 'qwen3-medium',
+  EMBEDDING_DIM: 2048,
+};
+
+export function getConfig(): Config {
+  return {
+    ARCHIVE_DIR: process.env.ARCHIVE_DIR || defaults.ARCHIVE_DIR,
+    SOURCE_DIR: process.env.SOURCE_DIR || defaults.SOURCE_DIR,
+    DATABASE_PATH: process.env.DATABASE_PATH || defaults.DATABASE_PATH,
+    EMBED_SOCKET: process.env.EMBED_SOCKET || defaults.EMBED_SOCKET,
+    AUTO_UPDATE: process.env.AUTO_UPDATE !== 'false',
+    PYTHON_CMD: process.env.PYTHON_CMD || defaults.PYTHON_CMD,
+    CHUNK_SIZE: parseInt(process.env.CHUNK_SIZE || String(defaults.CHUNK_SIZE), 10),
+    CHUNK_OVERLAP: parseInt(process.env.CHUNK_OVERLAP || String(defaults.CHUNK_OVERLAP), 10),
+    EMBEDDING_MODEL: process.env.EMBEDDING_MODEL || defaults.EMBEDDING_MODEL,
+    EMBEDDING_DIM: parseInt(process.env.EMBEDDING_DIM || String(defaults.EMBEDDING_DIM), 10),
+  };
+}
+
+export function validateConfig(config: Config): string[] {
+  const errors: string[] = [];
+
+  if (!existsSync(config.ARCHIVE_DIR)) {
+    errors.push(`ARCHIVE_DIR does not exist: ${config.ARCHIVE_DIR}`);
+  }
+  if (!existsSync(config.SOURCE_DIR)) {
+    errors.push(`SOURCE_DIR does not exist: ${config.SOURCE_DIR}`);
+  }
+  if (config.CHUNK_SIZE < 100 || config.CHUNK_SIZE > 1000) {
+    errors.push(`CHUNK_SIZE must be between 100 and 1000: ${config.CHUNK_SIZE}`);
+  }
+  if (config.CHUNK_OVERLAP < 0 || config.CHUNK_OVERLAP >= config.CHUNK_SIZE) {
+    errors.push(`CHUNK_OVERLAP must be between 0 and CHUNK_SIZE: ${config.CHUNK_OVERLAP}`);
+  }
+
+  return errors;
+}
+```
+
+**Step 4: Run test to verify it passes**
+
+Run: `npm test`
+Expected: All tests PASS
+
+**Step 5: Commit**
+
+```bash
+git add -A && git commit -m "feat: add configuration module with validation"
+```
+
+---
+
 ## Phase 2: Database Schema & Core Infrastructure
 
 ### Task 2.1: Create Database Module with Schema
@@ -137,16 +311,21 @@ describe('Database Schema', () => {
     expect(tables).toContain('chunks');
   });
 
-  it('should create virtual tables for search', () => {
+  it('should create FTS5 virtual table with trigram tokenizer', () => {
     createDatabase(TEST_DB);
     const db = getDatabase();
 
+    // Verify FTS table exists
     const tables = db
       .prepare("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")
       .all()
       .map((r: any) => r.name);
-
     expect(tables).toContain('chunks_fts');
+
+    // Verify trigram tokenizer works (finds substring matches)
+    db.prepare("INSERT INTO chunks (conversation_id, chunk_index, role, content) VALUES ('c1', 0, 'user', 'authentication')").run();
+    const results = db.prepare("SELECT * FROM chunks_fts WHERE chunks_fts MATCH 'auth'").all();
+    expect(results.length).toBeGreaterThan(0);
   });
 
   it('should enable WAL mode', () => {
@@ -163,6 +342,68 @@ describe('Database Schema', () => {
 
     const result = db.prepare('PRAGMA foreign_keys').get() as { foreign_keys: number };
     expect(result.foreign_keys).toBe(1);
+  });
+
+  it('should create sync triggers for FTS', () => {
+    createDatabase(TEST_DB);
+    const db = getDatabase();
+
+    const triggers = db
+      .prepare("SELECT name FROM sqlite_master WHERE type='trigger'")
+      .all()
+      .map((r: any) => r.name);
+
+    expect(triggers).toContain('chunks_ai');
+    expect(triggers).toContain('chunks_ad');
+    expect(triggers).toContain('chunks_au');
+  });
+
+  it('should sync FTS on chunk insert via trigger', () => {
+    createDatabase(TEST_DB);
+    const db = getDatabase();
+
+    // Insert conversation first (foreign key)
+    db.prepare("INSERT INTO conversations (id, project, file_path, content_hash, source_mtime) VALUES ('c1', 'p', '/f', 'h', 1000)").run();
+
+    // Insert chunk
+    db.prepare("INSERT INTO chunks (conversation_id, chunk_index, role, content) VALUES ('c1', 0, 'user', 'searchable content')").run();
+
+    // Verify FTS was updated via trigger
+    const ftsResults = db.prepare("SELECT rowid FROM chunks_fts WHERE chunks_fts MATCH 'searchable'").all();
+    expect(ftsResults.length).toBe(1);
+  });
+
+  it('should sync FTS on chunk delete via trigger', () => {
+    createDatabase(TEST_DB);
+    const db = getDatabase();
+
+    db.prepare("INSERT INTO conversations (id, project, file_path, content_hash, source_mtime) VALUES ('c1', 'p', '/f', 'h', 1000)").run();
+    db.prepare("INSERT INTO chunks (conversation_id, chunk_index, role, content) VALUES ('c1', 0, 'user', 'deleteme')").run();
+
+    // Verify in FTS
+    expect(db.prepare("SELECT * FROM chunks_fts WHERE chunks_fts MATCH 'deleteme'").all().length).toBe(1);
+
+    // Delete chunk
+    db.prepare("DELETE FROM chunks WHERE conversation_id = 'c1'").run();
+
+    // Verify removed from FTS
+    expect(db.prepare("SELECT * FROM chunks_fts WHERE chunks_fts MATCH 'deleteme'").all().length).toBe(0);
+  });
+
+  it('should sync FTS on chunk update via trigger', () => {
+    createDatabase(TEST_DB);
+    const db = getDatabase();
+
+    db.prepare("INSERT INTO conversations (id, project, file_path, content_hash, source_mtime) VALUES ('c1', 'p', '/f', 'h', 1000)").run();
+    db.prepare("INSERT INTO chunks (conversation_id, chunk_index, role, content) VALUES ('c1', 0, 'user', 'oldcontent')").run();
+
+    // Update chunk
+    db.prepare("UPDATE chunks SET content = 'newcontent' WHERE conversation_id = 'c1'").run();
+
+    // Old content should not be found
+    expect(db.prepare("SELECT * FROM chunks_fts WHERE chunks_fts MATCH 'oldcontent'").all().length).toBe(0);
+    // New content should be found
+    expect(db.prepare("SELECT * FROM chunks_fts WHERE chunks_fts MATCH 'newcontent'").all().length).toBe(1);
   });
 });
 ```
@@ -216,6 +457,7 @@ CREATE INDEX IF NOT EXISTS idx_chunks_conversation ON chunks(conversation_id);
 CREATE INDEX IF NOT EXISTS idx_chunks_role ON chunks(role);
 `;
 
+// FTS5 with trigram tokenizer for substring matching (better for code search)
 export const FTS_TABLE_SQL = `
 CREATE VIRTUAL TABLE IF NOT EXISTS chunks_fts USING fts5(
   content,
@@ -225,6 +467,7 @@ CREATE VIRTUAL TABLE IF NOT EXISTS chunks_fts USING fts5(
 );
 `;
 
+// Sync triggers to keep FTS in sync with chunks table
 export const TRIGGER_SQL = `
 CREATE TRIGGER IF NOT EXISTS chunks_ai AFTER INSERT ON chunks BEGIN
   INSERT INTO chunks_fts(rowid, content) VALUES (NEW.id, NEW.content);
@@ -289,7 +532,7 @@ Expected: All tests PASS
 **Step 6: Commit**
 
 ```bash
-git add -A && git commit -m "feat(db): add database schema with FTS5 support"
+git add -A && git commit -m "feat(db): add database schema with FTS5 trigram tokenizer and sync triggers"
 ```
 
 ---
@@ -337,6 +580,13 @@ describe('Metadata Operations', () => {
 
   it('should have schema_version set on creation', () => {
     expect(getMetadata('schema_version')).toBe('1');
+  });
+
+  it('should track embedding model and dimension for reindex detection', () => {
+    setMetadata('embedding_model', 'qwen3-medium');
+    setMetadata('embedding_dim', '2048');
+    expect(getMetadata('embedding_model')).toBe('qwen3-medium');
+    expect(getMetadata('embedding_dim')).toBe('2048');
   });
 });
 ```
@@ -413,6 +663,17 @@ describe('Conversation Operations', () => {
     insertConversation({ ...sample, id: 'conv-456', project: 'other' });
     expect(listConversations('test-project')).toHaveLength(1);
   });
+
+  it('should cascade delete chunks when conversation deleted', () => {
+    insertConversation(sample);
+    const db = require('../../src/db').getDatabase();
+    db.prepare("INSERT INTO chunks (conversation_id, chunk_index, role, content) VALUES ('conv-123', 0, 'user', 'test')").run();
+
+    deleteConversation('conv-123');
+
+    const chunks = db.prepare("SELECT * FROM chunks WHERE conversation_id = 'conv-123'").all();
+    expect(chunks).toHaveLength(0);
+  });
 });
 ```
 
@@ -456,6 +717,12 @@ export function listConversations(project?: string): Conversation[] {
     ? db.prepare('SELECT * FROM conversations WHERE project = ? ORDER BY created_at DESC').all(project) as Conversation[]
     : db.prepare('SELECT * FROM conversations ORDER BY created_at DESC').all() as Conversation[];
 }
+
+export function getRecentConversations(limit: number = 10): Conversation[] {
+  return getDatabase()
+    .prepare('SELECT * FROM conversations ORDER BY created_at DESC LIMIT ?')
+    .all(limit) as Conversation[];
+}
 ```
 
 **Step 4: Run test**
@@ -466,7 +733,7 @@ Expected: PASS
 **Step 5: Commit**
 
 ```bash
-git add -A && git commit -m "feat(db): add conversation CRUD"
+git add -A && git commit -m "feat(db): add conversation CRUD with cascade delete"
 ```
 
 ---
@@ -511,11 +778,37 @@ describe('Chunk Operations', () => {
     expect(searchChunksFTS('Promise')).toHaveLength(1);
   });
 
+  it('should support trigram substring search', () => {
+    insertChunk({ conversation_id: 'conv-123', chunk_index: 0, page_number: 1,
+      role: 'user', content: 'authentication middleware', embedding: null });
+    // Trigram tokenizer should find substring matches
+    expect(searchChunksFTS('auth')).toHaveLength(1);
+    expect(searchChunksFTS('middle')).toHaveLength(1);
+  });
+
   it('should cascade delete', () => {
     insertChunk({ conversation_id: 'conv-123', chunk_index: 0, page_number: 1,
       role: 'user', content: 'test', embedding: null });
     getDatabase().prepare('DELETE FROM conversations WHERE id = ?').run('conv-123');
     expect(getChunksForConversation('conv-123')).toHaveLength(0);
+  });
+
+  it('should sanitize FTS special characters', () => {
+    insertChunk({ conversation_id: 'conv-123', chunk_index: 0, page_number: 1,
+      role: 'user', content: 'special chars test', embedding: null });
+
+    // These should not throw errors
+    expect(() => searchChunksFTS('test AND')).not.toThrow();
+    expect(() => searchChunksFTS('test OR something')).not.toThrow();
+    expect(() => searchChunksFTS('test NOT')).not.toThrow();
+    expect(() => searchChunksFTS('"quoted"')).not.toThrow();
+    expect(() => searchChunksFTS('(parens)')).not.toThrow();
+    expect(() => searchChunksFTS('wild*card')).not.toThrow();
+  });
+
+  it('should return empty array for empty query', () => {
+    expect(searchChunksFTS('')).toHaveLength(0);
+    expect(searchChunksFTS('   ')).toHaveLength(0);
   });
 });
 ```
@@ -547,12 +840,38 @@ export function getChunksForConversation(id: string): Chunk[] {
   return getDatabase().prepare('SELECT * FROM chunks WHERE conversation_id = ? ORDER BY chunk_index').all(id) as Chunk[];
 }
 
+/**
+ * Search chunks using FTS5 with trigram tokenizer.
+ * Sanitizes query to remove FTS5 special characters and operators.
+ */
 export function searchChunksFTS(query: string, limit = 100): Chunk[] {
-  const sanitized = query.replace(/["\*\(\)]/g, ' ').replace(/\b(AND|OR|NOT)\b/gi, ' ')
-    .trim().split(/\s+/).filter(Boolean).map(t => `"${t}"`).join(' ');
+  const sanitized = sanitizeFTSQuery(query);
   if (!sanitized) return [];
-  return getDatabase().prepare(`SELECT c.* FROM chunks_fts fts JOIN chunks c ON c.id = fts.rowid
-    WHERE chunks_fts MATCH ? ORDER BY bm25(chunks_fts) LIMIT ?`).all(sanitized, limit) as Chunk[];
+
+  return getDatabase().prepare(`
+    SELECT c.* FROM chunks_fts fts
+    JOIN chunks c ON c.id = fts.rowid
+    WHERE chunks_fts MATCH ?
+    ORDER BY bm25(chunks_fts)
+    LIMIT ?
+  `).all(sanitized, limit) as Chunk[];
+}
+
+/**
+ * Sanitize query for FTS5:
+ * - Remove special operators (AND, OR, NOT)
+ * - Remove special characters (", *, (, ))
+ * - Wrap each term in quotes for exact matching
+ */
+export function sanitizeFTSQuery(query: string): string {
+  return query
+    .replace(/["\*\(\)]/g, ' ')           // Remove special chars
+    .replace(/\b(AND|OR|NOT)\b/gi, ' ')   // Remove operators
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .map(t => `"${t}"`)                   // Quote each term
+    .join(' ');
 }
 
 export function deleteChunksForConversation(id: string): void {
@@ -568,7 +887,7 @@ Expected: PASS
 **Step 5: Commit**
 
 ```bash
-git add -A && git commit -m "feat(db): add chunk CRUD with FTS sync"
+git add -A && git commit -m "feat(db): add chunk CRUD with FTS sync and query sanitization"
 ```
 
 ---
@@ -605,8 +924,19 @@ describe('File Utilities', () => {
     expect(getFileHash(TEST_FILE)).not.toBe(h1);
   });
 
+  it('should return consistent hash for same content', () => {
+    const h1 = getFileHash(TEST_FILE);
+    const h2 = getFileHash(TEST_FILE);
+    expect(h1).toBe(h2);
+  });
+
   it('should get mtime', () => {
     expect(getFileMtime(TEST_FILE)).toBeGreaterThan(0);
+  });
+
+  it('should throw for nonexistent file', () => {
+    expect(() => getFileHash('/nonexistent/file')).toThrow();
+    expect(() => getFileMtime('/nonexistent/file')).toThrow();
   });
 });
 ```
@@ -685,7 +1015,7 @@ describe('Change Detection', () => {
     expect(changes.added).toHaveLength(1);
   });
 
-  it('should detect modified files', () => {
+  it('should detect modified files via hash change', () => {
     const f = `${TEST_DIR}/mod.jsonl`;
     writeFileSync(f, '{}');
     insertConversation({ id: 'c1', project: 'p', title: '', created_at: null,
@@ -693,13 +1023,13 @@ describe('Change Detection', () => {
     expect(detectChanges(TEST_DIR).modified).toHaveLength(1);
   });
 
-  it('should detect deleted files', () => {
+  it('should detect deleted files (tombstone)', () => {
     insertConversation({ id: 'c1', project: 'p', title: '', created_at: null,
       file_path: `${TEST_DIR}/gone.jsonl`, content_hash: 'h', source_mtime: 0 });
     expect(detectChanges(TEST_DIR).deleted).toContain('c1');
   });
 
-  it('should skip unchanged', () => {
+  it('should skip unchanged files (mtime + hash match)', () => {
     const f = `${TEST_DIR}/same.jsonl`;
     writeFileSync(f, '{}');
     insertConversation({ id: 'c1', project: 'p', title: '', created_at: null,
@@ -707,6 +1037,27 @@ describe('Change Detection', () => {
     const changes = detectChanges(TEST_DIR);
     expect(changes.added).toHaveLength(0);
     expect(changes.modified).toHaveLength(0);
+  });
+
+  it('should use mtime as quick check before hashing', () => {
+    const f = `${TEST_DIR}/quick.jsonl`;
+    writeFileSync(f, '{}');
+    const mtime = getFileMtime(f);
+    const hash = getFileHash(f);
+
+    // Same mtime means skip hash check
+    insertConversation({ id: 'c1', project: 'p', title: '', created_at: null,
+      file_path: f, content_hash: hash, source_mtime: mtime });
+
+    const changes = detectChanges(TEST_DIR);
+    expect(changes.modified).toHaveLength(0);
+  });
+
+  it('should handle nested directories', () => {
+    mkdirSync(`${TEST_DIR}/sub/nested`, { recursive: true });
+    writeFileSync(`${TEST_DIR}/sub/nested/deep.jsonl`, '{}');
+    const changes = detectChanges(TEST_DIR);
+    expect(changes.added).toHaveLength(1);
   });
 });
 ```
@@ -739,14 +1090,26 @@ export function detectChanges(sourceDir: string): ChangeSet {
 
   for (const f of files) {
     const existing = indexedPaths.get(f);
-    if (!existing) { changes.added.push(f); }
-    else if (getFileMtime(f) !== existing.mtime && getFileHash(f) !== existing.hash) {
-      changes.modified.push(f);
+    if (!existing) {
+      changes.added.push(f);
+    } else {
+      // Quick check: skip if mtime matches
+      const currentMtime = getFileMtime(f);
+      if (currentMtime !== existing.mtime) {
+        // Mtime changed, verify with hash
+        const currentHash = getFileHash(f);
+        if (currentHash !== existing.hash) {
+          changes.modified.push(f);
+        }
+      }
     }
   }
 
+  // Detect tombstones (files in index but not on disk)
   for (const [path, info] of indexedPaths) {
-    if (!fileSet.has(path) && !existsSync(path)) changes.deleted.push(info.id);
+    if (!fileSet.has(path) && !existsSync(path)) {
+      changes.deleted.push(info.id);
+    }
   }
 
   return changes;
@@ -774,7 +1137,7 @@ Expected: PASS
 **Step 5: Commit**
 
 ```bash
-git add -A && git commit -m "feat(indexer): add change detection"
+git add -A && git commit -m "feat(indexer): add three-tier change detection (mtime -> hash -> tombstone)"
 ```
 
 ---
@@ -796,6 +1159,7 @@ Create `tests/fixtures/sample.jsonl`:
 {"type":"assistant","message":{"role":"assistant","content":[{"type":"text","text":"Async/await handles promises."}]}}
 {"type":"assistant","message":{"role":"assistant","content":[{"type":"tool_use","name":"Read"}]}}
 {"type":"user","message":{"role":"user","content":"Thanks!"}}
+{"type":"result","result":"some tool output"}
 ```
 
 **Step 2: Write the failing test**
@@ -804,7 +1168,7 @@ Create `tests/indexer/parser.test.ts`:
 ```typescript
 import { describe, it, expect } from 'vitest';
 import { join } from 'path';
-import { parseTranscript } from '../../src/indexer/parser';
+import { parseTranscript, extractConversationMetadata } from '../../src/indexer/parser';
 
 const FIXTURE = join(__dirname, '../fixtures/sample.jsonl');
 
@@ -814,15 +1178,52 @@ describe('Parser', () => {
     expect(msgs).toHaveLength(2);
   });
 
-  it('should exclude tool_use', () => {
+  it('should parse assistant text messages', () => {
+    const msgs = parseTranscript(FIXTURE).filter(m => m.role === 'assistant');
+    expect(msgs).toHaveLength(1);
+    expect(msgs[0].content).toContain('Async/await');
+  });
+
+  it('should exclude tool_use content blocks', () => {
     const msgs = parseTranscript(FIXTURE);
     expect(msgs.some(m => m.content.includes('Read'))).toBe(false);
   });
 
-  it('should preserve order', () => {
+  it('should exclude result entries', () => {
+    const msgs = parseTranscript(FIXTURE);
+    expect(msgs.some(m => m.content.includes('tool output'))).toBe(false);
+  });
+
+  it('should preserve message order', () => {
     const msgs = parseTranscript(FIXTURE);
     expect(msgs[0].role).toBe('user');
     expect(msgs[1].role).toBe('assistant');
+    expect(msgs[0].index).toBe(0);
+    expect(msgs[1].index).toBe(1);
+  });
+
+  it('should handle array content blocks', () => {
+    const msgs = parseTranscript(FIXTURE);
+    const assistant = msgs.find(m => m.role === 'assistant');
+    expect(assistant?.content).toBe('Async/await handles promises.');
+  });
+
+  it('should handle string content', () => {
+    const msgs = parseTranscript(FIXTURE);
+    const user = msgs.find(m => m.role === 'user');
+    expect(user?.content).toBe('How do I use async/await?');
+  });
+
+  it('should skip malformed JSON lines', () => {
+    // This should not throw
+    expect(() => parseTranscript(FIXTURE)).not.toThrow();
+  });
+});
+
+describe('Metadata Extraction', () => {
+  it('should extract conversation metadata from fixture', () => {
+    const meta = extractConversationMetadata(FIXTURE);
+    expect(meta.messageCount).toBeGreaterThan(0);
   });
 });
 ```
@@ -840,6 +1241,12 @@ import { readFileSync } from 'fs';
 
 export interface Message { index: number; role: 'user' | 'assistant'; content: string; }
 
+export interface ConversationMetadata {
+  messageCount: number;
+  userMessageCount: number;
+  assistantMessageCount: number;
+}
+
 export function parseTranscript(path: string): Message[] {
   const lines = readFileSync(path, 'utf-8').trim().split('\n').filter(Boolean);
   const messages: Message[] = [];
@@ -848,6 +1255,8 @@ export function parseTranscript(path: string): Message[] {
   for (const line of lines) {
     try {
       const p = JSON.parse(line);
+
+      // Only process user and assistant message types
       if (p.type === 'user' && p.message?.role === 'user') {
         const text = extractText(p.message.content);
         if (text) messages.push({ index: idx++, role: 'user', content: text });
@@ -855,17 +1264,37 @@ export function parseTranscript(path: string): Message[] {
         const text = extractText(p.message.content);
         if (text) messages.push({ index: idx++, role: 'assistant', content: text });
       }
-    } catch {}
+      // Skip: tool_result, result, summary, and other types
+    } catch {
+      // Skip malformed JSON lines
+    }
   }
   return messages;
 }
 
+/**
+ * Extract text content from message content.
+ * Handles both string content and array of content blocks.
+ * Filters out tool_use blocks (too noisy for search).
+ */
 function extractText(content: string | any[]): string {
   if (typeof content === 'string') return content;
   if (Array.isArray(content)) {
-    return content.filter(b => b.type === 'text' && b.text).map(b => b.text).join('\n');
+    return content
+      .filter(b => b.type === 'text' && b.text)
+      .map(b => b.text)
+      .join('\n');
   }
   return '';
+}
+
+export function extractConversationMetadata(path: string): ConversationMetadata {
+  const messages = parseTranscript(path);
+  return {
+    messageCount: messages.length,
+    userMessageCount: messages.filter(m => m.role === 'user').length,
+    assistantMessageCount: messages.filter(m => m.role === 'assistant').length,
+  };
 }
 ```
 
@@ -877,7 +1306,7 @@ Expected: PASS
 **Step 6: Commit**
 
 ```bash
-git add -A && git commit -m "feat(indexer): add JSONL parser"
+git add -A && git commit -m "feat(indexer): add JSONL parser excluding tool_use blocks"
 ```
 
 ---
@@ -895,20 +1324,74 @@ git add -A && git commit -m "feat(indexer): add JSONL parser"
 Create `tests/indexer/chunker.test.ts`:
 ```typescript
 import { describe, it, expect } from 'vitest';
-import { chunkText } from '../../src/indexer/chunker';
+import { chunkText, ChunkOptions } from '../../src/indexer/chunker';
 
 describe('Chunker', () => {
+  const defaultOpts: ChunkOptions = { maxTokens: 300, overlap: 50 };
+
   it('should return single chunk for short text', () => {
-    expect(chunkText('short', { maxTokens: 100, overlap: 20 })).toHaveLength(1);
+    expect(chunkText('short', defaultOpts)).toHaveLength(1);
   });
 
-  it('should split long text', () => {
-    expect(chunkText('word '.repeat(200), { maxTokens: 50, overlap: 10 }).length).toBeGreaterThan(1);
+  it('should split long text into multiple chunks', () => {
+    const longText = 'word '.repeat(500);
+    const chunks = chunkText(longText, { maxTokens: 100, overlap: 20 });
+    expect(chunks.length).toBeGreaterThan(1);
   });
 
-  it('should keep code blocks together', () => {
-    const code = '```js\nfunc()\n```';
-    expect(chunkText(code, { maxTokens: 50, overlap: 10 })).toHaveLength(1);
+  it('should include overlap between chunks', () => {
+    const text = 'one two three four five six seven eight nine ten';
+    const chunks = chunkText(text, { maxTokens: 5, overlap: 2 });
+
+    // With overlap, adjacent chunks should share some content
+    if (chunks.length >= 2) {
+      const firstEnd = chunks[0].split(' ').slice(-2).join(' ');
+      expect(chunks[1]).toContain(firstEnd.split(' ')[0]);
+    }
+  });
+
+  it('should keep small code blocks intact', () => {
+    const code = '```js\nfunction test() {\n  return 42;\n}\n```';
+    const chunks = chunkText(code, { maxTokens: 100, overlap: 20 });
+    expect(chunks).toHaveLength(1);
+    expect(chunks[0]).toContain('function test');
+  });
+
+  it('should split code blocks larger than 400 tokens at line boundaries', () => {
+    // Create a code block with many lines
+    const lines = Array(100).fill('  const x = 1;').join('\n');
+    const code = '```js\n' + lines + '\n```';
+    const chunks = chunkText(code, { maxTokens: 50, overlap: 10 });
+
+    // Should split, and each chunk should end at a line boundary (no mid-line splits)
+    expect(chunks.length).toBeGreaterThan(1);
+    for (const chunk of chunks.slice(0, -1)) {
+      // Each chunk except last should end with newline or code fence
+      expect(chunk.endsWith('\n') || chunk.endsWith('```')).toBe(true);
+    }
+  });
+
+  it('should prefer paragraph boundaries as split points', () => {
+    const text = 'First paragraph.\n\nSecond paragraph with more content that makes it longer.\n\nThird paragraph.';
+    const chunks = chunkText(text, { maxTokens: 20, overlap: 5 });
+
+    // Should split at paragraph boundaries when possible
+    expect(chunks.length).toBeGreaterThan(1);
+  });
+
+  it('should handle empty text', () => {
+    expect(chunkText('', defaultOpts)).toHaveLength(0);
+    expect(chunkText('   ', defaultOpts)).toHaveLength(0);
+  });
+
+  it('should respect maxTokens limit (approximately)', () => {
+    const longText = 'word '.repeat(1000);
+    const chunks = chunkText(longText, { maxTokens: 100, overlap: 20 });
+
+    // Each chunk should be roughly within limit (4 chars per token approximation)
+    for (const chunk of chunks) {
+      expect(chunk.length).toBeLessThanOrEqual(100 * 4 * 1.5); // Allow some tolerance
+    }
   });
 });
 ```
@@ -922,36 +1405,74 @@ Expected: FAIL
 
 Create `src/indexer/chunker.ts`:
 ```typescript
-export interface ChunkOptions { maxTokens: number; overlap: number; }
+export interface ChunkOptions {
+  maxTokens: number;   // Target 200-400 tokens per chunk
+  overlap: number;     // 50 tokens overlap for context continuity
+}
 
+// Approximate chars per token (conservative for mixed content)
 const CHARS_PER_TOKEN = 4;
 
 export function chunkText(text: string, opts: ChunkOptions): string[] {
+  const trimmed = text.trim();
+  if (!trimmed) return [];
+
   const maxChars = opts.maxTokens * CHARS_PER_TOKEN;
   const overlapChars = opts.overlap * CHARS_PER_TOKEN;
 
-  if (text.length <= maxChars) return [text];
+  // Short text: single chunk
+  if (trimmed.length <= maxChars) return [trimmed];
 
   const chunks: string[] = [];
   let pos = 0;
 
-  while (pos < text.length) {
-    let end = Math.min(pos + maxChars, text.length);
-    if (end < text.length) end = findBreak(text, pos, end);
-    const chunk = text.slice(pos, end).trim();
+  while (pos < trimmed.length) {
+    let end = Math.min(pos + maxChars, trimmed.length);
+
+    // Find a good break point if not at end
+    if (end < trimmed.length) {
+      end = findBreakPoint(trimmed, pos, end);
+    }
+
+    const chunk = trimmed.slice(pos, end).trim();
     if (chunk) chunks.push(chunk);
+
+    // Move forward, preserving overlap
     pos = Math.max(pos + 1, end - overlapChars);
   }
 
-  return chunks.length ? chunks : [text];
+  return chunks.length ? chunks : [trimmed];
 }
 
-function findBreak(text: string, start: number, end: number): number {
-  const seg = text.slice(start, end);
-  for (const sep of ['\n\n', '```\n', '\n', '. ', ' ']) {
-    const idx = seg.lastIndexOf(sep);
-    if (idx > seg.length * 0.3) return start + idx + sep.length;
-  }
+/**
+ * Find a good break point for chunking.
+ * Priority: paragraph > code fence > line > sentence > word > forced
+ */
+function findBreakPoint(text: string, start: number, end: number): number {
+  const segment = text.slice(start, end);
+  const minPos = Math.floor(segment.length * 0.3); // Don't break in first 30%
+
+  // Priority 1: Paragraph boundary (double newline)
+  const paraIdx = segment.lastIndexOf('\n\n');
+  if (paraIdx > minPos) return start + paraIdx + 2;
+
+  // Priority 2: Code fence boundary
+  const fenceIdx = segment.lastIndexOf('```\n');
+  if (fenceIdx > minPos) return start + fenceIdx + 4;
+
+  // Priority 3: Line boundary
+  const lineIdx = segment.lastIndexOf('\n');
+  if (lineIdx > minPos) return start + lineIdx + 1;
+
+  // Priority 4: Sentence boundary
+  const sentenceIdx = segment.lastIndexOf('. ');
+  if (sentenceIdx > minPos) return start + sentenceIdx + 2;
+
+  // Priority 5: Word boundary
+  const wordIdx = segment.lastIndexOf(' ');
+  if (wordIdx > minPos) return start + wordIdx + 1;
+
+  // Fallback: forced break
   return end;
 }
 ```
@@ -964,14 +1485,14 @@ Expected: PASS
 **Step 5: Commit**
 
 ```bash
-git add -A && git commit -m "feat(indexer): add text chunker with overlap"
+git add -A && git commit -m "feat(indexer): add text chunker with overlap and smart boundaries"
 ```
 
 ---
 
 ## Phase 6: Search API
 
-### Task 6.1: FTS Search Endpoint
+### Task 6.1: FTS Search with Filters
 
 **Files:**
 - Create: `src/api/search.ts`
@@ -985,36 +1506,105 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { createDatabase, closeDatabase } from '../../src/db';
 import { insertConversation } from '../../src/db/conversations';
 import { insertChunk } from '../../src/db/chunks';
-import { searchHybrid } from '../../src/api/search';
+import { searchFTS, SearchOptions } from '../../src/api/search';
 import { existsSync, unlinkSync } from 'fs';
 
 const TEST_DB = '/tmp/test-search.db';
 
-describe('Search', () => {
+describe('Search API', () => {
   beforeEach(() => {
     if (existsSync(TEST_DB)) unlinkSync(TEST_DB);
     createDatabase(TEST_DB);
-    insertConversation({ id: 'c1', project: 'p', title: 'JS', created_at: '2025-01-20',
-      file_path: '/f.jsonl', content_hash: 'h', source_mtime: 1000 });
+
+    // Setup test data
+    insertConversation({ id: 'c1', project: 'project-a', title: 'JavaScript Help',
+      created_at: '2025-01-20', file_path: '/f1.jsonl', content_hash: 'h1', source_mtime: 1000 });
+    insertConversation({ id: 'c2', project: 'project-b', title: 'Python Help',
+      created_at: '2025-01-15', file_path: '/f2.jsonl', content_hash: 'h2', source_mtime: 1000 });
+
     insertChunk({ conversation_id: 'c1', chunk_index: 0, page_number: 1,
-      role: 'user', content: 'async await question', embedding: null });
+      role: 'user', content: 'How do I use async await in JavaScript?', embedding: null });
+    insertChunk({ conversation_id: 'c1', chunk_index: 1, page_number: 1,
+      role: 'assistant', content: 'Async/await is syntactic sugar for promises.', embedding: null });
+    insertChunk({ conversation_id: 'c2', chunk_index: 0, page_number: 1,
+      role: 'user', content: 'Python async programming', embedding: null });
   });
 
-  afterEach(() => { closeDatabase(); if (existsSync(TEST_DB)) unlinkSync(TEST_DB); });
+  afterEach(() => {
+    closeDatabase();
+    if (existsSync(TEST_DB)) unlinkSync(TEST_DB);
+  });
 
   it('should find by keyword', () => {
-    expect(searchHybrid('async', {}).length).toBeGreaterThan(0);
+    const results = searchFTS('async', {});
+    expect(results.length).toBeGreaterThan(0);
   });
 
-  it('should filter by project', () => {
-    const r = searchHybrid('async', { project: 'other' });
-    expect(r).toHaveLength(0);
+  it('should filter by project (inside query, not after)', () => {
+    const results = searchFTS('async', { project: 'project-a' });
+    expect(results.length).toBeGreaterThan(0);
+    expect(results.every(r => r.project === 'project-a')).toBe(true);
+
+    const noResults = searchFTS('async', { project: 'nonexistent' });
+    expect(noResults).toHaveLength(0);
+  });
+
+  it('should filter by role', () => {
+    const userResults = searchFTS('async', { role: 'user' });
+    expect(userResults.every(r => r.role === 'user')).toBe(true);
+
+    const assistantResults = searchFTS('async', { role: 'assistant' });
+    expect(assistantResults.every(r => r.role === 'assistant')).toBe(true);
+  });
+
+  it('should filter by date range', () => {
+    const results = searchFTS('async', { after: '2025-01-18' });
+    expect(results.length).toBeGreaterThan(0);
+    // Only c1 is after 2025-01-18
   });
 
   it('should respect limit', () => {
-    insertChunk({ conversation_id: 'c1', chunk_index: 1, page_number: 1,
-      role: 'assistant', content: 'async response', embedding: null });
-    expect(searchHybrid('async', { limit: 1 })).toHaveLength(1);
+    const results = searchFTS('async', { limit: 1 });
+    expect(results).toHaveLength(1);
+  });
+
+  it('should respect offset', () => {
+    const all = searchFTS('async', { limit: 10 });
+    const offset = searchFTS('async', { limit: 10, offset: 1 });
+
+    if (all.length > 1) {
+      expect(offset[0].chunk_id).toBe(all[1].chunk_id);
+    }
+  });
+
+  it('should handle negative limit gracefully', () => {
+    const results = searchFTS('async', { limit: -1 });
+    expect(results).toHaveLength(0);
+  });
+
+  it('should handle negative offset gracefully', () => {
+    const results = searchFTS('async', { offset: -1 });
+    expect(results.length).toBeGreaterThanOrEqual(0); // Should not throw
+  });
+
+  it('should return empty array for empty query', () => {
+    expect(searchFTS('', {})).toHaveLength(0);
+    expect(searchFTS('   ', {})).toHaveLength(0);
+  });
+
+  it('should sanitize FTS special characters', () => {
+    // These should not throw
+    expect(() => searchFTS('async AND', {})).not.toThrow();
+    expect(() => searchFTS('test OR something', {})).not.toThrow();
+    expect(() => searchFTS('"quoted"', {})).not.toThrow();
+  });
+
+  it('should include conversation metadata in results', () => {
+    const results = searchFTS('async', {});
+    expect(results[0]).toHaveProperty('conversation_id');
+    expect(results[0]).toHaveProperty('title');
+    expect(results[0]).toHaveProperty('project');
+    expect(results[0]).toHaveProperty('page_number');
   });
 });
 ```
@@ -1029,35 +1619,77 @@ Expected: FAIL
 Create `src/api/search.ts`:
 ```typescript
 import { getDatabase } from '../db';
+import { sanitizeFTSQuery } from '../db/chunks';
 
 export interface SearchOptions {
-  project?: string; role?: 'user' | 'assistant';
-  after?: string; before?: string; limit?: number; offset?: number;
+  project?: string;
+  role?: 'user' | 'assistant';
+  after?: string;
+  before?: string;
+  limit?: number;
+  offset?: number;
 }
 
 export interface SearchResult {
-  chunk_id: number; conversation_id: string; title: string | null;
-  project: string; role: string; content: string; page_number: number | null; score: number;
+  chunk_id: number;
+  conversation_id: string;
+  title: string | null;
+  project: string;
+  role: string;
+  content: string;
+  page_number: number | null;
+  score: number;
 }
 
-export function searchHybrid(query: string, opts: SearchOptions): SearchResult[] {
+/**
+ * Full-text search with filters applied INSIDE the query (not after).
+ * This ensures correct ranking - filters don't skew BM25 scores.
+ */
+export function searchFTS(query: string, opts: SearchOptions): SearchResult[] {
   const db = getDatabase();
   const { project, role, after, before, limit = 20, offset = 0 } = opts;
 
-  const sanitized = query.replace(/["\*\(\)]/g, ' ').replace(/\b(AND|OR|NOT)\b/gi, ' ')
-    .trim().split(/\s+/).filter(Boolean).map(t => `"${t}"`).join(' ');
+  // Validate limit/offset
+  if (limit < 0 || offset < 0) return [];
+
+  const sanitized = sanitizeFTSQuery(query);
   if (!sanitized) return [];
 
-  let sql = `SELECT c.id as chunk_id, c.conversation_id, conv.title, conv.project,
-    c.role, c.content, c.page_number, bm25(chunks_fts) as score
-    FROM chunks_fts fts JOIN chunks c ON c.id = fts.rowid
-    JOIN conversations conv ON conv.id = c.conversation_id WHERE chunks_fts MATCH ?`;
+  // Build query with filters inside (critical for correct ranking)
+  let sql = `
+    SELECT
+      c.id as chunk_id,
+      c.conversation_id,
+      conv.title,
+      conv.project,
+      c.role,
+      c.content,
+      c.page_number,
+      bm25(chunks_fts) as score
+    FROM chunks_fts fts
+    JOIN chunks c ON c.id = fts.rowid
+    JOIN conversations conv ON conv.id = c.conversation_id
+    WHERE chunks_fts MATCH ?
+  `;
   const params: any[] = [sanitized];
 
-  if (project) { sql += ' AND conv.project = ?'; params.push(project); }
-  if (role) { sql += ' AND c.role = ?'; params.push(role); }
-  if (after) { sql += ' AND conv.created_at >= ?'; params.push(after); }
-  if (before) { sql += ' AND conv.created_at <= ?'; params.push(before); }
+  // Add filters (inside query, not post-filter)
+  if (project) {
+    sql += ' AND conv.project = ?';
+    params.push(project);
+  }
+  if (role) {
+    sql += ' AND c.role = ?';
+    params.push(role);
+  }
+  if (after) {
+    sql += ' AND conv.created_at >= ?';
+    params.push(after);
+  }
+  if (before) {
+    sql += ' AND conv.created_at <= ?';
+    params.push(before);
+  }
 
   sql += ' ORDER BY score LIMIT ? OFFSET ?';
   params.push(limit, offset);
@@ -1074,12 +1706,12 @@ Expected: PASS
 **Step 5: Commit**
 
 ```bash
-git add -A && git commit -m "feat(api): add FTS search"
+git add -A && git commit -m "feat(api): add FTS search with filters inside query"
 ```
 
 ---
 
-### Task 6.2: Snippet Generation
+### Task 6.2: Snippet Generation with Highlighting
 
 **Files:**
 - Create: `src/api/snippets.ts`
@@ -1092,14 +1724,68 @@ Create `tests/api/snippets.test.ts`:
 import { describe, it, expect } from 'vitest';
 import { generateSnippet, highlightTerms } from '../../src/api/snippets';
 
-describe('Snippets', () => {
-  it('should extract around match', () => {
-    const s = generateSnippet('before async after more text', 'async', 10);
-    expect(s).toContain('async');
+describe('Snippet Generation', () => {
+  it('should extract context around match', () => {
+    const content = 'before before before async await after after after';
+    const snippet = generateSnippet(content, 'async', 20);
+    expect(snippet).toContain('async');
   });
 
-  it('should highlight terms', () => {
-    expect(highlightTerms('use async', ['async'])).toContain('**async**');
+  it('should add ellipsis when truncating', () => {
+    const content = 'A'.repeat(100) + ' async ' + 'B'.repeat(100);
+    const snippet = generateSnippet(content, 'async', 20);
+    expect(snippet).toContain('...');
+  });
+
+  it('should handle match at start', () => {
+    const content = 'async is at the start of this text';
+    const snippet = generateSnippet(content, 'async', 50);
+    expect(snippet.startsWith('async')).toBe(true);
+  });
+
+  it('should handle match at end', () => {
+    const content = 'this text ends with async';
+    const snippet = generateSnippet(content, 'async', 50);
+    expect(snippet.endsWith('async')).toBe(true);
+  });
+
+  it('should return truncated content when no match', () => {
+    const content = 'some content without the search term';
+    const snippet = generateSnippet(content, 'notfound', 20);
+    expect(snippet.length).toBeLessThanOrEqual(50);
+  });
+
+  it('should handle multiple search terms', () => {
+    const content = 'async await promises are great';
+    const snippet = generateSnippet(content, 'async await', 50);
+    expect(snippet).toContain('async');
+  });
+});
+
+describe('Term Highlighting', () => {
+  it('should wrap terms in markdown bold', () => {
+    const highlighted = highlightTerms('use async here', ['async']);
+    expect(highlighted).toBe('use **async** here');
+  });
+
+  it('should highlight multiple terms', () => {
+    const highlighted = highlightTerms('async and await', ['async', 'await']);
+    expect(highlighted).toBe('**async** and **await**');
+  });
+
+  it('should be case-insensitive', () => {
+    const highlighted = highlightTerms('ASYNC code', ['async']);
+    expect(highlighted).toBe('**ASYNC** code');
+  });
+
+  it('should handle regex special characters in terms', () => {
+    const highlighted = highlightTerms('test (parens) here', ['(parens)']);
+    expect(highlighted).toBe('test **(parens)** here');
+  });
+
+  it('should not double-highlight', () => {
+    const highlighted = highlightTerms('async async', ['async']);
+    expect(highlighted).toBe('**async** **async**');
   });
 });
 ```
@@ -1113,25 +1799,66 @@ Expected: FAIL
 
 Create `src/api/snippets.ts`:
 ```typescript
-export function generateSnippet(content: string, query: string, ctx = 75): string {
-  const terms = query.toLowerCase().split(/\s+/);
+/**
+ * Generate a snippet from content centered around search terms.
+ * @param content Full content text
+ * @param query Search query
+ * @param contextChars Characters of context on each side
+ * @returns Snippet with ellipsis if truncated
+ */
+export function generateSnippet(content: string, query: string, contextChars = 75): string {
+  const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
   const lower = content.toLowerCase();
-  let idx = -1;
-  for (const t of terms) { const i = lower.indexOf(t); if (i !== -1 && (idx === -1 || i < idx)) idx = i; }
-  if (idx === -1) return content.slice(0, ctx * 2) + (content.length > ctx * 2 ? '...' : '');
 
-  const start = Math.max(0, idx - ctx);
-  const end = Math.min(content.length, idx + ctx);
-  let s = content.slice(start, end);
-  if (start > 0) s = '...' + s;
-  if (end < content.length) s = s + '...';
-  return s;
+  // Find first matching term position
+  let matchIdx = -1;
+  for (const term of terms) {
+    const idx = lower.indexOf(term);
+    if (idx !== -1 && (matchIdx === -1 || idx < matchIdx)) {
+      matchIdx = idx;
+    }
+  }
+
+  // No match: return start of content
+  if (matchIdx === -1) {
+    const maxLen = contextChars * 2;
+    return content.length > maxLen
+      ? content.slice(0, maxLen) + '...'
+      : content;
+  }
+
+  // Extract context around match
+  const start = Math.max(0, matchIdx - contextChars);
+  const end = Math.min(content.length, matchIdx + contextChars);
+
+  let snippet = content.slice(start, end);
+
+  // Add ellipsis for truncation
+  if (start > 0) snippet = '...' + snippet;
+  if (end < content.length) snippet = snippet + '...';
+
+  return snippet;
 }
 
+/**
+ * Highlight search terms in text using markdown bold (**term**).
+ * @param text Text to highlight in
+ * @param terms Terms to highlight
+ * @returns Text with highlighted terms
+ */
 export function highlightTerms(text: string, terms: string[]): string {
-  let r = text;
-  for (const t of terms) r = r.replace(new RegExp(`(${t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi'), '**$1**');
-  return r;
+  let result = text;
+
+  for (const term of terms) {
+    if (!term) continue;
+
+    // Escape regex special characters
+    const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`(${escaped})`, 'gi');
+    result = result.replace(regex, '**$1**');
+  }
+
+  return result;
 }
 ```
 
@@ -1143,28 +1870,275 @@ Expected: PASS
 **Step 5: Commit**
 
 ```bash
-git add -A && git commit -m "feat(api): add snippet generation"
+git add -A && git commit -m "feat(api): add snippet generation with markdown highlighting"
+```
+
+---
+
+### Task 6.3: Empty Query Fallback (Recent Conversations)
+
+**Files:**
+- Modify: `src/api/search.ts`
+- Create: `tests/api/search-fallback.test.ts`
+
+**Step 1: Write the failing test**
+
+Create `tests/api/search-fallback.test.ts`:
+```typescript
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { createDatabase, closeDatabase } from '../../src/db';
+import { insertConversation } from '../../src/db/conversations';
+import { searchWithFallback } from '../../src/api/search';
+import { existsSync, unlinkSync } from 'fs';
+
+const TEST_DB = '/tmp/test-search-fallback.db';
+
+describe('Search Fallback', () => {
+  beforeEach(() => {
+    if (existsSync(TEST_DB)) unlinkSync(TEST_DB);
+    createDatabase(TEST_DB);
+
+    insertConversation({ id: 'c1', project: 'project-a', title: 'Recent',
+      created_at: '2025-01-20', file_path: '/f1.jsonl', content_hash: 'h1', source_mtime: 1000 });
+    insertConversation({ id: 'c2', project: 'project-a', title: 'Older',
+      created_at: '2025-01-15', file_path: '/f2.jsonl', content_hash: 'h2', source_mtime: 1000 });
+  });
+
+  afterEach(() => {
+    closeDatabase();
+    if (existsSync(TEST_DB)) unlinkSync(TEST_DB);
+  });
+
+  it('should return recent conversations for empty query', () => {
+    const results = searchWithFallback('', {});
+    expect(results.conversations.length).toBeGreaterThan(0);
+    expect(results.type).toBe('recent');
+  });
+
+  it('should return recent conversations for whitespace query', () => {
+    const results = searchWithFallback('   ', {});
+    expect(results.type).toBe('recent');
+  });
+
+  it('should filter recent by project', () => {
+    insertConversation({ id: 'c3', project: 'project-b', title: 'Other',
+      created_at: '2025-01-20', file_path: '/f3.jsonl', content_hash: 'h3', source_mtime: 1000 });
+
+    const results = searchWithFallback('', { project: 'project-a' });
+    expect(results.conversations.every(c => c.project === 'project-a')).toBe(true);
+  });
+
+  it('should order recent by created_at descending', () => {
+    const results = searchWithFallback('', {});
+    expect(results.conversations[0].title).toBe('Recent');
+    expect(results.conversations[1].title).toBe('Older');
+  });
+
+  it('should return search results for non-empty query', () => {
+    const results = searchWithFallback('nonexistent', {});
+    expect(results.type).toBe('search');
+  });
+});
+```
+
+**Step 2: Run test to verify it fails**
+
+Run: `npm test`
+Expected: FAIL
+
+**Step 3: Update search.ts with fallback**
+
+Add to `src/api/search.ts`:
+```typescript
+import { getRecentConversations, listConversations, Conversation } from '../db/conversations';
+
+export interface SearchWithFallbackResult {
+  type: 'search' | 'recent';
+  results?: SearchResult[];
+  conversations?: Conversation[];
+}
+
+/**
+ * Search with fallback to recent conversations for empty queries.
+ * Per design: "Empty query → Return recent conversations"
+ */
+export function searchWithFallback(query: string, opts: SearchOptions): SearchWithFallbackResult {
+  const trimmed = query.trim();
+
+  if (!trimmed) {
+    // Empty query: return recent conversations
+    const conversations = opts.project
+      ? listConversations(opts.project)
+      : getRecentConversations(opts.limit || 20);
+    return { type: 'recent', conversations };
+  }
+
+  // Non-empty query: perform search
+  const results = searchFTS(query, opts);
+  return { type: 'search', results };
+}
+```
+
+**Step 4: Run test**
+
+Run: `npm test`
+Expected: PASS
+
+**Step 5: Commit**
+
+```bash
+git add -A && git commit -m "feat(api): add empty query fallback to recent conversations"
+```
+
+---
+
+## Phase 7: Embedding Client (Future - sqlite-vec)
+
+### Task 7.1: Embedding Client with Health Checks
+
+> **Note:** This phase requires sqlite-vec native addon and qwen3-embeddings-mlx sidecar.
+> Implement after Phase 6 is complete and stable.
+
+**Files:**
+- Create: `src/embeddings/client.ts`
+- Create: `tests/embeddings/client.test.ts`
+
+**Tests to implement:**
+```typescript
+describe('Embedding Client', () => {
+  it('should connect via Unix socket');
+  it('should batch embed multiple texts');
+  it('should report health status');
+  it('should timeout gracefully');
+  it('should fall back when embeddings unavailable');
+});
+```
+
+---
+
+### Task 7.2: Vector Search with sqlite-vec
+
+> **Note:** Requires sqlite-vec extension loaded.
+
+**Tests to implement:**
+```typescript
+describe('Vector Search', () => {
+  it('should load sqlite-vec extension');
+  it('should create chunks_vec virtual table');
+  it('should insert and retrieve vectors');
+  it('should perform similarity search');
+  it('should sync vectors via triggers');
+});
+```
+
+---
+
+### Task 7.3: Hybrid Search with RRF
+
+> **Note:** Requires both FTS and vector search working.
+
+**Tests to implement:**
+```typescript
+describe('Hybrid Search with RRF', () => {
+  it('should merge FTS and vector results using RRF (k=60)');
+  it('should rank documents appearing in both higher');
+  it('should handle FTS-only results when embeddings down');
+  it('should handle vector-only results for pure semantic queries');
+  it('should apply filters before RRF merge');
+});
+```
+
+**RRF Implementation (k=60):**
+```typescript
+function mergeWithRRF(vectorResults: Result[], ftsResults: Result[], k = 60): Result[] {
+  const scores = new Map<number, number>();
+
+  vectorResults.forEach((r, rank) => {
+    scores.set(r.id, (scores.get(r.id) || 0) + 1 / (k + rank));
+  });
+
+  ftsResults.forEach((r, rank) => {
+    scores.set(r.id, (scores.get(r.id) || 0) + 1 / (k + rank));
+  });
+
+  return [...scores.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .map(([id, score]) => ({ id, score }));
+}
+```
+
+---
+
+## Phase 8: Background Indexing (Future)
+
+### Task 8.1: Lock File Management
+
+**Tests to implement:**
+```typescript
+describe('Lock File', () => {
+  it('should write lock file with PID on indexing start');
+  it('should release lock file on indexing complete');
+  it('should detect stale lock files (process dead)');
+  it('should prevent concurrent indexing');
+});
+```
+
+---
+
+### Task 8.2: Atomic Index Swap
+
+**Tests to implement:**
+```typescript
+describe('Atomic Swap', () => {
+  it('should only swap index after successful completion');
+  it('should serve old index during rebuild');
+  it('should never serve partial index');
+  it('should handle swap failure gracefully');
+});
+```
+
+---
+
+### Task 8.3: Background Worker
+
+**Tests to implement:**
+```typescript
+describe('Background Worker', () => {
+  it('should spawn indexing in separate process');
+  it('should not block server startup');
+  it('should report indexing progress');
+  it('should handle worker crash');
+});
 ```
 
 ---
 
 ## Summary
 
-**Phases covered:**
-1. Test Infrastructure (vitest)
-2. Database Schema (tables, FTS, triggers)
-3. CRUD Operations (metadata, conversations, chunks)
-4. Change Detection (hash, mtime, tombstones)
-5. JSONL Parsing (user/assistant extraction)
-6. Chunking (overlap, code-aware)
-7. Search API (FTS with filters, snippets)
+**Phases 1-6 (Core - implement now):**
+1. Configuration & Test Infrastructure
+2. Database Schema with FTS5 trigram + sync triggers
+3. Conversation & Chunk CRUD
+4. Change Detection (mtime → hash → tombstone)
+5. JSONL Parsing (exclude tool_use)
+6. Chunking with overlap + smart boundaries
+7. Search API with filters inside queries + snippets
 
-**Future phases (not in this plan):**
-- sqlite-vec integration + vector search
-- qwen3-embeddings-mlx sidecar
-- RRF merge for hybrid ranking
-- Background indexing worker
-- UI components
+**Phases 7-8 (Advanced - implement after core is stable):**
+7. Embedding Client + sqlite-vec + RRF hybrid search
+8. Background Indexing with lock file + atomic swap
+
+**Key Design Decisions Tested:**
+- ✅ Trigram tokenizer for substring/code search
+- ✅ Sync triggers keep FTS in sync
+- ✅ FTS query sanitization
+- ✅ Three-tier change detection
+- ✅ Filters inside queries (not post-filter)
+- ✅ Empty query → recent conversations
+- ✅ Snippet highlighting with markdown
+- 🔜 RRF with k=60 for hybrid ranking
+- 🔜 Lock file with PID for concurrent safety
+- 🔜 Atomic swap for index integrity
 
 ---
 
