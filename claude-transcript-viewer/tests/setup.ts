@@ -1,9 +1,17 @@
 import { beforeEach, afterEach } from 'vitest';
 import { unlinkSync, existsSync } from 'fs';
+import { tmpdir } from 'os';
+import { join } from 'path';
 
-// Clean up test databases before each test
+const testDb = join(tmpdir(), 'test-search.db');
+
 beforeEach(() => {
-  const testDb = '/tmp/test-search.db';
+  if (existsSync(testDb)) {
+    unlinkSync(testDb);
+  }
+});
+
+afterEach(() => {
   if (existsSync(testDb)) {
     unlinkSync(testDb);
   }
