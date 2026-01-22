@@ -1,39 +1,260 @@
 import express, { Request, Response } from "express";
-import { readFileSync, existsSync, readdirSync } from "fs";
+import { readFileSync, existsSync, readdirSync, mkdirSync } from "fs";
 import { join, dirname } from "path";
+import { spawn } from "child_process";
 import * as cheerio from "cheerio";
+import { createDatabase, getDatabase, closeDatabase } from "./db/index.js";
+import { searchHybrid, searchFTS, SearchOptions } from "./api/search.js";
+import { generateSnippet, highlightTerms } from "./api/snippets.js";
+import { createEmbeddingClient, EmbeddingClient } from "./embeddings/client.js";
+import { getConfig } from "./config.js";
+import { runIndexer } from "./indexer/index.js";
 
 const app = express();
+const config = getConfig();
 const PORT = process.env.PORT || 3000;
 const ARCHIVE_DIR = process.env.ARCHIVE_DIR || process.argv[2] || "./claude-archive";
+const SOURCE_DIR = process.env.SOURCE_DIR || process.argv[3] || "";
+const DATABASE_PATH = process.env.DATABASE_PATH || join(ARCHIVE_DIR, ".search.db");
 
-// CSS to inject for progressive disclosure
+// Initialize database and embedding client
+let embeddingClient: EmbeddingClient | undefined;
+
+// Background indexing state
+let indexingStatus: {
+  isIndexing: boolean;
+  progress?: string;
+  lastError?: string;
+  lastStats?: {
+    added: number;
+    modified: number;
+    deleted: number;
+    chunks: number;
+  };
+} = { isIndexing: false };
+
+// Archive generation state
+let archiveStatus: {
+  isGenerating: boolean;
+  progress?: string;
+  lastError?: string;
+  lastRun?: string;
+} = { isGenerating: false };
+
+// Generate HTML archive using claude-code-transcripts Python CLI
+async function generateArchive(): Promise<boolean> {
+  if (!SOURCE_DIR || archiveStatus.isGenerating) {
+    return false;
+  }
+
+  if (!existsSync(SOURCE_DIR)) {
+    console.log(`Source directory not found: ${SOURCE_DIR} - skipping archive generation`);
+    return false;
+  }
+
+  // Ensure archive directory exists
+  if (!existsSync(ARCHIVE_DIR)) {
+    mkdirSync(ARCHIVE_DIR, { recursive: true });
+  }
+
+  console.log(`Generating HTML archive from ${SOURCE_DIR} to ${ARCHIVE_DIR}...`);
+  archiveStatus.isGenerating = true;
+  archiveStatus.progress = "Starting...";
+
+  return new Promise((resolve) => {
+    // Use uv run to execute claude-code-transcripts all command
+    const proc = spawn("uv", [
+      "run",
+      "claude-code-transcripts",
+      "all",
+      "-s",
+      SOURCE_DIR,
+      "-o",
+      ARCHIVE_DIR,
+      "--include-agents",
+      "-q",
+    ], {
+      cwd: process.env.TRANSCRIPTS_CLI_PATH || undefined,
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+
+    let stdout = "";
+    let stderr = "";
+
+    proc.stdout.on("data", (data) => {
+      const line = data.toString();
+      stdout += line;
+      // Update progress from output
+      const match = line.match(/Processing|Generating|Writing/i);
+      if (match) {
+        archiveStatus.progress = line.trim().slice(0, 50);
+      }
+    });
+
+    proc.stderr.on("data", (data) => {
+      stderr += data.toString();
+    });
+
+    proc.on("close", (code) => {
+      archiveStatus.isGenerating = false;
+      archiveStatus.lastRun = new Date().toISOString();
+
+      if (code === 0) {
+        archiveStatus.progress = "Complete";
+        console.log("Archive generation complete");
+        resolve(true);
+      } else {
+        archiveStatus.lastError = stderr || `Exit code ${code}`;
+        console.error("Archive generation failed:", stderr || `Exit code ${code}`);
+        resolve(false);
+      }
+    });
+
+    proc.on("error", (err) => {
+      archiveStatus.isGenerating = false;
+      archiveStatus.lastError = err.message;
+      console.error("Failed to spawn claude-code-transcripts:", err.message);
+      console.log("Make sure claude-code-transcripts is installed: pip install claude-code-transcripts");
+      resolve(false);
+    });
+  });
+}
+
+// Start background indexing if SOURCE_DIR is provided
+async function startBackgroundIndexing() {
+  if (!SOURCE_DIR || indexingStatus.isIndexing) {
+    return;
+  }
+
+  if (!existsSync(SOURCE_DIR)) {
+    console.log(`Source directory not found: ${SOURCE_DIR} - skipping auto-indexing`);
+    return;
+  }
+
+  console.log(`Starting background indexing from ${SOURCE_DIR}...`);
+  indexingStatus.isIndexing = true;
+  indexingStatus.progress = "Starting...";
+
+  try {
+    const stats = await runIndexer({
+      sourceDir: SOURCE_DIR,
+      databasePath: DATABASE_PATH,
+      embedSocketPath: process.env.EMBED_SOCKET,
+      verbose: false,
+    });
+
+    indexingStatus.lastStats = {
+      added: stats.added,
+      modified: stats.modified,
+      deleted: stats.deleted,
+      chunks: stats.chunks,
+    };
+    indexingStatus.progress = "Complete";
+
+    if (stats.errors.length > 0) {
+      indexingStatus.lastError = `${stats.errors.length} files had errors`;
+    }
+
+    console.log(`Background indexing complete: ${stats.added} added, ${stats.modified} modified, ${stats.chunks} chunks`);
+  } catch (err) {
+    indexingStatus.lastError = err instanceof Error ? err.message : String(err);
+    console.error("Background indexing failed:", err);
+  } finally {
+    indexingStatus.isIndexing = false;
+  }
+}
+
+function initializeSearch() {
+  try {
+    createDatabase(DATABASE_PATH);
+    console.log(`Search database initialized at ${DATABASE_PATH}`);
+
+    // Try to connect to embedding server
+    const socketPath = process.env.EMBED_SOCKET || "/tmp/qwen-embed.sock";
+    if (existsSync(socketPath)) {
+      embeddingClient = createEmbeddingClient(socketPath);
+      console.log(`Embedding client connected to ${socketPath}`);
+    } else {
+      console.log(`Embedding server not found at ${socketPath} - using FTS-only search`);
+    }
+  } catch (err) {
+    console.error("Failed to initialize search database:", err);
+  }
+}
+
+// CSS to inject for progressive disclosure and search bar
 const INJECTED_CSS = `
 <style id="viewer-enhancements">
-/* All cells collapsed by default */
-.cell:not([open]) .cell-content { display: none; }
-
-/* Preview text in collapsed cells */
-.cell-preview {
+/* Global search bar styles */
+.viewer-search-bar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: var(--bg, #1a1a2e);
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border, #333);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.viewer-search-bar a.home-link {
+  color: var(--primary, #e94560);
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 0.875rem;
+}
+.viewer-search-bar a.home-link:hover { text-decoration: underline; }
+.viewer-search-bar .search-wrapper {
+  position: relative;
   flex: 1;
-  color: var(--text-muted, #757575);
-  font-weight: normal;
-  font-size: var(--font-size-xs, 0.75rem);
-  margin: 0 var(--spacing-sm, 8px);
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  line-height: 1.4;
+  max-width: 400px;
 }
-.cell[open] .cell-preview { display: none; }
-
-/* Adjust summary layout for preview */
-.cell summary {
-  align-items: flex-start !important;
-  flex-wrap: wrap !important;
+.viewer-search-bar input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  border: 1px solid var(--border, #333);
+  border-radius: 4px;
+  background: var(--surface, #16213e);
+  color: var(--text, #eee);
 }
-.cell summary .cell-label { flex-shrink: 0; }
+.viewer-search-bar input:focus {
+  outline: none;
+  border-color: var(--primary, #e94560);
+}
+.viewer-search-bar .search-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--surface, #16213e);
+  border: 1px solid var(--border, #333);
+  border-radius: 4px;
+  margin-top: 4px;
+  display: none;
+  max-height: 400px;
+  overflow-y: auto;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+.viewer-search-bar .search-dropdown.visible { display: block; }
+.viewer-search-bar .search-dropdown-item {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border, #333);
+  cursor: pointer;
+}
+.viewer-search-bar .search-dropdown-item:hover { background: rgba(255,255,255,0.05); }
+.viewer-search-bar .search-dropdown-item:last-child { border-bottom: none; }
+.viewer-search-bar .search-dropdown-item h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.875rem;
+  color: var(--text, #eee);
+}
+.viewer-search-bar .search-dropdown-item p {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--text-muted, #888);
+}
+.viewer-search-bar .search-dropdown-item p strong { color: var(--primary, #e94560); }
 
 /* Performance optimization */
 .message {
@@ -61,49 +282,11 @@ const INJECTED_CSS = `
 </style>
 `;
 
-// JavaScript for infinite scroll and cell enhancements
+// JavaScript for infinite scroll and search bar
 const INJECTED_JS = `
 <script id="viewer-enhancements-js">
 (function() {
-  // Extract preview text from cell content
-  function extractPreview(cellContent, maxLength = 400) {
-    const text = cellContent.textContent || '';
-    const cleaned = text.replace(/\\s+/g, ' ').trim();
-    return cleaned.length > maxLength
-      ? cleaned.substring(0, maxLength) + '...'
-      : cleaned;
-  }
-
-  // Add preview to all cells
-  function addPreviews() {
-    document.querySelectorAll('.cell').forEach(cell => {
-      if (cell.querySelector('.cell-preview')) return; // Already has preview
-
-      const summary = cell.querySelector('summary');
-      const content = cell.querySelector('.cell-content');
-      const copyBtn = summary.querySelector('.cell-copy-btn');
-
-      if (summary && content) {
-        const preview = document.createElement('span');
-        preview.className = 'cell-preview';
-        preview.textContent = extractPreview(content);
-
-        // Insert before copy button or at end
-        if (copyBtn) {
-          summary.insertBefore(preview, copyBtn);
-        } else {
-          summary.appendChild(preview);
-        }
-      }
-    });
-  }
-
-  // Collapse all cells by default
-  function collapseAllCells() {
-    document.querySelectorAll('.cell[open]').forEach(cell => {
-      cell.removeAttribute('open');
-    });
-  }
+  // NOTE: Cell collapse functionality removed - claude-code-transcripts handles it natively.
 
   // Infinite scroll state
   let currentPage = 1;
@@ -162,9 +345,6 @@ const INJECTED_JS = `
           container.insertBefore(clone, pagination || loader);
         });
 
-        // Process new content
-        addPreviews();
-        collapseAllCells();
         currentPage = nextPage;
       }
     } catch (err) {
@@ -214,12 +394,97 @@ const INJECTED_JS = `
 
   function init() {
     detectTotalPages();
-    collapseAllCells();
-    addPreviews();
     setupInfiniteScroll();
+    setupSearchBar();
+  }
+
+  // Search bar functionality
+  function setupSearchBar() {
+    const searchInput = document.getElementById('viewer-search-input');
+    const dropdown = document.getElementById('viewer-search-dropdown');
+    if (!searchInput || !dropdown) return;
+
+    let debounceTimer;
+
+    searchInput.addEventListener('input', () => {
+      clearTimeout(debounceTimer);
+      const q = searchInput.value.trim();
+      if (!q) {
+        dropdown.classList.remove('visible');
+        return;
+      }
+      debounceTimer = setTimeout(() => performSearch(q), 200);
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.viewer-search-bar')) {
+        dropdown.classList.remove('visible');
+      }
+    });
+
+    async function performSearch(q) {
+      try {
+        const res = await fetch('/api/search?q=' + encodeURIComponent(q) + '&limit=5');
+        const data = await res.json();
+
+        dropdown.textContent = '';
+
+        if (data.results && data.results.length > 0) {
+          data.results.forEach(r => {
+            const item = document.createElement('div');
+            item.className = 'search-dropdown-item';
+            item.onclick = () => window.location.href = r.url;
+
+            const title = document.createElement('h4');
+            title.textContent = (r.title || 'Untitled').slice(0, 50);
+            item.appendChild(title);
+
+            const snippet = document.createElement('p');
+            snippet.textContent = r.snippet.replace(/\\*\\*/g, '');
+            item.appendChild(snippet);
+
+            dropdown.appendChild(item);
+          });
+
+          // Add "view all" link
+          const viewAll = document.createElement('div');
+          viewAll.className = 'search-dropdown-item';
+          viewAll.onclick = () => window.location.href = '/search?q=' + encodeURIComponent(q);
+          const em = document.createElement('em');
+          em.textContent = 'View all results...';
+          em.style.color = 'var(--primary, #e94560)';
+          viewAll.appendChild(em);
+          dropdown.appendChild(viewAll);
+
+          dropdown.classList.add('visible');
+        } else {
+          const noResults = document.createElement('div');
+          noResults.className = 'search-dropdown-item';
+          const em = document.createElement('em');
+          em.textContent = 'No results found';
+          noResults.appendChild(em);
+          dropdown.appendChild(noResults);
+          dropdown.classList.add('visible');
+        }
+      } catch (err) {
+        console.error('Search failed:', err);
+      }
+    }
   }
 })();
 </script>
+`;
+
+// Search bar HTML to inject at top of body
+const SEARCH_BAR_HTML = `
+<div class="viewer-search-bar">
+  <a href="/" class="home-link">← Home</a>
+  <div class="search-wrapper">
+    <input type="search" id="viewer-search-input" placeholder="Search all conversations..." autocomplete="off" />
+    <div id="viewer-search-dropdown" class="search-dropdown"></div>
+  </div>
+</div>
 `;
 
 // Inject enhancements into HTML
@@ -228,6 +493,9 @@ function enhanceHtml(html: string): string {
 
   // Inject CSS before </head>
   $("head").append(INJECTED_CSS);
+
+  // Inject search bar at beginning of body
+  $("body").prepend(SEARCH_BAR_HTML);
 
   // Inject JS before </body>
   $("body").append(INJECTED_JS);
@@ -269,16 +537,873 @@ app.get("/api/projects", (req: Request, res: Response) => {
   }
 });
 
+// Search API endpoint
+app.get("/api/search", async (req: Request, res: Response) => {
+  const startTime = Date.now();
+
+  try {
+    const query = (req.query.q as string) || "";
+    const options: SearchOptions = {
+      project: req.query.project as string | undefined,
+      role: req.query.role as "user" | "assistant" | undefined,
+      after: req.query.after as string | undefined,
+      before: req.query.before as string | undefined,
+      limit: req.query.limit ? parseInt(req.query.limit as string, 10) : 20,
+      offset: req.query.offset ? parseInt(req.query.offset as string, 10) : 0,
+    };
+
+    const result = await searchHybrid(query, options, embeddingClient);
+
+    // Format response according to design spec
+    if (result.type === "recent") {
+      res.json({
+        type: "recent",
+        conversations: result.conversations,
+        query_time_ms: Date.now() - startTime,
+      });
+      return;
+    }
+
+    // Add snippets with highlighting to results
+    const resultsWithSnippets = (result.results || []).map((r) => {
+      const terms = query.split(/\s+/).filter(Boolean);
+      const snippet = generateSnippet(r.content, query, 100);
+      const highlightedSnippet = highlightTerms(snippet, terms);
+
+      return {
+        chunk_id: r.chunk_id,
+        conversation_id: r.conversation_id,
+        project: r.project,
+        title: r.title,
+        snippet: highlightedSnippet,
+        role: r.role,
+        page: r.page_number,
+        score: r.score,
+        url: `/${r.project}/${r.conversation_id}/page-001.html`,
+      };
+    });
+
+    res.json({
+      type: result.type,
+      results: resultsWithSnippets,
+      total: resultsWithSnippets.length,
+      query_time_ms: Date.now() - startTime,
+      embedding_status: result.embeddingStatus,
+    });
+  } catch (err) {
+    console.error("Search error:", err);
+    res.status(500).json({ error: "Search failed" });
+  }
+});
+
+// Index status endpoint
+app.get("/api/index/status", (req: Request, res: Response) => {
+  try {
+    const db = getDatabase();
+    const chunkCount = db.prepare("SELECT COUNT(*) as count FROM chunks").get() as { count: number };
+    const convCount = db.prepare("SELECT COUNT(*) as count FROM conversations").get() as { count: number };
+
+    const overallStatus = archiveStatus.isGenerating
+      ? "generating"
+      : indexingStatus.isIndexing
+        ? "indexing"
+        : "ready";
+
+    res.json({
+      status: overallStatus,
+      conversations: convCount.count,
+      chunks: chunkCount.count,
+      embedding_server: embeddingClient ? "connected" : "unavailable",
+      archive: {
+        isGenerating: archiveStatus.isGenerating,
+        progress: archiveStatus.progress,
+        lastError: archiveStatus.lastError,
+        lastRun: archiveStatus.lastRun,
+      },
+      indexing: {
+        isIndexing: indexingStatus.isIndexing,
+        progress: indexingStatus.progress,
+        lastError: indexingStatus.lastError,
+        lastStats: indexingStatus.lastStats,
+      },
+    });
+  } catch (err) {
+    res.json({
+      status: "not_initialized",
+      conversations: 0,
+      chunks: 0,
+      embedding_server: "unavailable",
+      archive: archiveStatus,
+      indexing: indexingStatus,
+    });
+  }
+});
+
+// Manually trigger archive regeneration
+app.post("/api/archive/regenerate", async (req: Request, res: Response) => {
+  if (archiveStatus.isGenerating) {
+    res.status(409).json({ error: "Archive generation already in progress" });
+    return;
+  }
+
+  if (!SOURCE_DIR) {
+    res.status(400).json({ error: "No SOURCE_DIR configured" });
+    return;
+  }
+
+  // Start archive generation in background, then index
+  (async () => {
+    await generateArchive();
+    await startBackgroundIndexing();
+  })();
+
+  res.json({ status: "started", message: "Archive generation started in background" });
+});
+
+// Manually trigger re-indexing
+app.post("/api/index/reindex", async (req: Request, res: Response) => {
+  if (indexingStatus.isIndexing) {
+    res.status(409).json({ error: "Indexing already in progress" });
+    return;
+  }
+
+  if (!SOURCE_DIR) {
+    res.status(400).json({ error: "No SOURCE_DIR configured" });
+    return;
+  }
+
+  // Start indexing in background
+  startBackgroundIndexing();
+
+  res.json({ status: "started", message: "Indexing started in background" });
+});
+
+// Search results page
+app.get("/search", async (req: Request, res: Response) => {
+  const startTime = Date.now();
+
+  try {
+    const query = (req.query.q as string) || "";
+    const options: SearchOptions = {
+      project: req.query.project as string | undefined,
+      role: req.query.role as "user" | "assistant" | undefined,
+      after: req.query.after as string | undefined,
+      before: req.query.before as string | undefined,
+      limit: req.query.limit ? parseInt(req.query.limit as string, 10) : 50,
+      offset: req.query.offset ? parseInt(req.query.offset as string, 10) : 0,
+    };
+
+    const db = getDatabase();
+
+    // Get list of projects for filter dropdown
+    const projects = db.prepare(`
+      SELECT DISTINCT project FROM conversations ORDER BY project
+    `).all() as Array<{ project: string }>;
+
+    let results: Array<{
+      chunk_id: number;
+      conversation_id: string;
+      project: string;
+      title: string;
+      snippet: string;
+      role: string;
+      page: number;
+      score: number;
+      url: string;
+    }> = [];
+
+    if (query) {
+      const searchResult = await searchHybrid(query, options, embeddingClient);
+
+      results = (searchResult.results || []).map((r) => {
+        const terms = query.split(/\s+/).filter(Boolean);
+        const snippet = generateSnippet(r.content, query, 150);
+        const highlightedSnippet = highlightTerms(snippet, terms);
+
+        return {
+          chunk_id: r.chunk_id,
+          conversation_id: r.conversation_id,
+          project: r.project,
+          title: r.title,
+          snippet: highlightedSnippet,
+          role: r.role,
+          page: r.page_number,
+          score: r.score,
+          url: `/${r.project}/${r.conversation_id}/page-001.html`,
+        };
+      });
+    }
+
+    const html = renderSearchPage({
+      query,
+      results,
+      projects: projects.map((p) => p.project),
+      filters: {
+        project: options.project,
+        role: options.role,
+        after: options.after,
+        before: options.before,
+      },
+      queryTimeMs: Date.now() - startTime,
+      offset: options.offset || 0,
+      limit: options.limit || 50,
+    });
+
+    res.type("html").send(html);
+  } catch (err) {
+    console.error("Search page error:", err);
+    res.status(500).send("Search failed");
+  }
+});
+
+function renderSearchPage(data: {
+  query: string;
+  results: Array<{
+    chunk_id: number;
+    conversation_id: string;
+    project: string;
+    title: string;
+    snippet: string;
+    role: string;
+    page: number;
+    score: number;
+    url: string;
+  }>;
+  projects: string[];
+  filters: {
+    project?: string;
+    role?: string;
+    after?: string;
+    before?: string;
+  };
+  queryTimeMs: number;
+  offset: number;
+  limit: number;
+}): string {
+  const projectOptions = data.projects
+    .map(
+      (p) =>
+        `<option value="${escapeHtml(p)}"${data.filters.project === p ? " selected" : ""}>${escapeHtml(p)}</option>`
+    )
+    .join("");
+
+  const resultItems = data.results
+    .map(
+      (r) => `
+      <div class="search-result-item">
+        <a href="${escapeHtml(r.url)}">
+          <h3>${escapeHtml(r.title?.slice(0, 80) || "Untitled")}${r.title && r.title.length > 80 ? "..." : ""}</h3>
+          <div class="result-meta">
+            <span class="project">${escapeHtml(r.project)}</span>
+            <span class="role ${r.role}">${escapeHtml(r.role)}</span>
+          </div>
+          <p class="result-snippet">${r.snippet}</p>
+        </a>
+      </div>
+    `
+    )
+    .join("");
+
+  const hasMore = data.results.length === data.limit;
+  const prevOffset = Math.max(0, data.offset - data.limit);
+  const nextOffset = data.offset + data.limit;
+
+  const buildUrl = (offset: number) => {
+    const params = new URLSearchParams();
+    if (data.query) params.set("q", data.query);
+    if (data.filters.project) params.set("project", data.filters.project);
+    if (data.filters.role) params.set("role", data.filters.role);
+    if (data.filters.after) params.set("after", data.filters.after);
+    if (data.filters.before) params.set("before", data.filters.before);
+    if (offset > 0) params.set("offset", String(offset));
+    return `/search?${params.toString()}`;
+  };
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${data.query ? escapeHtml(data.query) + " - " : ""}Search - Claude Transcript Viewer</title>
+  <style>
+    :root {
+      --bg: #1a1a2e;
+      --surface: #16213e;
+      --primary: #e94560;
+      --text: #eee;
+      --text-muted: #888;
+      --border: #333;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .header {
+      background: var(--surface);
+      padding: 1rem 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .header a { color: var(--primary); text-decoration: none; }
+    .header a:hover { text-decoration: underline; }
+    .search-form {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+    .search-row {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .search-row input[type="search"] {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--text);
+    }
+    .search-row input[type="search"]:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    .search-row button {
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      background: var(--primary);
+      color: #fff;
+      cursor: pointer;
+    }
+    .search-row button:hover { opacity: 0.9; }
+    .filters {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .filters select, .filters input {
+      padding: 0.5rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.875rem;
+    }
+    .filters label {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+    .results-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem 2rem;
+    }
+    .results-info {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+    }
+    .search-result-item {
+      background: var(--surface);
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      transition: transform 0.2s;
+    }
+    .search-result-item:hover {
+      transform: translateX(4px);
+    }
+    .search-result-item a {
+      display: block;
+      padding: 1rem 1.5rem;
+      text-decoration: none;
+      color: inherit;
+    }
+    .search-result-item h3 {
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+    .result-meta {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .result-meta span {
+      font-size: 0.75rem;
+      padding: 0.125rem 0.5rem;
+      border-radius: 4px;
+    }
+    .result-meta .project {
+      background: rgba(233, 69, 96, 0.2);
+      color: var(--primary);
+    }
+    .result-meta .role {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-muted);
+    }
+    .result-meta .role.user { color: #64b5f6; }
+    .result-meta .role.assistant { color: #81c784; }
+    .result-snippet {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+    .result-snippet strong {
+      color: var(--primary);
+      font-weight: normal;
+      background: rgba(233, 69, 96, 0.2);
+      padding: 0 2px;
+      border-radius: 2px;
+    }
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .pagination a {
+      padding: 0.5rem 1rem;
+      background: var(--surface);
+      color: var(--text);
+      text-decoration: none;
+      border-radius: 4px;
+    }
+    .pagination a:hover { background: rgba(255,255,255,0.1); }
+    .pagination a.disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+    .no-results {
+      text-align: center;
+      padding: 3rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <a href="/">← Back to Home</a>
+  </div>
+
+  <form class="search-form" method="GET" action="/search">
+    <div class="search-row">
+      <input type="search" name="q" value="${escapeHtml(data.query)}" placeholder="Search conversations..." autofocus />
+      <button type="submit">Search</button>
+    </div>
+    <div class="filters">
+      <div>
+        <label>Project</label>
+        <select name="project">
+          <option value="">All projects</option>
+          ${projectOptions}
+        </select>
+      </div>
+      <div>
+        <label>Role</label>
+        <select name="role">
+          <option value="">All roles</option>
+          <option value="user"${data.filters.role === "user" ? " selected" : ""}>User</option>
+          <option value="assistant"${data.filters.role === "assistant" ? " selected" : ""}>Assistant</option>
+        </select>
+      </div>
+      <div>
+        <label>After</label>
+        <input type="date" name="after" value="${escapeHtml(data.filters.after || "")}" />
+      </div>
+      <div>
+        <label>Before</label>
+        <input type="date" name="before" value="${escapeHtml(data.filters.before || "")}" />
+      </div>
+    </div>
+  </form>
+
+  <div class="results-container">
+    ${
+      data.query
+        ? `<p class="results-info">${data.results.length} results for "${escapeHtml(data.query)}" (${data.queryTimeMs}ms)</p>`
+        : `<p class="results-info">Enter a search query above</p>`
+    }
+
+    ${
+      data.results.length > 0
+        ? resultItems
+        : data.query
+          ? `<div class="no-results"><p>No results found for "${escapeHtml(data.query)}"</p></div>`
+          : ""
+    }
+
+    ${
+      data.query && (data.offset > 0 || hasMore)
+        ? `
+      <div class="pagination">
+        <a href="${buildUrl(prevOffset)}" class="${data.offset === 0 ? "disabled" : ""}">← Previous</a>
+        <a href="${buildUrl(nextOffset)}" class="${!hasMore ? "disabled" : ""}">Next →</a>
+      </div>
+    `
+        : ""
+    }
+  </div>
+</body>
+</html>`;
+}
+
+// Landing page
+app.get("/", async (req: Request, res: Response) => {
+  try {
+    const db = getDatabase();
+
+    // Get project stats
+    const projects = db.prepare(`
+      SELECT project, COUNT(*) as count, MAX(created_at) as last_updated
+      FROM conversations
+      GROUP BY project
+      ORDER BY last_updated DESC
+    `).all() as Array<{ project: string; count: number; last_updated: string }>;
+
+    // Get recent conversations
+    const recentConversations = db.prepare(`
+      SELECT id, project, title, created_at
+      FROM conversations
+      ORDER BY created_at DESC
+      LIMIT 10
+    `).all() as Array<{ id: string; project: string; title: string; created_at: string }>;
+
+    // Get index stats
+    const chunkCount = db.prepare("SELECT COUNT(*) as count FROM chunks").get() as { count: number };
+
+    const html = renderLandingPage({
+      projects,
+      recentConversations,
+      chunkCount: chunkCount.count,
+      embeddingStatus: embeddingClient ? "connected" : "unavailable",
+    });
+
+    res.type("html").send(html);
+  } catch (err) {
+    // Database not initialized - show setup instructions
+    res.type("html").send(renderSetupPage());
+  }
+});
+
+function renderLandingPage(data: {
+  projects: Array<{ project: string; count: number; last_updated: string }>;
+  recentConversations: Array<{ id: string; project: string; title: string; created_at: string }>;
+  chunkCount: number;
+  embeddingStatus: string;
+}): string {
+  const projectCards = data.projects
+    .map(
+      (p) => `
+      <a href="/${escapeHtml(p.project)}/" class="project-card">
+        <h3>${escapeHtml(p.project)}</h3>
+        <p>${p.count} conversations</p>
+        <small>Updated: ${new Date(p.last_updated).toLocaleDateString()}</small>
+      </a>
+    `
+    )
+    .join("");
+
+  const recentList = data.recentConversations
+    .map(
+      (c) => `
+      <li>
+        <a href="/${escapeHtml(c.project)}/${escapeHtml(c.id)}/page-001.html">
+          <strong>${escapeHtml(c.title?.slice(0, 60) || "Untitled")}${c.title && c.title.length > 60 ? "..." : ""}</strong>
+          <span class="meta">${escapeHtml(c.project)} - ${new Date(c.created_at).toLocaleDateString()}</span>
+        </a>
+      </li>
+    `
+    )
+    .join("");
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Transcript Viewer</title>
+  <style>
+    :root {
+      --bg: #1a1a2e;
+      --surface: #16213e;
+      --primary: #e94560;
+      --text: #eee;
+      --text-muted: #888;
+      --border: #333;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 { margin-bottom: 0.5rem; }
+    .status {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      margin-bottom: 2rem;
+    }
+    .status .dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 4px;
+    }
+    .status .dot.green { background: #4caf50; }
+    .status .dot.yellow { background: #ff9800; }
+    .search-container {
+      margin-bottom: 2rem;
+    }
+    #search-input {
+      width: 100%;
+      padding: 1rem;
+      font-size: 1.1rem;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--text);
+    }
+    #search-input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    #search-results {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-top: 0.5rem;
+      display: none;
+    }
+    #search-results.visible { display: block; }
+    .search-result {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+    }
+    .search-result:hover { background: rgba(255,255,255,0.05); }
+    .search-result:last-child { border-bottom: none; }
+    .search-result h4 { margin-bottom: 0.25rem; }
+    .search-result .snippet { color: var(--text-muted); font-size: 0.875rem; }
+    .search-result .snippet strong { color: var(--primary); }
+    h2 { margin: 2rem 0 1rem; color: var(--text-muted); font-size: 0.875rem; text-transform: uppercase; }
+    .projects {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .project-card {
+      background: var(--surface);
+      padding: 1.5rem;
+      border-radius: 8px;
+      text-decoration: none;
+      color: var(--text);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .project-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .project-card h3 { margin-bottom: 0.5rem; }
+    .project-card p { color: var(--text-muted); }
+    .project-card small { color: var(--text-muted); font-size: 0.75rem; }
+    .recent-list {
+      list-style: none;
+    }
+    .recent-list li {
+      margin-bottom: 0.75rem;
+    }
+    .recent-list a {
+      display: block;
+      padding: 1rem;
+      background: var(--surface);
+      border-radius: 8px;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .recent-list a:hover { background: rgba(255,255,255,0.05); }
+    .recent-list .meta {
+      display: block;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Claude Transcript Viewer</h1>
+  <p class="status">
+    <span class="dot green"></span> ${data.chunkCount.toLocaleString()} chunks indexed
+    <span style="margin-left: 1rem;">
+      <span class="dot ${data.embeddingStatus === "connected" ? "green" : "yellow"}"></span>
+      Embeddings: ${data.embeddingStatus}
+    </span>
+  </p>
+
+  <div class="search-container">
+    <input type="search" id="search-input" placeholder="Search conversations..." autocomplete="off" />
+    <div id="search-results"></div>
+  </div>
+
+  <h2>Projects</h2>
+  <div class="projects">
+    ${projectCards || "<p>No projects indexed yet.</p>"}
+  </div>
+
+  <h2>Recent Conversations</h2>
+  <ul class="recent-list">
+    ${recentList || "<li>No conversations indexed yet.</li>"}
+  </ul>
+
+  <script>
+    const input = document.getElementById('search-input');
+    const resultsContainer = document.getElementById('search-results');
+    let debounceTimer;
+
+    input.addEventListener('input', () => {
+      clearTimeout(debounceTimer);
+      const q = input.value.trim();
+      if (!q) {
+        resultsContainer.classList.remove('visible');
+        return;
+      }
+      debounceTimer = setTimeout(() => search(q), 200);
+    });
+
+    async function search(q) {
+      try {
+        const res = await fetch('/api/search?q=' + encodeURIComponent(q) + '&limit=5');
+        const data = await res.json();
+
+        // Clear previous results using safe DOM manipulation
+        resultsContainer.textContent = '';
+
+        if (data.results && data.results.length > 0) {
+          data.results.forEach(r => {
+            const div = document.createElement('div');
+            div.className = 'search-result';
+            div.onclick = () => window.location.href = r.url;
+
+            const title = document.createElement('h4');
+            title.textContent = r.title || 'Untitled';
+            div.appendChild(title);
+
+            const snippet = document.createElement('p');
+            snippet.className = 'snippet';
+            // Snippet contains server-sanitized markdown bold (**text**), render as HTML
+            snippet.textContent = r.snippet.replace(/\\*\\*/g, '');
+            div.appendChild(snippet);
+
+            resultsContainer.appendChild(div);
+          });
+
+          // Add "view all" link
+          const viewAll = document.createElement('div');
+          viewAll.className = 'search-result';
+          viewAll.onclick = () => window.location.href = '/search?q=' + encodeURIComponent(q);
+          const em = document.createElement('em');
+          em.textContent = 'View all results for "' + q + '"';
+          viewAll.appendChild(em);
+          resultsContainer.appendChild(viewAll);
+
+          resultsContainer.classList.add('visible');
+        } else {
+          const noResults = document.createElement('div');
+          noResults.className = 'search-result';
+          const em = document.createElement('em');
+          em.textContent = 'No results found';
+          noResults.appendChild(em);
+          resultsContainer.appendChild(noResults);
+          resultsContainer.classList.add('visible');
+        }
+      } catch (err) {
+        console.error('Search failed:', err);
+      }
+    }
+  </script>
+</body>
+</html>`;
+}
+
+function renderSetupPage(): string {
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Claude Transcript Viewer - Setup</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #1a1a2e;
+      color: #eee;
+      padding: 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    h1 { margin-bottom: 1rem; }
+    pre {
+      background: #16213e;
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+    code { color: #e94560; }
+  </style>
+</head>
+<body>
+  <h1>Welcome to Claude Transcript Viewer</h1>
+  <p>To get started, index your transcripts:</p>
+  <pre><code>npm run index /path/to/transcripts ./search.db</code></pre>
+  <p>Then restart the server with the database path:</p>
+  <pre><code>DATABASE_PATH=./search.db npm run dev /path/to/archive</code></pre>
+</body>
+</html>`;
+}
+
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+// Initialize search on startup
+initializeSearch();
+
 app.listen(PORT, () => {
   console.log(`
 Claude Transcript Viewer running at http://localhost:${PORT}
 
 Serving archive from: ${ARCHIVE_DIR}
+Source directory: ${SOURCE_DIR || "(not configured)"}
 
 Usage:
   npm run dev                    # Development mode with hot reload
   npm run dev -- /path/to/archive  # Specify archive directory
+  npm run dev -- /archive /source  # Specify both archive and source directory
 
 Open http://localhost:${PORT} to browse transcripts.
 `);
+
+  // Start background archive generation and indexing after server is ready (non-blocking)
+  if (SOURCE_DIR) {
+    setTimeout(async () => {
+      // First generate HTML archive from JSONL files
+      await generateArchive();
+      // Then index for search
+      await startBackgroundIndexing();
+    }, 1000);
+  }
 });

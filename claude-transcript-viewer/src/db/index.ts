@@ -1,5 +1,6 @@
 import Database from 'better-sqlite3';
-import { SCHEMA_SQL, SCHEMA_VERSION, FTS_TABLE_SQL, TRIGGER_SQL } from './schema.js';
+import * as sqliteVec from 'sqlite-vec';
+import { SCHEMA_SQL, SCHEMA_VERSION, FTS_TABLE_SQL, VEC_TABLE_SQL, TRIGGER_SQL } from './schema.js';
 
 let db: Database.Database | null = null;
 
@@ -8,10 +9,15 @@ export function createDatabase(dbPath: string): Database.Database {
     db.close();
   }
   db = new Database(dbPath);
+
+  // Load sqlite-vec extension for vector search
+  sqliteVec.load(db);
+
   db.pragma('journal_mode = WAL');
   db.pragma('foreign_keys = ON');
   db.exec(SCHEMA_SQL);
   db.exec(FTS_TABLE_SQL);
+  db.exec(VEC_TABLE_SQL);
   db.exec(TRIGGER_SQL);
   db.prepare('INSERT OR REPLACE INTO metadata (key, value) VALUES (?, ?)')
     .run('schema_version', String(SCHEMA_VERSION));

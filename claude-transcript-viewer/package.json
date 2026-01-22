@@ -8,6 +8,7 @@
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
+    "index": "tsx src/indexer/index.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage"
@@ -26,6 +27,7 @@
     "better-sqlite3": "^12.6.2",
     "cheerio": "^1.1.2",
     "express": "^5.2.1",
+    "sqlite-vec": "^0.1.7-alpha.2",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   },

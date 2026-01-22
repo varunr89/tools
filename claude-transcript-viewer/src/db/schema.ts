@@ -44,17 +44,29 @@ CREATE VIRTUAL TABLE IF NOT EXISTS chunks_fts USING fts5(
 );
 `;
 
+// Vector table for semantic search (2048 dimensions for qwen3-medium model)
+export const VEC_TABLE_SQL = `
+CREATE VIRTUAL TABLE IF NOT EXISTS chunks_vec USING vec0(
+  embedding float[2048]
+);
+`;
+
 export const TRIGGER_SQL = `
+-- FTS sync triggers
 CREATE TRIGGER IF NOT EXISTS chunks_ai AFTER INSERT ON chunks BEGIN
   INSERT INTO chunks_fts(rowid, content) VALUES (NEW.id, NEW.content);
+  INSERT INTO chunks_vec(rowid, embedding) SELECT NEW.id, NEW.embedding WHERE NEW.embedding IS NOT NULL;
 END;
 
 CREATE TRIGGER IF NOT EXISTS chunks_ad AFTER DELETE ON chunks BEGIN
   INSERT INTO chunks_fts(chunks_fts, rowid, content) VALUES('delete', OLD.id, OLD.content);
+  DELETE FROM chunks_vec WHERE rowid = OLD.id;
 END;
 
 CREATE TRIGGER IF NOT EXISTS chunks_au AFTER UPDATE ON chunks BEGIN
   INSERT INTO chunks_fts(chunks_fts, rowid, content) VALUES('delete', OLD.id, OLD.content);
   INSERT INTO chunks_fts(rowid, content) VALUES (NEW.id, NEW.content);
+  DELETE FROM chunks_vec WHERE rowid = OLD.id;
+  INSERT INTO chunks_vec(rowid, embedding) SELECT NEW.id, NEW.embedding WHERE NEW.embedding IS NOT NULL;
 END;
 `;
