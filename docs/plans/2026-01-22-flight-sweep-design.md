@@ -88,15 +88,42 @@ For each (depart_date, europe_nights, india_nights):
 - If both fail for a leg, mark scenario as "incomplete"
 - Never mix one-way and round-trip pricing within a strategy
 
+## Architecture: Two-Phase Approach
+
+### Phase 1: Data Collection (`flight_sweep_collect.py`)
+
+Fetches and caches raw API responses. Run once.
+
+```
+flight_cache/
+  ├── google_SEA_MXP_2026-04-25.json
+  ├── duffel_SEA_MXP_2026-04-25.json
+  ├── duffel_rt_SEA_MXP_2026-04-25_2026-05-25.json
+  └── ...
+```
+
+- Fetches all routes/dates from both sources
+- Saves raw API responses (no filtering applied)
+- ~50-70 cache files
+- Rate limiting: Duffel 0.5s delay, Google as-needed
+
+### Phase 2: Analysis (`flight_sweep_analyze.py`)
+
+Reads cached data, applies filters, scores scenarios. Run repeatedly.
+
+- No API calls - pure local processing
+- Applies constraints (stops, layover, carrier)
+- Builds all 90 scenarios from cached data
+- Scores and ranks results
+- Can tweak constraints and re-run instantly
+
+### Benefits
+- Change filters without re-fetching (saves time, avoids rate limits)
+- Debug data issues by inspecting raw cache
+- Re-analyze with different parameters (e.g., "what if max layover was 6 hours?")
+- Experiment with different scoring weights
+
 ## Implementation Details
-
-### API Rate Limiting
-- Duffel: 0.5s delay between requests
-- Google: No explicit limit, may fail intermittently
-
-### Caching
-- Cache API responses by (origin, dest, date, trip_type)
-- Same route/date appears in multiple scenarios
 
 ### Layover Validation
 - Duffel: Use segment data to calculate layover duration
@@ -104,10 +131,11 @@ For each (depart_date, europe_nights, india_nights):
 - Flag flights where layover can't be verified
 
 ### Output Files
-1. `flight_sweep_results.json` - Raw data for all 90 scenarios
-2. `flight_sweep_viewer.html` - Interactive table with sorting/filtering
-3. Console summary of top 10
+1. `flight_cache/*.json` - Raw API responses
+2. `flight_sweep_results.json` - Analyzed scenarios
+3. `flight_sweep_viewer.html` - Interactive table with sorting/filtering
+4. Console summary of top 10
 
-### Estimated API Calls
-- ~50-70 unique searches after caching
+### Estimated API Calls (Phase 1)
+- ~50-70 unique searches
 - Estimated runtime: 2-3 minutes
