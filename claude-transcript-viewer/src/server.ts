@@ -367,7 +367,8 @@ const INJECTED_JS = `
     if (container) {
       const loader = document.createElement('div');
       loader.id = 'infinite-scroll-loader';
-      if (pagination) {
+      // Only use insertBefore if pagination is a direct child of container
+      if (pagination && pagination.parentNode === container) {
         container.insertBefore(loader, pagination);
         pagination.style.display = 'none'; // Hide pagination
       } else {
@@ -416,6 +417,17 @@ const INJECTED_JS = `
       debounceTimer = setTimeout(() => performSearch(q), 200);
     });
 
+    // Handle Enter key to go to full search page
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const q = searchInput.value.trim();
+        if (q) {
+          window.location.href = '/search?q=' + encodeURIComponent(q);
+        }
+      }
+    });
+
     // Close dropdown when clicking outside
     document.addEventListener('click', (e) => {
       if (!e.target.closest('.viewer-search-bar')) {
@@ -441,7 +453,8 @@ const INJECTED_JS = `
             item.appendChild(title);
 
             const snippet = document.createElement('p');
-            snippet.textContent = r.snippet.replace(/\\*\\*/g, '');
+            // Safe: server escapes content before adding <strong> tags
+            snippet.innerHTML = r.snippet;
             item.appendChild(snippet);
 
             dropdown.appendChild(item);
@@ -579,7 +592,7 @@ app.get("/api/search", async (req: Request, res: Response) => {
         role: r.role,
         page: r.page_number,
         score: r.score,
-        url: `/${r.project}/${r.conversation_id}/page-001.html`,
+        url: `/${projectToArchivePath(r.project)}/${r.conversation_id}/page-001.html`,
       };
     });
 
@@ -729,7 +742,7 @@ app.get("/search", async (req: Request, res: Response) => {
           role: r.role,
           page: r.page_number,
           score: r.score,
-          url: `/${r.project}/${r.conversation_id}/page-001.html`,
+          url: `/${projectToArchivePath(r.project)}/${r.conversation_id}/page-001.html`,
         };
       });
     }
@@ -1300,8 +1313,8 @@ function renderLandingPage(data: {
 
             const snippet = document.createElement('p');
             snippet.className = 'snippet';
-            // Snippet contains server-sanitized markdown bold (**text**), render as HTML
-            snippet.textContent = r.snippet.replace(/\\*\\*/g, '');
+            // Safe: server escapes content before adding <strong> tags
+            snippet.innerHTML = r.snippet;
             div.appendChild(snippet);
 
             resultsContainer.appendChild(div);
@@ -1377,6 +1390,26 @@ function escapeHtml(str: string): string {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
+}
+
+/**
+ * Convert database project slug to archive directory name.
+ * Database stores path-based slugs like "-Users-varunr-projects-tools"
+ * Archive uses the last segment of the original path like "tools"
+ */
+function projectToArchivePath(project: string): string {
+  // If it doesn't start with "-", it's already a simple name
+  if (!project.startsWith("-")) {
+    return project;
+  }
+
+  // Convert slug back to path: -Users-varunr-projects-tools -> /Users/varunr/projects/tools
+  // Strategy: split on common directory names and take the last segment
+  const pathLike = project.replace(/^-/, "/").replace(/-/g, "/");
+  const segments = pathLike.split("/").filter(Boolean);
+
+  // Return the last segment as the archive directory name
+  return segments[segments.length - 1] || project;
 }
 
 // Initialize search on startup
