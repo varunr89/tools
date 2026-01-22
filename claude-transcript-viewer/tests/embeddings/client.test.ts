@@ -79,7 +79,7 @@ describe('EmbeddingClient', () => {
 
   describe('embed single text', () => {
     it('returns embedding vector for text', async () => {
-      const mockEmbedding = Array(2048).fill(0.1);
+      const mockEmbedding = Array(1024).fill(0.1);
       await createMockServer((req, res) => {
         if (req.url === '/embed' && req.method === 'POST') {
           let body = '';
@@ -100,7 +100,7 @@ describe('EmbeddingClient', () => {
       client = createEmbeddingClient(socketPath);
       const result = await client.embed('hello world');
       expect(result).not.toBeNull();
-      expect(result!.embedding).toHaveLength(2048);
+      expect(result!.embedding).toHaveLength(1024);
       expect(result!.tokens).toBe(2);
     });
 
@@ -113,7 +113,7 @@ describe('EmbeddingClient', () => {
 
   describe('batch embed', () => {
     it('returns embeddings for multiple texts', async () => {
-      const mockEmbedding = Array(2048).fill(0.1);
+      const mockEmbedding = Array(1024).fill(0.1);
       await createMockServer((req, res) => {
         if (req.url === '/embed/batch' && req.method === 'POST') {
           let body = '';
@@ -136,7 +136,7 @@ describe('EmbeddingClient', () => {
       client = createEmbeddingClient(socketPath);
       const results = await client.embedBatch(['hello', 'world test', 'foo']);
       expect(results).toHaveLength(3);
-      expect(results![0].embedding).toHaveLength(2048);
+      expect(results![0].embedding).toHaveLength(1024);
       expect(results![1].tokens).toBe(2);
     });
 
@@ -168,7 +168,7 @@ describe('EmbeddingClient', () => {
             JSON.stringify({
               status: 'ok',
               model: 'qwen3-medium',
-              dim: 2048,
+              dim: 1024,
             })
           );
         }
@@ -178,7 +178,7 @@ describe('EmbeddingClient', () => {
       const info = await client.getModelInfo();
       expect(info).toEqual({
         model: 'qwen3-medium',
-        dim: 2048,
+        dim: 1024,
       });
     });
 

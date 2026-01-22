@@ -22,8 +22,8 @@ const defaults: Config = {
   PYTHON_CMD: 'python3',
   CHUNK_SIZE: 300,
   CHUNK_OVERLAP: 50,
-  EMBEDDING_MODEL: 'qwen3-medium',
-  EMBEDDING_DIM: 2048,
+  EMBEDDING_MODEL: 'qwen3-small',
+  EMBEDDING_DIM: 1024,
 };
 
 // Helper to parse integer env vars with NaN fallback to default

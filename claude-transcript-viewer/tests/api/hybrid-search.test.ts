@@ -29,11 +29,11 @@ describe('Hybrid Search', () => {
     mockEmbeddingClient = {
       isHealthy: vi.fn().mockResolvedValue(true),
       embed: vi.fn().mockResolvedValue({
-        embedding: Array(2048).fill(0.1),
+        embedding: Array(1024).fill(0.1),
         tokens: 2,
       } as EmbeddingResponse),
       embedBatch: vi.fn().mockResolvedValue([]),
-      getModelInfo: vi.fn().mockResolvedValue({ model: 'test', dim: 2048 }),
+      getModelInfo: vi.fn().mockResolvedValue({ model: 'test', dim: 1024 }),
       close: vi.fn(),
     };
   });
@@ -44,8 +44,8 @@ describe('Hybrid Search', () => {
   });
 
   function createEmbedding(seed: number): Buffer {
-    const embedding = new Float32Array(2048);
-    for (let i = 0; i < 2048; i++) {
+    const embedding = new Float32Array(1024);
+    for (let i = 0; i < 1024; i++) {
       embedding[i] = Math.sin(seed + i * 0.1);
     }
     return Buffer.from(embedding.buffer);

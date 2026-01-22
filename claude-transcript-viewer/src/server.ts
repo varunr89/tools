@@ -143,6 +143,7 @@ async function startBackgroundIndexing() {
       sourceDir: SOURCE_DIR,
       databasePath: DATABASE_PATH,
       embedSocketPath: process.env.EMBED_SOCKET,
+      embedUrl: process.env.EMBED_URL,
       verbose: false,
     });
 
@@ -237,7 +238,7 @@ function buildProjectMapping() {
   console.log(`Built project mapping: ${projectToArchiveMap.size} projects mapped to archive directories`);
 }
 
-function initializeSearch() {
+async function initializeSearch() {
   try {
     createDatabase(DATABASE_PATH);
     console.log(`Search database initialized at ${DATABASE_PATH}`);
@@ -245,13 +246,28 @@ function initializeSearch() {
     // Build project to archive directory mapping
     buildProjectMapping();
 
-    // Try to connect to embedding server
+    // Try to connect to embedding server (HTTP URL or Unix socket)
+    const embedUrl = process.env.EMBED_URL; // e.g., http://localhost:8000
     const socketPath = process.env.EMBED_SOCKET || "/tmp/qwen-embed.sock";
-    if (existsSync(socketPath)) {
+
+    if (embedUrl) {
+      // HTTP endpoint (e.g., qwen3-embeddings-mlx)
+      embeddingClient = createEmbeddingClient(embedUrl);
+      const healthy = await embeddingClient.isHealthy();
+      if (healthy) {
+        const info = await embeddingClient.getModelInfo();
+        console.log(`Embedding client connected to ${embedUrl} (model: ${info?.model}, dim: ${info?.dim})`);
+      } else {
+        console.log(`Embedding server at ${embedUrl} not responding - using FTS-only search`);
+        embeddingClient = undefined;
+      }
+    } else if (existsSync(socketPath)) {
+      // Unix socket
       embeddingClient = createEmbeddingClient(socketPath);
       console.log(`Embedding client connected to ${socketPath}`);
     } else {
-      console.log(`Embedding server not found at ${socketPath} - using FTS-only search`);
+      console.log(`Embedding server not found - using FTS-only search`);
+      console.log(`  Set EMBED_URL=http://localhost:8000 for HTTP or EMBED_SOCKET for Unix socket`);
     }
   } catch (err) {
     console.error("Failed to initialize search database:", err);
@@ -688,7 +704,8 @@ app.use(express.static(ARCHIVE_DIR, { index: false }));
 
 // Serve project directory index.html files (since we disabled automatic index serving)
 app.get("/:project/", (req: Request, res: Response) => {
-  const projectDir = join(ARCHIVE_DIR, req.params.project);
+  const project = req.params.project as string;
+  const projectDir = join(ARCHIVE_DIR, project);
   const indexPath = resolve(projectDir, "index.html");
 
   if (existsSync(indexPath)) {

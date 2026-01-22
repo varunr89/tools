@@ -28,8 +28,8 @@ describe('Vector Search', () => {
   });
 
   function createEmbedding(seed: number): Buffer {
-    const embedding = new Float32Array(2048);
-    for (let i = 0; i < 2048; i++) {
+    const embedding = new Float32Array(1024);
+    for (let i = 0; i < 1024; i++) {
       embedding[i] = Math.sin(seed + i * 0.1);
     }
     return Buffer.from(embedding.buffer);

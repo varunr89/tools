@@ -132,9 +132,9 @@ describe('Database Schema', () => {
     createDatabase(TEST_DB);
     const db = getDatabase();
 
-    // Create a sample embedding (2048 dimensions as specified in design)
-    const embedding = new Float32Array(2048);
-    for (let i = 0; i < 2048; i++) {
+    // Create a sample embedding (1024 dimensions as specified in design)
+    const embedding = new Float32Array(1024);
+    for (let i = 0; i < 1024; i++) {
       embedding[i] = Math.random();
     }
 
@@ -151,9 +151,9 @@ describe('Database Schema', () => {
     const db = getDatabase();
 
     // Create two embeddings
-    const embedding1 = new Float32Array(2048).fill(0.1);
-    const embedding2 = new Float32Array(2048).fill(0.9);
-    const queryVec = new Float32Array(2048).fill(0.1); // Similar to embedding1
+    const embedding1 = new Float32Array(1024).fill(0.1);
+    const embedding2 = new Float32Array(1024).fill(0.9);
+    const queryVec = new Float32Array(1024).fill(0.1); // Similar to embedding1
 
     db.prepare("INSERT INTO conversations (id, project, file_path, content_hash, source_mtime) VALUES ('c1', 'p', '/f', 'h', 1000)").run();
     db.prepare("INSERT INTO chunks (conversation_id, chunk_index, role, content, embedding) VALUES ('c1', 0, 'user', 'first', ?)").run(Buffer.from(embedding1.buffer));

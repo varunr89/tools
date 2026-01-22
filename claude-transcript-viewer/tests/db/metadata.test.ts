@@ -38,8 +38,8 @@ describe('Metadata Operations', () => {
 
   it('should track embedding model and dimension for reindex detection', () => {
     setMetadata('embedding_model', 'qwen3-medium');
-    setMetadata('embedding_dim', '2048');
+    setMetadata('embedding_dim', '1024');
     expect(getMetadata('embedding_model')).toBe('qwen3-medium');
-    expect(getMetadata('embedding_dim')).toBe('2048');
+    expect(getMetadata('embedding_dim')).toBe('1024');
   });
 });

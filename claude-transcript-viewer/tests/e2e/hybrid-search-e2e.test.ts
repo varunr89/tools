@@ -25,8 +25,8 @@ describe('E2E: Hybrid Search Pipeline', () => {
   });
 
   function createEmbedding(seed: number): Buffer {
-    const embedding = new Float32Array(2048);
-    for (let i = 0; i < 2048; i++) {
+    const embedding = new Float32Array(1024);
+    for (let i = 0; i < 1024; i++) {
       embedding[i] = Math.sin(seed + i * 0.1);
     }
     return Buffer.from(embedding.buffer);
@@ -202,7 +202,7 @@ describe('E2E: Hybrid Search Pipeline', () => {
       const content = 'useState manages local state';
       const highlighted = highlightTerms(content, ['useState']);
 
-      expect(highlighted).toContain('**useState**');
+      expect(highlighted).toContain('<strong>useState</strong>');
     });
   });
 

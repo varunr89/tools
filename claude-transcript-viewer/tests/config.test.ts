@@ -16,7 +16,7 @@ describe('Configuration', () => {
     const config = getConfig();
     expect(config.CHUNK_SIZE).toBe(300);
     expect(config.CHUNK_OVERLAP).toBe(50);
-    expect(config.EMBEDDING_DIM).toBe(2048);
+    expect(config.EMBEDDING_DIM).toBe(1024);
   });
 
   it('should load configuration from environment', () => {
@@ -49,7 +49,7 @@ describe('Configuration', () => {
       CHUNK_SIZE: 300,
       CHUNK_OVERLAP: 50,
       EMBEDDING_MODEL: 'qwen3-medium',
-      EMBEDDING_DIM: 2048,
+      EMBEDDING_DIM: 1024,
     };
 
     const errors = validateConfig(config);
@@ -68,7 +68,7 @@ describe('Configuration', () => {
       CHUNK_SIZE: 300,
       CHUNK_OVERLAP: 50,
       EMBEDDING_MODEL: 'qwen3-medium',
-      EMBEDDING_DIM: 2048,
+      EMBEDDING_DIM: 1024,
     };
 
     const errors = validateConfig(config);

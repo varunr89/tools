@@ -44,10 +44,12 @@ CREATE VIRTUAL TABLE IF NOT EXISTS chunks_fts USING fts5(
 );
 `;
 
-// Vector table for semantic search (2048 dimensions for qwen3-medium model)
+// Vector table for semantic search
+// Dimensions: 1024 for qwen3-small, 2048 for qwen3-medium, 4096 for qwen3-large
+// Using 1024 as default (small model is fastest)
 export const VEC_TABLE_SQL = `
 CREATE VIRTUAL TABLE IF NOT EXISTS chunks_vec USING vec0(
-  embedding float[2048]
+  embedding float[1024]
 );
 `;
 

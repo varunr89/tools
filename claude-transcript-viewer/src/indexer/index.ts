@@ -16,6 +16,7 @@ export interface IndexOptions {
   sourceDir: string;
   databasePath: string;
   embedSocketPath?: string;
+  embedUrl?: string;
   batchSize?: number;
   verbose?: boolean;
 }
@@ -179,6 +180,7 @@ export async function runIndexer(options: IndexOptions): Promise<IndexStats> {
     sourceDir,
     databasePath,
     embedSocketPath,
+    embedUrl,
     batchSize = 10,
     verbose = false,
   } = options;
@@ -195,15 +197,17 @@ export async function runIndexer(options: IndexOptions): Promise<IndexStats> {
   createDatabase(databasePath);
   const db = getDatabase();
 
-  // Connect to embedding server if available
+  // Connect to embedding server if available (prefer URL over socket path)
   let embeddingClient: EmbeddingClient | undefined;
-  if (embedSocketPath) {
-    embeddingClient = createEmbeddingClient(embedSocketPath);
+  const embedEndpoint = embedUrl || embedSocketPath;
+  if (embedEndpoint) {
+    embeddingClient = createEmbeddingClient(embedEndpoint);
     const healthy = await embeddingClient.isHealthy();
     if (healthy) {
-      console.log(`Connected to embedding server at ${embedSocketPath}`);
+      const info = await embeddingClient.getModelInfo();
+      console.log(`Connected to embedding server at ${embedEndpoint} (model: ${info?.model}, dim: ${info?.dim})`);
     } else {
-      console.log(`Embedding server not available - indexing without embeddings`);
+      console.log(`Embedding server not available at ${embedEndpoint} - indexing without embeddings`);
       embeddingClient = undefined;
     }
   }

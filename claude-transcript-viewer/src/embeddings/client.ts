@@ -1,5 +1,4 @@
 import * as http from 'http';
-import * as net from 'net';
 
 export interface EmbeddingResponse {
   embedding: number[];
@@ -20,7 +19,9 @@ export interface EmbeddingClient {
 }
 
 interface RequestOptions {
-  socketPath: string;
+  socketPath?: string;
+  hostname?: string;
+  port?: number;
   path: string;
   method: string;
   body?: string;
@@ -32,29 +33,35 @@ async function makeRequest(options: RequestOptions): Promise<{
   body: string;
 } | null> {
   return new Promise((resolve) => {
-    const { socketPath, path, method, body, timeout = 5000 } = options;
+    const { socketPath, hostname, port, path, method, body, timeout = 5000 } = options;
 
-    const req = http.request(
-      {
-        socketPath,
-        path,
-        method,
-        headers: body
-          ? {
-              'Content-Type': 'application/json',
-              'Content-Length': Buffer.byteLength(body),
-            }
-          : {},
-        timeout,
-      },
-      (res) => {
-        let responseBody = '';
-        res.on('data', (chunk) => (responseBody += chunk));
-        res.on('end', () => {
-          resolve({ statusCode: res.statusCode || 0, body: responseBody });
-        });
-      }
-    );
+    const reqOptions: http.RequestOptions = {
+      path,
+      method,
+      headers: body
+        ? {
+            'Content-Type': 'application/json',
+            'Content-Length': Buffer.byteLength(body),
+          }
+        : {},
+      timeout,
+    };
+
+    // Support both Unix socket and HTTP
+    if (socketPath) {
+      reqOptions.socketPath = socketPath;
+    } else if (hostname && port) {
+      reqOptions.hostname = hostname;
+      reqOptions.port = port;
+    }
+
+    const req = http.request(reqOptions, (res) => {
+      let responseBody = '';
+      res.on('data', (chunk) => (responseBody += chunk));
+      res.on('end', () => {
+        resolve({ statusCode: res.statusCode || 0, body: responseBody });
+      });
+    });
 
     req.on('error', () => resolve(null));
     req.on('timeout', () => {
@@ -70,17 +77,39 @@ async function makeRequest(options: RequestOptions): Promise<{
 }
 
 class EmbeddingClientImpl implements EmbeddingClient {
-  private socketPath: string;
+  private socketPath?: string;
+  private hostname?: string;
+  private port?: number;
   private timeout: number;
+  private batchEndpoint: string;
 
-  constructor(socketPath: string, timeout = 5000) {
-    this.socketPath = socketPath;
+  constructor(endpoint: string, timeout = 5000) {
     this.timeout = timeout;
+
+    // Parse endpoint - could be Unix socket path or HTTP URL
+    if (endpoint.startsWith('http://')) {
+      const url = new URL(endpoint);
+      this.hostname = url.hostname;
+      this.port = parseInt(url.port) || 8000;
+      // qwen3-embeddings-mlx uses /embed_batch, not /embed/batch
+      this.batchEndpoint = '/embed_batch';
+    } else {
+      // Unix socket path
+      this.socketPath = endpoint;
+      this.batchEndpoint = '/embed/batch';
+    }
+  }
+
+  private getRequestBase(): Pick<RequestOptions, 'socketPath' | 'hostname' | 'port'> {
+    if (this.socketPath) {
+      return { socketPath: this.socketPath };
+    }
+    return { hostname: this.hostname, port: this.port };
   }
 
   async isHealthy(): Promise<boolean> {
     const result = await makeRequest({
-      socketPath: this.socketPath,
+      ...this.getRequestBase(),
       path: '/health',
       method: 'GET',
       timeout: this.timeout,
@@ -91,7 +120,7 @@ class EmbeddingClientImpl implements EmbeddingClient {
 
   async embed(text: string): Promise<EmbeddingResponse | null> {
     const result = await makeRequest({
-      socketPath: this.socketPath,
+      ...this.getRequestBase(),
       path: '/embed',
       method: 'POST',
       body: JSON.stringify({ text }),
@@ -106,7 +135,7 @@ class EmbeddingClientImpl implements EmbeddingClient {
       const parsed = JSON.parse(result.body);
       return {
         embedding: parsed.embedding,
-        tokens: parsed.tokens,
+        tokens: parsed.tokens || parsed.tokens_processed || 0,
       };
     } catch {
       return null;
@@ -119,8 +148,8 @@ class EmbeddingClientImpl implements EmbeddingClient {
     }
 
     const result = await makeRequest({
-      socketPath: this.socketPath,
-      path: '/embed/batch',
+      ...this.getRequestBase(),
+      path: this.batchEndpoint,
       method: 'POST',
       body: JSON.stringify({ texts }),
       timeout: this.timeout,
@@ -132,9 +161,9 @@ class EmbeddingClientImpl implements EmbeddingClient {
 
     try {
       const parsed = JSON.parse(result.body);
-      return parsed.embeddings.map((e: { embedding: number[]; tokens: number }) => ({
+      return parsed.embeddings.map((e: { embedding: number[]; tokens?: number; tokens_processed?: number }) => ({
         embedding: e.embedding,
-        tokens: e.tokens,
+        tokens: e.tokens || e.tokens_processed || 0,
       }));
     } catch {
       return null;
@@ -143,7 +172,7 @@ class EmbeddingClientImpl implements EmbeddingClient {
 
   async getModelInfo(): Promise<ModelInfo | null> {
     const result = await makeRequest({
-      socketPath: this.socketPath,
+      ...this.getRequestBase(),
       path: '/health',
       method: 'GET',
       timeout: this.timeout,
@@ -155,9 +184,10 @@ class EmbeddingClientImpl implements EmbeddingClient {
 
     try {
       const parsed = JSON.parse(result.body);
+      // qwen3-embeddings-mlx uses model_name and embedding_dim
       return {
-        model: parsed.model,
-        dim: parsed.dim,
+        model: parsed.model || parsed.model_name || parsed.default_model || 'unknown',
+        dim: parsed.dim || parsed.embedding_dim || parsed.dimensions || 0,
       };
     } catch {
       return null;
@@ -166,13 +196,12 @@ class EmbeddingClientImpl implements EmbeddingClient {
 
   close(): void {
     // No persistent connections to close in this implementation
-    // Future: could add connection pooling
   }
 }
 
 export function createEmbeddingClient(
-  socketPath: string,
+  endpoint: string,
   timeout = 5000
 ): EmbeddingClient {
-  return new EmbeddingClientImpl(socketPath, timeout);
+  return new EmbeddingClientImpl(endpoint, timeout);
 }

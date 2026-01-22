@@ -40,28 +40,28 @@ describe('Snippet Generation', () => {
 });
 
 describe('Term Highlighting', () => {
-  it('should wrap terms in markdown bold', () => {
+  it('should wrap terms in strong tags', () => {
     const highlighted = highlightTerms('use async here', ['async']);
-    expect(highlighted).toBe('use **async** here');
+    expect(highlighted).toBe('use <strong>async</strong> here');
   });
 
   it('should highlight multiple terms', () => {
     const highlighted = highlightTerms('async and await', ['async', 'await']);
-    expect(highlighted).toBe('**async** and **await**');
+    expect(highlighted).toBe('<strong>async</strong> and <strong>await</strong>');
   });
 
   it('should be case-insensitive', () => {
     const highlighted = highlightTerms('ASYNC code', ['async']);
-    expect(highlighted).toBe('**ASYNC** code');
+    expect(highlighted).toBe('<strong>ASYNC</strong> code');
   });
 
   it('should handle regex special characters in terms', () => {
     const highlighted = highlightTerms('test (parens) here', ['(parens)']);
-    expect(highlighted).toBe('test **(parens)** here');
+    expect(highlighted).toBe('test <strong>(parens)</strong> here');
   });
 
   it('should not double-highlight', () => {
     const highlighted = highlightTerms('async async', ['async']);
-    expect(highlighted).toBe('**async** **async**');
+    expect(highlighted).toBe('<strong>async</strong> <strong>async</strong>');
   });
 });
