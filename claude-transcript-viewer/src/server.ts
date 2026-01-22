@@ -332,16 +332,49 @@ const INJECTED_CSS = `
 }
 .viewer-search-bar .search-dropdown-item p strong { color: var(--primary, #e94560); }
 
-/* Performance optimization */
-.message {
-  content-visibility: auto;
-  contain-intrinsic-size: 1px 600px;
-}
+/* Performance optimization - removed content-visibility from .message to allow proper collapse sizing */
 .cell {
   content-visibility: auto;
   contain: layout style paint;
   contain-intrinsic-size: 1px 400px;
 }
+
+/* Message content collapsing */
+.message-content.collapsed {
+  max-height: 300px;
+  overflow: hidden;
+  position: relative;
+}
+.message-content.collapsed::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: linear-gradient(to bottom, transparent, var(--card-bg, #fff));
+  pointer-events: none;
+}
+.message.user .message-content.collapsed::after {
+  background: linear-gradient(to bottom, transparent, var(--user-bg, #e3f2fd));
+}
+.message.tool-reply .message-content.collapsed::after {
+  background: linear-gradient(to bottom, transparent, #fff8e1);
+}
+.message-expand-btn {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  margin-top: 4px;
+  background: rgba(0,0,0,0.05);
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--text-muted, #757575);
+  text-align: center;
+}
+.message-expand-btn:hover { background: rgba(0,0,0,0.1); }
 
 /* Infinite scroll loading indicator */
 #infinite-scroll-loader {
@@ -362,7 +395,41 @@ const INJECTED_CSS = `
 const INJECTED_JS = `
 <script id="viewer-enhancements-js">
 (function() {
-  // NOTE: Cell collapse functionality removed - claude-code-transcripts handles it natively.
+  // Collapse long message content - can be called multiple times for new content
+  const MAX_HEIGHT = 300;
+  function collapseMessages(root) {
+    const container = root || document;
+    container.querySelectorAll('.message-content').forEach(function(content) {
+      // Skip if already processed or has truncatable handling
+      if (content.dataset.collapseProcessed) return;
+      if (content.closest('.truncatable')) return;
+      content.dataset.collapseProcessed = 'true';
+
+      if (content.scrollHeight > MAX_HEIGHT + 50) {
+        content.classList.add('collapsed');
+
+        const btn = document.createElement('button');
+        btn.className = 'message-expand-btn';
+        btn.textContent = 'Show more';
+        btn.addEventListener('click', function() {
+          if (content.classList.contains('collapsed')) {
+            content.classList.remove('collapsed');
+            btn.textContent = 'Show less';
+          } else {
+            content.classList.add('collapsed');
+            btn.textContent = 'Show more';
+          }
+        });
+        content.parentNode.insertBefore(btn, content.nextSibling);
+      }
+    });
+  }
+
+  // Initial collapse
+  collapseMessages();
+
+  // Export for use by infinite scroll
+  window.collapseMessages = collapseMessages;
 
   // Infinite scroll state
   let currentPage = 1;
@@ -422,6 +489,11 @@ const INJECTED_JS = `
         });
 
         currentPage = nextPage;
+
+        // Collapse newly loaded messages
+        if (window.collapseMessages) {
+          window.collapseMessages();
+        }
       }
     } catch (err) {
       console.error('Failed to load next page:', err);
