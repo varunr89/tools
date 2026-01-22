@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import { readFileSync, existsSync, readdirSync, mkdirSync } from "fs";
-import { join, dirname } from "path";
+import { join, dirname, resolve } from "path";
 import { spawn } from "child_process";
 import * as cheerio from "cheerio";
 import { createDatabase, getDatabase, closeDatabase } from "./db/index.js";
@@ -40,6 +40,9 @@ let archiveStatus: {
   lastError?: string;
   lastRun?: string;
 } = { isGenerating: false };
+
+// Cache mapping database project slugs to archive directory names
+let projectToArchiveMap: Map<string, string> = new Map();
 
 // Generate HTML archive using claude-code-transcripts Python CLI
 async function generateArchive(): Promise<boolean> {
@@ -164,10 +167,83 @@ async function startBackgroundIndexing() {
   }
 }
 
+/**
+ * Build mapping from database project slugs to archive directory names.
+ * Database stores path-based slugs like "-Users-varunr-projects-podcast-summarizer-v2"
+ * Archive uses normalized names like "podcast-summarizer-v2"
+ */
+function buildProjectMapping() {
+  projectToArchiveMap.clear();
+
+  // Get archive directories
+  const archiveDirs = new Set<string>();
+  try {
+    const entries = readdirSync(ARCHIVE_DIR, { withFileTypes: true });
+    for (const entry of entries) {
+      if (entry.isDirectory()) {
+        archiveDirs.add(entry.name);
+      }
+    }
+  } catch (err) {
+    console.error("Failed to read archive directory:", err);
+    return;
+  }
+
+  // Get database projects
+  const db = getDatabase();
+  const projects = db.prepare("SELECT DISTINCT project FROM conversations").all() as { project: string }[];
+
+  // Match each database project to an archive directory
+  for (const { project } of projects) {
+    // Try direct match first
+    if (archiveDirs.has(project)) {
+      projectToArchiveMap.set(project, project);
+      continue;
+    }
+
+    // Convert slug to path segments for matching
+    // -Users-varunr-projects-podcast-summarizer-v2 -> potential matches
+    const slug = project.replace(/^-/, "");
+
+    // Try to find a matching archive directory
+    // Strategy: the archive dir should be a suffix of the slug when hyphens are considered
+    let bestMatch: string | undefined;
+    let bestMatchLen = 0;
+
+    for (const dir of archiveDirs) {
+      // Check if the slug ends with this directory name
+      // Account for the hyphen separator: slug should end with -<dir> or be exactly <dir>
+      if (slug === dir || slug.endsWith(`-${dir}`)) {
+        if (dir.length > bestMatchLen) {
+          bestMatch = dir;
+          bestMatchLen = dir.length;
+        }
+      }
+    }
+
+    if (bestMatch) {
+      projectToArchiveMap.set(project, bestMatch);
+    } else {
+      // Fallback: use the last hyphen-separated segment
+      // This handles edge cases but may not always be correct
+      const segments = slug.split("-");
+      const lastSegment = segments[segments.length - 1];
+      if (lastSegment && archiveDirs.has(lastSegment)) {
+        projectToArchiveMap.set(project, lastSegment);
+      }
+    }
+  }
+
+  console.log(`Built project mapping: ${projectToArchiveMap.size} projects mapped to archive directories`);
+}
+
 function initializeSearch() {
   try {
     createDatabase(DATABASE_PATH);
     console.log(`Search database initialized at ${DATABASE_PATH}`);
+
+    // Build project to archive directory mapping
+    buildProjectMapping();
 
     // Try to connect to embedding server
     const socketPath = process.env.EMBED_SOCKET || "/tmp/qwen-embed.sock";
@@ -535,8 +611,20 @@ app.get(/.*\.html$/, (req: Request, res: Response) => {
   }
 });
 
-// Serve static assets (CSS, JS, images)
-app.use(express.static(ARCHIVE_DIR));
+// Serve static assets (CSS, JS, images) - disable index.html serving so our dynamic routes work
+app.use(express.static(ARCHIVE_DIR, { index: false }));
+
+// Serve project directory index.html files (since we disabled automatic index serving)
+app.get("/:project/", (req: Request, res: Response) => {
+  const projectDir = join(ARCHIVE_DIR, req.params.project);
+  const indexPath = resolve(projectDir, "index.html");
+
+  if (existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    res.status(404).send("Project not found");
+  }
+});
 
 // List available projects
 app.get("/api/projects", (req: Request, res: Response) => {
@@ -737,10 +825,10 @@ app.get("/search", async (req: Request, res: Response) => {
           chunk_id: r.chunk_id,
           conversation_id: r.conversation_id,
           project: r.project,
-          title: r.title,
+          title: r.title || "Untitled",
           snippet: highlightedSnippet,
           role: r.role,
-          page: r.page_number,
+          page: r.page_number || 1,
           score: r.score,
           url: `/${projectToArchivePath(r.project)}/${r.conversation_id}/page-001.html`,
         };
@@ -1110,28 +1198,30 @@ function renderLandingPage(data: {
   embeddingStatus: string;
 }): string {
   const projectCards = data.projects
-    .map(
-      (p) => `
-      <a href="/${escapeHtml(p.project)}/" class="project-card">
-        <h3>${escapeHtml(p.project)}</h3>
+    .map((p) => {
+      const archiveName = projectToArchivePath(p.project);
+      return `
+      <a href="/${escapeHtml(archiveName)}/" class="project-card">
+        <h3>${escapeHtml(archiveName)}</h3>
         <p>${p.count} conversations</p>
         <small>Updated: ${new Date(p.last_updated).toLocaleDateString()}</small>
       </a>
-    `
-    )
+    `;
+    })
     .join("");
 
   const recentList = data.recentConversations
-    .map(
-      (c) => `
+    .map((c) => {
+      const archiveName = projectToArchivePath(c.project);
+      return `
       <li>
-        <a href="/${escapeHtml(c.project)}/${escapeHtml(c.id)}/page-001.html">
+        <a href="/${escapeHtml(archiveName)}/${escapeHtml(c.id)}/page-001.html">
           <strong>${escapeHtml(c.title?.slice(0, 60) || "Untitled")}${c.title && c.title.length > 60 ? "..." : ""}</strong>
-          <span class="meta">${escapeHtml(c.project)} - ${new Date(c.created_at).toLocaleDateString()}</span>
+          <span class="meta">${escapeHtml(archiveName)} - ${new Date(c.created_at).toLocaleDateString()}</span>
         </a>
       </li>
-    `
-    )
+    `;
+    })
     .join("");
 
   return `<!DOCTYPE html>
@@ -1394,22 +1484,51 @@ function escapeHtml(str: string): string {
 
 /**
  * Convert database project slug to archive directory name.
- * Database stores path-based slugs like "-Users-varunr-projects-tools"
- * Archive uses the last segment of the original path like "tools"
+ * Uses the pre-built mapping from buildProjectMapping().
  */
 function projectToArchivePath(project: string): string {
+  // Check the mapping first
+  const mapped = projectToArchiveMap.get(project);
+  if (mapped) {
+    return mapped;
+  }
+
   // If it doesn't start with "-", it's already a simple name
   if (!project.startsWith("-")) {
     return project;
   }
 
-  // Convert slug back to path: -Users-varunr-projects-tools -> /Users/varunr/projects/tools
-  // Strategy: split on common directory names and take the last segment
-  const pathLike = project.replace(/^-/, "/").replace(/-/g, "/");
-  const segments = pathLike.split("/").filter(Boolean);
+  // Fallback: try suffix matching against archive directories
+  // This handles cases where the mapping wasn't built yet
+  const slug = project.replace(/^-/, "");
+  try {
+    const entries = readdirSync(ARCHIVE_DIR, { withFileTypes: true });
+    let bestMatch: string | undefined;
+    let bestMatchLen = 0;
 
-  // Return the last segment as the archive directory name
-  return segments[segments.length - 1] || project;
+    for (const entry of entries) {
+      if (entry.isDirectory()) {
+        const dir = entry.name;
+        if (slug === dir || slug.endsWith(`-${dir}`)) {
+          if (dir.length > bestMatchLen) {
+            bestMatch = dir;
+            bestMatchLen = dir.length;
+          }
+        }
+      }
+    }
+
+    if (bestMatch) {
+      // Cache for future use
+      projectToArchiveMap.set(project, bestMatch);
+      return bestMatch;
+    }
+  } catch {
+    // Fall through to last-segment fallback
+  }
+
+  // Last resort: return the original project
+  return project;
 }
 
 // Initialize search on startup
