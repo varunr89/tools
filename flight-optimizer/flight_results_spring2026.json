@@ -1,0 +1,1592 @@
+[
+  {
+    "strategy": "one_way_x3",
+    "total_score": 6188.633333333333,
+    "flight_total": 1401.3,
+    "childcare_cost": 4000,
+    "depart_date": "2026-05-09",
+    "return_date": "2026-06-07",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 20,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-09",
+        "airline": "British Airways",
+        "departure": "6:11 AM on Sat, May 09",
+        "arrival": "3:15 AM on Sun, May 10",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 439.05,
+        "score": 680.3833333333333
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-06-01",
+        "airline": "Duffel Airways",
+        "departure": "12:00 AM on Mon, Jun 01",
+        "arrival": "1:31 PM on Mon, Jun 01",
+        "duration": "10 hr 1 min",
+        "stops": 0,
+        "price": 358.33,
+        "score": 558.6633333333333
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-06-07",
+        "airline": "American Airlines",
+        "departure": "4:38 AM on Sun, Jun 07",
+        "arrival": "9:25 AM on Sun, Jun 07",
+        "duration": "17 hr 17 min",
+        "stops": 0,
+        "price": 603.92,
+        "score": 949.5866666666666
+      }
+    ]
+  },
+  {
+    "strategy": "one_way_x3",
+    "total_score": 6195.893333333333,
+    "flight_total": 1408.56,
+    "childcare_cost": 4000,
+    "depart_date": "2026-05-02",
+    "return_date": "2026-05-31",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 20,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-02",
+        "airline": "British Airways",
+        "departure": "12:46 AM on Sat, May 02",
+        "arrival": "9:50 PM on Sat, May 02",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 431.88,
+        "score": 673.2133333333334
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-25",
+        "airline": "Duffel Airways",
+        "departure": "6:34 PM on Mon, May 25",
+        "arrival": "8:05 AM on Tue, May 26",
+        "duration": "10 hr 1 min",
+        "stops": 0,
+        "price": 366.0,
+        "score": 566.3333333333334
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-31",
+        "airline": "British Airways",
+        "departure": "11:13 PM on Sun, May 31",
+        "arrival": "4:00 AM on Mon, Jun 01",
+        "duration": "17 hr 17 min",
+        "stops": 0,
+        "price": 610.68,
+        "score": 956.3466666666666
+      }
+    ]
+  },
+  {
+    "strategy": "one_way_x3",
+    "total_score": 6196.303333333333,
+    "flight_total": 1408.9699999999998,
+    "childcare_cost": 4000,
+    "depart_date": "2026-05-09",
+    "return_date": "2026-06-07",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 20,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-09",
+        "airline": "Duffel Airways",
+        "departure": "6:11 AM on Sat, May 09",
+        "arrival": "3:15 AM on Sun, May 10",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 446.72,
+        "score": 688.0533333333333
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-06-01",
+        "airline": "Duffel Airways",
+        "departure": "12:00 AM on Mon, Jun 01",
+        "arrival": "1:31 PM on Mon, Jun 01",
+        "duration": "10 hr 1 min",
+        "stops": 0,
+        "price": 358.33,
+        "score": 558.6633333333333
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-06-07",
+        "airline": "American Airlines",
+        "departure": "4:38 AM on Sun, Jun 07",
+        "arrival": "9:25 AM on Sun, Jun 07",
+        "duration": "17 hr 17 min",
+        "stops": 0,
+        "price": 603.92,
+        "score": 949.5866666666666
+      }
+    ]
+  },
+  {
+    "strategy": "one_way_x3",
+    "total_score": 6201.473333333333,
+    "flight_total": 1414.1399999999999,
+    "childcare_cost": 4000,
+    "depart_date": "2026-05-09",
+    "return_date": "2026-06-07",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 20,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-09",
+        "airline": "Iberia",
+        "departure": "6:11 AM on Sat, May 09",
+        "arrival": "3:15 AM on Sun, May 10",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 451.89,
+        "score": 693.2233333333334
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-06-01",
+        "airline": "Duffel Airways",
+        "departure": "12:00 AM on Mon, Jun 01",
+        "arrival": "1:31 PM on Mon, Jun 01",
+        "duration": "10 hr 1 min",
+        "stops": 0,
+        "price": 358.33,
+        "score": 558.6633333333333
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-06-07",
+        "airline": "American Airlines",
+        "departure": "4:38 AM on Sun, Jun 07",
+        "arrival": "9:25 AM on Sun, Jun 07",
+        "duration": "17 hr 17 min",
+        "stops": 0,
+        "price": 603.92,
+        "score": 949.5866666666666
+      }
+    ]
+  },
+  {
+    "strategy": "one_way_x3",
+    "total_score": 6201.733333333334,
+    "flight_total": 1414.4,
+    "childcare_cost": 4000,
+    "depart_date": "2026-05-02",
+    "return_date": "2026-05-31",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 20,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-02",
+        "airline": "British Airways",
+        "departure": "12:46 AM on Sat, May 02",
+        "arrival": "9:50 PM on Sat, May 02",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 431.88,
+        "score": 673.2133333333334
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-25",
+        "airline": "Duffel Airways",
+        "departure": "6:34 PM on Mon, May 25",
+        "arrival": "8:05 AM on Tue, May 26",
+        "duration": "10 hr 1 min",
+        "stops": 0,
+        "price": 366.0,
+        "score": 566.3333333333334
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-31",
+        "airline": "Duffel Airways",
+        "departure": "11:13 PM on Sun, May 31",
+        "arrival": "4:00 AM on Mon, Jun 01",
+        "duration": "17 hr 17 min",
+        "stops": 0,
+        "price": 616.52,
+        "score": 962.1866666666667
+      }
+    ]
+  },
+  {
+    "strategy": "one_way_x3",
+    "total_score": 6202.183333333333,
+    "flight_total": 1414.85,
+    "childcare_cost": 4000,
+    "depart_date": "2026-05-09",
+    "return_date": "2026-06-07",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 20,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-09",
+        "airline": "American Airlines",
+        "departure": "6:11 AM on Sat, May 09",
+        "arrival": "3:15 AM on Sun, May 10",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 452.6,
+        "score": 693.9333333333334
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-06-01",
+        "airline": "Duffel Airways",
+        "departure": "12:00 AM on Mon, Jun 01",
+        "arrival": "1:31 PM on Mon, Jun 01",
+        "duration": "10 hr 1 min",
+        "stops": 0,
+        "price": 358.33,
+        "score": 558.6633333333333
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-06-07",
+        "airline": "American Airlines",
+        "departure": "4:38 AM on Sun, Jun 07",
+        "arrival": "9:25 AM on Sun, Jun 07",
+        "duration": "17 hr 17 min",
+        "stops": 0,
+        "price": 603.92,
+        "score": 949.5866666666666
+      }
+    ]
+  },
+  {
+    "strategy": "one_way_x3",
+    "total_score": 6203.923333333333,
+    "flight_total": 1416.59,
+    "childcare_cost": 4000,
+    "depart_date": "2026-05-02",
+    "return_date": "2026-05-31",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 20,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-02",
+        "airline": "British Airways",
+        "departure": "12:46 AM on Sat, May 02",
+        "arrival": "9:50 PM on Sat, May 02",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 431.88,
+        "score": 673.2133333333334
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-25",
+        "airline": "British Airways",
+        "departure": "6:34 PM on Mon, May 25",
+        "arrival": "8:05 AM on Tue, May 26",
+        "duration": "10 hr 1 min",
+        "stops": 0,
+        "price": 374.03,
+        "score": 574.3633333333333
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-31",
+        "airline": "British Airways",
+        "departure": "11:13 PM on Sun, May 31",
+        "arrival": "4:00 AM on Mon, Jun 01",
+        "duration": "17 hr 17 min",
+        "stops": 0,
+        "price": 610.68,
+        "score": 956.3466666666666
+      }
+    ]
+  },
+  {
+    "strategy": "one_way_x3",
+    "total_score": 6204.303333333333,
+    "flight_total": 1416.9699999999998,
+    "childcare_cost": 4000,
+    "depart_date": "2026-05-02",
+    "return_date": "2026-05-31",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 20,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-02",
+        "airline": "Iberia",
+        "departure": "12:46 AM on Sat, May 02",
+        "arrival": "9:50 PM on Sat, May 02",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 440.29,
+        "score": 681.6233333333333
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-25",
+        "airline": "Duffel Airways",
+        "departure": "6:34 PM on Mon, May 25",
+        "arrival": "8:05 AM on Tue, May 26",
+        "duration": "10 hr 1 min",
+        "stops": 0,
+        "price": 366.0,
+        "score": 566.3333333333334
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-31",
+        "airline": "British Airways",
+        "departure": "11:13 PM on Sun, May 31",
+        "arrival": "4:00 AM on Mon, Jun 01",
+        "duration": "17 hr 17 min",
+        "stops": 0,
+        "price": 610.68,
+        "score": 956.3466666666666
+      }
+    ]
+  },
+  {
+    "strategy": "one_way_x3",
+    "total_score": 6207.453333333333,
+    "flight_total": 1420.12,
+    "childcare_cost": 4000,
+    "depart_date": "2026-05-09",
+    "return_date": "2026-06-07",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 20,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-09",
+        "airline": "British Airways",
+        "departure": "6:11 AM on Sat, May 09",
+        "arrival": "3:15 AM on Sun, May 10",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 439.05,
+        "score": 680.3833333333333
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-06-01",
+        "airline": "British Airways",
+        "departure": "12:00 AM on Mon, Jun 01",
+        "arrival": "1:31 PM on Mon, Jun 01",
+        "duration": "10 hr 1 min",
+        "stops": 0,
+        "price": 377.15,
+        "score": 577.4833333333333
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-06-07",
+        "airline": "American Airlines",
+        "departure": "4:38 AM on Sun, Jun 07",
+        "arrival": "9:25 AM on Sun, Jun 07",
+        "duration": "17 hr 17 min",
+        "stops": 0,
+        "price": 603.92,
+        "score": 949.5866666666666
+      }
+    ]
+  },
+  {
+    "strategy": "one_way_x3",
+    "total_score": 6208.803333333333,
+    "flight_total": 1421.4699999999998,
+    "childcare_cost": 4000,
+    "depart_date": "2026-05-02",
+    "return_date": "2026-05-31",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 20,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-02",
+        "airline": "Duffel Airways",
+        "departure": "12:46 AM on Sat, May 02",
+        "arrival": "9:50 PM on Sat, May 02",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 444.79,
+        "score": 686.1233333333333
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-25",
+        "airline": "Duffel Airways",
+        "departure": "6:34 PM on Mon, May 25",
+        "arrival": "8:05 AM on Tue, May 26",
+        "duration": "10 hr 1 min",
+        "stops": 0,
+        "price": 366.0,
+        "score": 566.3333333333334
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-31",
+        "airline": "British Airways",
+        "departure": "11:13 PM on Sun, May 31",
+        "arrival": "4:00 AM on Mon, Jun 01",
+        "duration": "17 hr 17 min",
+        "stops": 0,
+        "price": 610.68,
+        "score": 956.3466666666666
+      }
+    ]
+  },
+  {
+    "strategy": "one_way_x3",
+    "total_score": 6209.763333333333,
+    "flight_total": 1422.4299999999998,
+    "childcare_cost": 4000,
+    "depart_date": "2026-05-02",
+    "return_date": "2026-05-31",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 20,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-02",
+        "airline": "British Airways",
+        "departure": "12:46 AM on Sat, May 02",
+        "arrival": "9:50 PM on Sat, May 02",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 431.88,
+        "score": 673.2133333333334
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-25",
+        "airline": "British Airways",
+        "departure": "6:34 PM on Mon, May 25",
+        "arrival": "8:05 AM on Tue, May 26",
+        "duration": "10 hr 1 min",
+        "stops": 0,
+        "price": 374.03,
+        "score": 574.3633333333333
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-31",
+        "airline": "Duffel Airways",
+        "departure": "11:13 PM on Sun, May 31",
+        "arrival": "4:00 AM on Mon, Jun 01",
+        "duration": "17 hr 17 min",
+        "stops": 0,
+        "price": 616.52,
+        "score": 962.1866666666667
+      }
+    ]
+  },
+  {
+    "strategy": "one_way_x3",
+    "total_score": 6210.143333333333,
+    "flight_total": 1422.81,
+    "childcare_cost": 4000,
+    "depart_date": "2026-05-02",
+    "return_date": "2026-05-31",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 20,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-02",
+        "airline": "Iberia",
+        "departure": "12:46 AM on Sat, May 02",
+        "arrival": "9:50 PM on Sat, May 02",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 440.29,
+        "score": 681.6233333333333
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-25",
+        "airline": "Duffel Airways",
+        "departure": "6:34 PM on Mon, May 25",
+        "arrival": "8:05 AM on Tue, May 26",
+        "duration": "10 hr 1 min",
+        "stops": 0,
+        "price": 366.0,
+        "score": 566.3333333333334
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-31",
+        "airline": "Duffel Airways",
+        "departure": "11:13 PM on Sun, May 31",
+        "arrival": "4:00 AM on Mon, Jun 01",
+        "duration": "17 hr 17 min",
+        "stops": 0,
+        "price": 616.52,
+        "score": 962.1866666666667
+      }
+    ]
+  },
+  {
+    "strategy": "one_way_x3",
+    "total_score": 6212.333333333333,
+    "flight_total": 1425.0,
+    "childcare_cost": 4000,
+    "depart_date": "2026-05-02",
+    "return_date": "2026-05-31",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 20,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-02",
+        "airline": "Iberia",
+        "departure": "12:46 AM on Sat, May 02",
+        "arrival": "9:50 PM on Sat, May 02",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 440.29,
+        "score": 681.6233333333333
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-25",
+        "airline": "British Airways",
+        "departure": "6:34 PM on Mon, May 25",
+        "arrival": "8:05 AM on Tue, May 26",
+        "duration": "10 hr 1 min",
+        "stops": 0,
+        "price": 374.03,
+        "score": 574.3633333333333
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-31",
+        "airline": "British Airways",
+        "departure": "11:13 PM on Sun, May 31",
+        "arrival": "4:00 AM on Mon, Jun 01",
+        "duration": "17 hr 17 min",
+        "stops": 0,
+        "price": 610.68,
+        "score": 956.3466666666666
+      }
+    ]
+  },
+  {
+    "strategy": "one_way_x3",
+    "total_score": 6212.613333333334,
+    "flight_total": 1425.28,
+    "childcare_cost": 4000,
+    "depart_date": "2026-05-02",
+    "return_date": "2026-05-31",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 20,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-02",
+        "airline": "American Airlines",
+        "departure": "12:46 AM on Sat, May 02",
+        "arrival": "9:50 PM on Sat, May 02",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 448.6,
+        "score": 689.9333333333334
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-25",
+        "airline": "Duffel Airways",
+        "departure": "6:34 PM on Mon, May 25",
+        "arrival": "8:05 AM on Tue, May 26",
+        "duration": "10 hr 1 min",
+        "stops": 0,
+        "price": 366.0,
+        "score": 566.3333333333334
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-31",
+        "airline": "British Airways",
+        "departure": "11:13 PM on Sun, May 31",
+        "arrival": "4:00 AM on Mon, Jun 01",
+        "duration": "17 hr 17 min",
+        "stops": 0,
+        "price": 610.68,
+        "score": 956.3466666666666
+      }
+    ]
+  },
+  {
+    "strategy": "one_way_x3",
+    "total_score": 6214.643333333333,
+    "flight_total": 1427.31,
+    "childcare_cost": 4000,
+    "depart_date": "2026-05-02",
+    "return_date": "2026-05-31",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 20,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-02",
+        "airline": "Duffel Airways",
+        "departure": "12:46 AM on Sat, May 02",
+        "arrival": "9:50 PM on Sat, May 02",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 444.79,
+        "score": 686.1233333333333
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-25",
+        "airline": "Duffel Airways",
+        "departure": "6:34 PM on Mon, May 25",
+        "arrival": "8:05 AM on Tue, May 26",
+        "duration": "10 hr 1 min",
+        "stops": 0,
+        "price": 366.0,
+        "score": 566.3333333333334
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-31",
+        "airline": "Duffel Airways",
+        "departure": "11:13 PM on Sun, May 31",
+        "arrival": "4:00 AM on Mon, Jun 01",
+        "duration": "17 hr 17 min",
+        "stops": 0,
+        "price": 616.52,
+        "score": 962.1866666666667
+      }
+    ]
+  },
+  {
+    "strategy": "one_way_x3",
+    "total_score": 6215.123333333333,
+    "flight_total": 1427.79,
+    "childcare_cost": 4000,
+    "depart_date": "2026-05-09",
+    "return_date": "2026-06-07",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 20,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-09",
+        "airline": "Duffel Airways",
+        "departure": "6:11 AM on Sat, May 09",
+        "arrival": "3:15 AM on Sun, May 10",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 446.72,
+        "score": 688.0533333333333
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-06-01",
+        "airline": "British Airways",
+        "departure": "12:00 AM on Mon, Jun 01",
+        "arrival": "1:31 PM on Mon, Jun 01",
+        "duration": "10 hr 1 min",
+        "stops": 0,
+        "price": 377.15,
+        "score": 577.4833333333333
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-06-07",
+        "airline": "American Airlines",
+        "departure": "4:38 AM on Sun, Jun 07",
+        "arrival": "9:25 AM on Sun, Jun 07",
+        "duration": "17 hr 17 min",
+        "stops": 0,
+        "price": 603.92,
+        "score": 949.5866666666666
+      }
+    ]
+  },
+  {
+    "strategy": "one_way_x3",
+    "total_score": 6217.093333333333,
+    "flight_total": 1429.76,
+    "childcare_cost": 4000,
+    "depart_date": "2026-05-09",
+    "return_date": "2026-06-07",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 20,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-09",
+        "airline": "British Airways",
+        "departure": "6:11 AM on Sat, May 09",
+        "arrival": "3:15 AM on Sun, May 10",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 439.05,
+        "score": 680.3833333333333
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-06-01",
+        "airline": "Duffel Airways",
+        "departure": "12:00 AM on Mon, Jun 01",
+        "arrival": "1:31 PM on Mon, Jun 01",
+        "duration": "10 hr 1 min",
+        "stops": 0,
+        "price": 358.33,
+        "score": 558.6633333333333
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-06-07",
+        "airline": "British Airways",
+        "departure": "4:38 AM on Sun, Jun 07",
+        "arrival": "9:25 AM on Sun, Jun 07",
+        "duration": "17 hr 17 min",
+        "stops": 0,
+        "price": 632.38,
+        "score": 978.0466666666666
+      }
+    ]
+  },
+  {
+    "strategy": "one_way_x3",
+    "total_score": 6220.293333333333,
+    "flight_total": 1432.96,
+    "childcare_cost": 4000,
+    "depart_date": "2026-05-09",
+    "return_date": "2026-06-07",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 20,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-09",
+        "airline": "Iberia",
+        "departure": "6:11 AM on Sat, May 09",
+        "arrival": "3:15 AM on Sun, May 10",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 451.89,
+        "score": 693.2233333333334
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-06-01",
+        "airline": "British Airways",
+        "departure": "12:00 AM on Mon, Jun 01",
+        "arrival": "1:31 PM on Mon, Jun 01",
+        "duration": "10 hr 1 min",
+        "stops": 0,
+        "price": 377.15,
+        "score": 577.4833333333333
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-06-07",
+        "airline": "American Airlines",
+        "departure": "4:38 AM on Sun, Jun 07",
+        "arrival": "9:25 AM on Sun, Jun 07",
+        "duration": "17 hr 17 min",
+        "stops": 0,
+        "price": 603.92,
+        "score": 949.5866666666666
+      }
+    ]
+  },
+  {
+    "strategy": "one_way_x3",
+    "total_score": 6221.003333333333,
+    "flight_total": 1433.67,
+    "childcare_cost": 4000,
+    "depart_date": "2026-05-09",
+    "return_date": "2026-06-07",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 20,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-09",
+        "airline": "American Airlines",
+        "departure": "6:11 AM on Sat, May 09",
+        "arrival": "3:15 AM on Sun, May 10",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 452.6,
+        "score": 693.9333333333334
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-06-01",
+        "airline": "British Airways",
+        "departure": "12:00 AM on Mon, Jun 01",
+        "arrival": "1:31 PM on Mon, Jun 01",
+        "duration": "10 hr 1 min",
+        "stops": 0,
+        "price": 377.15,
+        "score": 577.4833333333333
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-06-07",
+        "airline": "American Airlines",
+        "departure": "4:38 AM on Sun, Jun 07",
+        "arrival": "9:25 AM on Sun, Jun 07",
+        "duration": "17 hr 17 min",
+        "stops": 0,
+        "price": 603.92,
+        "score": 949.5866666666666
+      }
+    ]
+  },
+  {
+    "strategy": "one_way_x3",
+    "total_score": 6224.763333333333,
+    "flight_total": 1437.4299999999998,
+    "childcare_cost": 4000,
+    "depart_date": "2026-05-09",
+    "return_date": "2026-06-07",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 20,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-09",
+        "airline": "Duffel Airways",
+        "departure": "6:11 AM on Sat, May 09",
+        "arrival": "3:15 AM on Sun, May 10",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 446.72,
+        "score": 688.0533333333333
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-06-01",
+        "airline": "Duffel Airways",
+        "departure": "12:00 AM on Mon, Jun 01",
+        "arrival": "1:31 PM on Mon, Jun 01",
+        "duration": "10 hr 1 min",
+        "stops": 0,
+        "price": 358.33,
+        "score": 558.6633333333333
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-06-07",
+        "airline": "British Airways",
+        "departure": "4:38 AM on Sun, Jun 07",
+        "arrival": "9:25 AM on Sun, Jun 07",
+        "duration": "17 hr 17 min",
+        "stops": 0,
+        "price": 632.38,
+        "score": 978.0466666666666
+      }
+    ]
+  },
+  {
+    "strategy": "round_trip_x2",
+    "total_score": 6377.401666666667,
+    "flight_total": 1462.7350000000001,
+    "childcare_cost": 4000,
+    "depart_date": "2026-05-02",
+    "return_date": "2026-05-31",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 20,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-02",
+        "airline": "Duffel Airways",
+        "departure": "12:46 AM on Sat, May 02",
+        "arrival": "9:50 PM on Sat, May 02",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 404.79,
+        "score": 646.1233333333333
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-24",
+        "airline": "British Airways",
+        "departure": "5:48 PM on Sun, May 24",
+        "arrival": "7:19 AM on Mon, May 25",
+        "duration": "10 hr 1 min",
+        "stops": 0,
+        "price": 345.975,
+        "score": 546.3083333333334
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-05-30",
+        "airline": "Air India",
+        "departure": "9:25 PM on Sat, May 30",
+        "arrival": "7:30 PM on Sun, May 31",
+        "duration": "1 hr 35 min",
+        "stops": 1,
+        "price": 307.18,
+        "score": 538.8466666666667
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-05-31",
+        "airline": "Duffel Airways",
+        "departure": "11:13 PM on Sun, May 31",
+        "arrival": "2:17 AM on Mon, Jun 01",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 404.79,
+        "score": 646.1233333333333
+      }
+    ]
+  },
+  {
+    "strategy": "round_trip_x2",
+    "total_score": 6381.351666666667,
+    "flight_total": 1466.685,
+    "childcare_cost": 4000,
+    "depart_date": "2026-05-02",
+    "return_date": "2026-05-31",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 20,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-02",
+        "airline": "British Airways",
+        "departure": "12:46 AM on Sat, May 02",
+        "arrival": "9:50 PM on Sat, May 02",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 406.765,
+        "score": 648.0983333333334
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-24",
+        "airline": "British Airways",
+        "departure": "5:48 PM on Sun, May 24",
+        "arrival": "7:19 AM on Mon, May 25",
+        "duration": "10 hr 1 min",
+        "stops": 0,
+        "price": 345.975,
+        "score": 546.3083333333334
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-05-30",
+        "airline": "Air India",
+        "departure": "9:25 PM on Sat, May 30",
+        "arrival": "7:30 PM on Sun, May 31",
+        "duration": "1 hr 35 min",
+        "stops": 1,
+        "price": 307.18,
+        "score": 538.8466666666667
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-05-31",
+        "airline": "British Airways",
+        "departure": "11:13 PM on Sun, May 31",
+        "arrival": "2:17 AM on Mon, Jun 01",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 406.765,
+        "score": 648.0983333333334
+      }
+    ]
+  },
+  {
+    "strategy": "round_trip_x2",
+    "total_score": 6384.793333333333,
+    "flight_total": 1501.46,
+    "childcare_cost": 4000,
+    "depart_date": "2026-05-09",
+    "return_date": "2026-06-07",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 20,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-09",
+        "airline": "American Airlines",
+        "departure": "6:11 AM on Sat, May 09",
+        "arrival": "3:15 AM on Sun, May 10",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 412.5,
+        "score": 653.8333333333333
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-31",
+        "airline": "British Airways",
+        "departure": "11:13 PM on Sun, May 31",
+        "arrival": "12:44 PM on Mon, Jun 01",
+        "duration": "10 hr 1 min",
+        "stops": 0,
+        "price": 338.23,
+        "score": 538.5633333333334
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-06-06",
+        "airline": "British Airways",
+        "departure": "3:52 AM on Sat, Jun 06",
+        "arrival": "10:23 AM on Sat, Jun 06",
+        "duration": "10 hr 1 min",
+        "stops": 0,
+        "price": 338.23,
+        "score": 538.5633333333334
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-06-07",
+        "airline": "American Airlines",
+        "departure": "4:38 AM on Sun, Jun 07",
+        "arrival": "7:42 AM on Sun, Jun 07",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 412.5,
+        "score": 653.8333333333333
+      }
+    ]
+  },
+  {
+    "strategy": "round_trip_x2",
+    "total_score": 6385.863333333334,
+    "flight_total": 1502.5300000000002,
+    "childcare_cost": 4000,
+    "depart_date": "2026-05-02",
+    "return_date": "2026-05-31",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 20,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-02",
+        "airline": "Duffel Airways",
+        "departure": "12:46 AM on Sat, May 02",
+        "arrival": "9:50 PM on Sat, May 02",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 404.79,
+        "score": 646.1233333333333
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-24",
+        "airline": "Duffel Airways",
+        "departure": "5:48 PM on Sun, May 24",
+        "arrival": "7:19 AM on Mon, May 25",
+        "duration": "10 hr 1 min",
+        "stops": 0,
+        "price": 346.975,
+        "score": 547.3083333333334
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-05-30",
+        "airline": "British Airways",
+        "departure": "10:27 PM on Sat, May 30",
+        "arrival": "4:58 AM on Sun, May 31",
+        "duration": "10 hr 1 min",
+        "stops": 0,
+        "price": 345.975,
+        "score": 546.3083333333334
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-05-31",
+        "airline": "Duffel Airways",
+        "departure": "11:13 PM on Sun, May 31",
+        "arrival": "2:17 AM on Mon, Jun 01",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 404.79,
+        "score": 646.1233333333333
+      }
+    ]
+  },
+  {
+    "strategy": "round_trip_x2",
+    "total_score": 6389.8133333333335,
+    "flight_total": 1506.48,
+    "childcare_cost": 4000,
+    "depart_date": "2026-05-02",
+    "return_date": "2026-05-31",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 20,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-02",
+        "airline": "British Airways",
+        "departure": "12:46 AM on Sat, May 02",
+        "arrival": "9:50 PM on Sat, May 02",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 406.765,
+        "score": 648.0983333333334
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-24",
+        "airline": "Duffel Airways",
+        "departure": "5:48 PM on Sun, May 24",
+        "arrival": "7:19 AM on Mon, May 25",
+        "duration": "10 hr 1 min",
+        "stops": 0,
+        "price": 346.975,
+        "score": 547.3083333333334
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-05-30",
+        "airline": "British Airways",
+        "departure": "10:27 PM on Sat, May 30",
+        "arrival": "4:58 AM on Sun, May 31",
+        "duration": "10 hr 1 min",
+        "stops": 0,
+        "price": 345.975,
+        "score": 546.3083333333334
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-05-31",
+        "airline": "British Airways",
+        "departure": "11:13 PM on Sun, May 31",
+        "arrival": "2:17 AM on Mon, Jun 01",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 406.765,
+        "score": 648.0983333333334
+      }
+    ]
+  },
+  {
+    "strategy": "round_trip_x2",
+    "total_score": 6393.113333333333,
+    "flight_total": 1509.78,
+    "childcare_cost": 4000,
+    "depart_date": "2026-05-09",
+    "return_date": "2026-06-07",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 20,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-09",
+        "airline": "American Airlines",
+        "departure": "6:11 AM on Sat, May 09",
+        "arrival": "3:15 AM on Sun, May 10",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 412.5,
+        "score": 653.8333333333333
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-31",
+        "airline": "Duffel Airways",
+        "departure": "11:13 PM on Sun, May 31",
+        "arrival": "12:44 PM on Mon, Jun 01",
+        "duration": "10 hr 1 min",
+        "stops": 0,
+        "price": 342.39,
+        "score": 542.7233333333334
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-06-06",
+        "airline": "Duffel Airways",
+        "departure": "3:52 AM on Sat, Jun 06",
+        "arrival": "10:23 AM on Sat, Jun 06",
+        "duration": "10 hr 1 min",
+        "stops": 0,
+        "price": 342.39,
+        "score": 542.7233333333334
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-06-07",
+        "airline": "American Airlines",
+        "departure": "4:38 AM on Sun, Jun 07",
+        "arrival": "7:42 AM on Sun, Jun 07",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 412.5,
+        "score": 653.8333333333333
+      }
+    ]
+  },
+  {
+    "strategy": "round_trip_x2",
+    "total_score": 6406.161666666667,
+    "flight_total": 1491.4950000000001,
+    "childcare_cost": 4000,
+    "depart_date": "2026-05-02",
+    "return_date": "2026-05-31",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 20,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-02",
+        "airline": "Iberia",
+        "departure": "12:46 AM on Sat, May 02",
+        "arrival": "9:50 PM on Sat, May 02",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 419.17,
+        "score": 660.5033333333333
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-24",
+        "airline": "British Airways",
+        "departure": "5:48 PM on Sun, May 24",
+        "arrival": "7:19 AM on Mon, May 25",
+        "duration": "10 hr 1 min",
+        "stops": 0,
+        "price": 345.975,
+        "score": 546.3083333333334
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-05-30",
+        "airline": "Air India",
+        "departure": "9:25 PM on Sat, May 30",
+        "arrival": "7:30 PM on Sun, May 31",
+        "duration": "1 hr 35 min",
+        "stops": 1,
+        "price": 307.18,
+        "score": 538.8466666666667
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-05-31",
+        "airline": "Iberia",
+        "departure": "11:13 PM on Sun, May 31",
+        "arrival": "2:17 AM on Mon, Jun 01",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 419.17,
+        "score": 660.5033333333333
+      }
+    ]
+  },
+  {
+    "strategy": "round_trip_x2",
+    "total_score": 6411.423333333333,
+    "flight_total": 1528.0900000000001,
+    "childcare_cost": 4000,
+    "depart_date": "2026-05-09",
+    "return_date": "2026-06-07",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 20,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-09",
+        "airline": "Iberia",
+        "departure": "6:11 AM on Sat, May 09",
+        "arrival": "3:15 AM on Sun, May 10",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 425.815,
+        "score": 667.1483333333333
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-31",
+        "airline": "British Airways",
+        "departure": "11:13 PM on Sun, May 31",
+        "arrival": "12:44 PM on Mon, Jun 01",
+        "duration": "10 hr 1 min",
+        "stops": 0,
+        "price": 338.23,
+        "score": 538.5633333333334
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-06-06",
+        "airline": "British Airways",
+        "departure": "3:52 AM on Sat, Jun 06",
+        "arrival": "10:23 AM on Sat, Jun 06",
+        "duration": "10 hr 1 min",
+        "stops": 0,
+        "price": 338.23,
+        "score": 538.5633333333334
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-06-07",
+        "airline": "Iberia",
+        "departure": "4:38 AM on Sun, Jun 07",
+        "arrival": "7:42 AM on Sun, Jun 07",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 425.815,
+        "score": 667.1483333333333
+      }
+    ]
+  },
+  {
+    "strategy": "round_trip_x2",
+    "total_score": 6414.623333333333,
+    "flight_total": 1531.29,
+    "childcare_cost": 4000,
+    "depart_date": "2026-05-02",
+    "return_date": "2026-05-31",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 20,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-02",
+        "airline": "Iberia",
+        "departure": "12:46 AM on Sat, May 02",
+        "arrival": "9:50 PM on Sat, May 02",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 419.17,
+        "score": 660.5033333333333
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-24",
+        "airline": "Duffel Airways",
+        "departure": "5:48 PM on Sun, May 24",
+        "arrival": "7:19 AM on Mon, May 25",
+        "duration": "10 hr 1 min",
+        "stops": 0,
+        "price": 346.975,
+        "score": 547.3083333333334
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-05-30",
+        "airline": "British Airways",
+        "departure": "10:27 PM on Sat, May 30",
+        "arrival": "4:58 AM on Sun, May 31",
+        "duration": "10 hr 1 min",
+        "stops": 0,
+        "price": 345.975,
+        "score": 546.3083333333334
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-05-31",
+        "airline": "Iberia",
+        "departure": "11:13 PM on Sun, May 31",
+        "arrival": "2:17 AM on Mon, Jun 01",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 419.17,
+        "score": 660.5033333333333
+      }
+    ]
+  },
+  {
+    "strategy": "round_trip_x2",
+    "total_score": 6419.743333333334,
+    "flight_total": 1536.4099999999999,
+    "childcare_cost": 4000,
+    "depart_date": "2026-05-09",
+    "return_date": "2026-06-07",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 20,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-09",
+        "airline": "Iberia",
+        "departure": "6:11 AM on Sat, May 09",
+        "arrival": "3:15 AM on Sun, May 10",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 425.815,
+        "score": 667.1483333333333
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-31",
+        "airline": "Duffel Airways",
+        "departure": "11:13 PM on Sun, May 31",
+        "arrival": "12:44 PM on Mon, Jun 01",
+        "duration": "10 hr 1 min",
+        "stops": 0,
+        "price": 342.39,
+        "score": 542.7233333333334
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-06-06",
+        "airline": "Duffel Airways",
+        "departure": "3:52 AM on Sat, Jun 06",
+        "arrival": "10:23 AM on Sat, Jun 06",
+        "duration": "10 hr 1 min",
+        "stops": 0,
+        "price": 342.39,
+        "score": 542.7233333333334
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-06-07",
+        "airline": "Iberia",
+        "departure": "4:38 AM on Sun, Jun 07",
+        "arrival": "7:42 AM on Sun, Jun 07",
+        "duration": "12 hr 4 min",
+        "stops": 0,
+        "price": 425.815,
+        "score": 667.1483333333333
+      }
+    ]
+  }
+]
