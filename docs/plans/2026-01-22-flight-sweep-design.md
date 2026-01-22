@@ -1,0 +1,113 @@
+# Flight Optimizer Sweep Design
+
+Comprehensive sweep across date combinations to find optimal Seattle - Milan - Hyderabad - Seattle itinerary.
+
+## Parameters to Sweep
+
+### Departure Dates (Friday 5PM+ or Saturday)
+| Date | Day |
+|------|-----|
+| April 24, 2026 | Friday |
+| April 25, 2026 | Saturday |
+| May 1, 2026 | Friday |
+| May 2, 2026 | Saturday |
+| May 8, 2026 | Friday |
+
+### Trip Duration Variations
+- **Europe nights:** 21, 22, 23
+- **India nights:** 5, 6, 7
+
+### Strategies
+- **Strategy A:** 3 one-way flights (SEA→MXP, MXP→HYD, HYD→SEA)
+- **Strategy B:** 2 round-trips (SEA↔MXP + MXP↔HYD)
+
+### Total Combinations
+5 departures × 3 Europe × 3 India × 2 strategies = **90 scenarios**
+
+## Constraints
+
+| Constraint | Implementation |
+|------------|----------------|
+| Max 1 stop per leg | Filter out 2+ stop flights |
+| Max 4 hour layover | Filter out flights with layover > 4 hours |
+| Single carrier per leg | Filter out multi-carrier legs (comma in airline name) |
+
+## Scoring Formula
+
+```
+total_score = flight_price
+            + (total_hours × $20)
+            + (total_stops × $200)
+            + (weekdays × $200)
+```
+
+- **Duration penalty:** $20 per hour of travel time
+- **Stop penalty:** $200 per stop
+- **Childcare penalty:** $200 per weekday in trip
+
+## Data Collection
+
+### Strategy A: 3 One-Way Flights
+
+```
+For each (depart_date, europe_nights, india_nights):
+  leg1_date = depart_date
+  leg2_date = depart_date + 1 + europe_nights
+  leg3_date = leg2_date + india_nights
+
+  Search:
+    SEA→MXP on leg1_date  [Google + Duffel]
+    MXP→HYD on leg2_date  [Duffel only]
+    HYD→SEA on leg3_date  [Google + Duffel]
+
+  Pick best price per leg from available sources
+```
+
+### Strategy B: 2 Round-Trips
+
+```
+For each (depart_date, europe_nights, india_nights):
+  leg1_date = depart_date
+  leg2_date = depart_date + 1 + europe_nights
+  leg3_date = leg2_date + india_nights
+  return_date = leg3_date + 1
+
+  Search:
+    SEA↔MXP round-trip (leg1_date out, return_date back)  [Duffel only]
+    MXP↔HYD round-trip (leg2_date out, leg3_date back)    [Duffel only]
+
+  Use actual round-trip pricing
+```
+
+### Data Sources
+- **Google Flights** (via fast-flights): SEA→MXP, HYD→SEA one-ways
+- **Duffel API:** All routes, both one-way and round-trip
+
+### Handling Missing Data
+- If a source fails, use what's available
+- If both fail for a leg, mark scenario as "incomplete"
+- Never mix one-way and round-trip pricing within a strategy
+
+## Implementation Details
+
+### API Rate Limiting
+- Duffel: 0.5s delay between requests
+- Google: No explicit limit, may fail intermittently
+
+### Caching
+- Cache API responses by (origin, dest, date, trip_type)
+- Same route/date appears in multiple scenarios
+
+### Layover Validation
+- Duffel: Use segment data to calculate layover duration
+- Google: Assume compliant if ≤1 stop (no layover data available)
+- Flag flights where layover can't be verified
+
+### Output Files
+1. `flight_sweep_results.json` - Raw data for all 90 scenarios
+2. `flight_sweep_viewer.html` - Interactive table with sorting/filtering
+3. Console summary of top 10
+
+### Estimated API Calls
+- ~50-70 unique searches after caching
+- Estimated runtime: 2-3 minutes
