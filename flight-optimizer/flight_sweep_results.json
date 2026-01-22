@@ -1,0 +1,4592 @@
+[
+  {
+    "rank": 1,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-05-08",
+    "return_date": "2026-06-04",
+    "europe_nights": 21,
+    "india_nights": 5,
+    "weekdays": 20,
+    "total_price": 1265.42,
+    "total_hours": 45.85,
+    "total_stops": 2,
+    "childcare_cost": 4000,
+    "total_score": 6582.42,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-08",
+        "airline": "British Airways",
+        "price": 395.0,
+        "duration_hours": 13.833333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-30",
+        "airline": "British Airways",
+        "price": 385.96,
+        "duration_hours": 10.016666666666667,
+        "stops": 0,
+        "source": "duffel"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-06-04",
+        "airline": "Singapore Airlines",
+        "price": 484.46,
+        "duration_hours": 22.0,
+        "stops": 1,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 2,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-05-08",
+    "return_date": "2026-06-07",
+    "europe_nights": 23,
+    "india_nights": 6,
+    "weekdays": 21,
+    "total_price": 1377.0100000000002,
+    "total_hours": 41.13333333333334,
+    "total_stops": 1,
+    "childcare_cost": 4200,
+    "total_score": 6599.676666666666,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-08",
+        "airline": "British Airways",
+        "price": 395.0,
+        "duration_hours": 13.833333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-06-01",
+        "airline": "British Airways",
+        "price": 377.16,
+        "duration_hours": 10.016666666666667,
+        "stops": 0,
+        "source": "duffel"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-06-07",
+        "airline": "British Airways",
+        "price": 604.85,
+        "duration_hours": 17.283333333333335,
+        "stops": 0,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 3,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-05-02",
+    "return_date": "2026-05-31",
+    "europe_nights": 21,
+    "india_nights": 7,
+    "weekdays": 20,
+    "total_price": 1332.82,
+    "total_hours": 43.45,
+    "total_stops": 2,
+    "childcare_cost": 4000,
+    "total_score": 6601.82,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-02",
+        "airline": "Lufthansa",
+        "price": 418.06,
+        "duration_hours": 14.583333333333334,
+        "stops": 1,
+        "source": "duffel"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-24",
+        "airline": "Etihad",
+        "price": 311.0,
+        "duration_hours": 11.583333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-31",
+        "airline": "American Airlines",
+        "price": 603.76,
+        "duration_hours": 17.283333333333335,
+        "stops": 0,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 4,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-05-02",
+    "return_date": "2026-05-31",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 20,
+    "total_price": 1332.82,
+    "total_hours": 43.45,
+    "total_stops": 2,
+    "childcare_cost": 4000,
+    "total_score": 6601.82,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-02",
+        "airline": "Lufthansa",
+        "price": 418.06,
+        "duration_hours": 14.583333333333334,
+        "stops": 1,
+        "source": "duffel"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-25",
+        "airline": "Etihad",
+        "price": 311.0,
+        "duration_hours": 11.583333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-31",
+        "airline": "American Airlines",
+        "price": 603.76,
+        "duration_hours": 17.283333333333335,
+        "stops": 0,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 5,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-05-02",
+    "return_date": "2026-05-31",
+    "europe_nights": 23,
+    "india_nights": 5,
+    "weekdays": 20,
+    "total_price": 1332.82,
+    "total_hours": 43.45,
+    "total_stops": 2,
+    "childcare_cost": 4000,
+    "total_score": 6601.82,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-02",
+        "airline": "Lufthansa",
+        "price": 418.06,
+        "duration_hours": 14.583333333333334,
+        "stops": 1,
+        "source": "duffel"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-26",
+        "airline": "Etihad",
+        "price": 311.0,
+        "duration_hours": 11.583333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-31",
+        "airline": "American Airlines",
+        "price": 603.76,
+        "duration_hours": 17.283333333333335,
+        "stops": 0,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 6,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-05-08",
+    "return_date": "2026-06-07",
+    "europe_nights": 22,
+    "india_nights": 7,
+    "weekdays": 21,
+    "total_price": 1379.1799999999998,
+    "total_hours": 41.13333333333334,
+    "total_stops": 1,
+    "childcare_cost": 4200,
+    "total_score": 6601.846666666666,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-08",
+        "airline": "British Airways",
+        "price": 395.0,
+        "duration_hours": 13.833333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-31",
+        "airline": "British Airways",
+        "price": 379.33,
+        "duration_hours": 10.016666666666667,
+        "stops": 0,
+        "source": "duffel"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-06-07",
+        "airline": "British Airways",
+        "price": 604.85,
+        "duration_hours": 17.283333333333335,
+        "stops": 0,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 7,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-04-25",
+    "return_date": "2026-05-23",
+    "europe_nights": 22,
+    "india_nights": 5,
+    "weekdays": 20,
+    "total_price": 1278.5700000000002,
+    "total_hours": 46.449999999999996,
+    "total_stops": 2,
+    "childcare_cost": 4000,
+    "total_score": 6607.57,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-04-25",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 13.0,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-18",
+        "airline": "British Airways",
+        "price": 345.17,
+        "duration_hours": 10.016666666666667,
+        "stops": 0,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-05-23",
+        "airline": "British Airways",
+        "price": 345.17,
+        "duration_hours": 10.016666666666667,
+        "stops": 0,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-05-24",
+        "airline": "SAS",
+        "price": 233.765,
+        "duration_hours": 13.416666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 8,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-04-24",
+    "return_date": "2026-05-21",
+    "europe_nights": 21,
+    "india_nights": 5,
+    "weekdays": 20,
+    "total_price": 1088.46,
+    "total_hours": 48.083333333333336,
+    "total_stops": 3,
+    "childcare_cost": 4000,
+    "total_score": 6650.126666666667,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-04-24",
+        "airline": "Icelandair",
+        "price": 264.0,
+        "duration_hours": 14.5,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-16",
+        "airline": "Etihad",
+        "price": 340.0,
+        "duration_hours": 11.583333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-21",
+        "airline": "Singapore Airlines",
+        "price": 484.46,
+        "duration_hours": 22.0,
+        "stops": 1,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 9,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-05-02",
+    "return_date": "2026-05-30",
+    "europe_nights": 22,
+    "india_nights": 5,
+    "weekdays": 20,
+    "total_price": 1378.0900000000001,
+    "total_hours": 46.61666666666667,
+    "total_stops": 2,
+    "childcare_cost": 4000,
+    "total_score": 6710.423333333333,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-02",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 13.166666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-25",
+        "airline": "British Airways",
+        "price": 342.43,
+        "duration_hours": 10.016666666666667,
+        "stops": 0,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-05-30",
+        "airline": "British Airways",
+        "price": 342.43,
+        "duration_hours": 10.016666666666667,
+        "stops": 0,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-05-31",
+        "airline": "SAS",
+        "price": 338.765,
+        "duration_hours": 13.416666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 10,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-04-25",
+    "return_date": "2026-05-24",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 20,
+    "total_price": 1401.9899999999998,
+    "total_hours": 45.86666666666667,
+    "total_stops": 2,
+    "childcare_cost": 4000,
+    "total_score": 6719.323333333334,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-04-25",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 13.0,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-18",
+        "airline": "British Airways",
+        "price": 346.53,
+        "duration_hours": 10.016666666666667,
+        "stops": 0,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-05-24",
+        "airline": "British Airways",
+        "price": 346.53,
+        "duration_hours": 10.016666666666667,
+        "stops": 0,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-05-25",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 12.833333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 11,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-05-01",
+    "return_date": "2026-05-31",
+    "europe_nights": 22,
+    "india_nights": 7,
+    "weekdays": 21,
+    "total_price": 1320.57,
+    "total_hours": 41.53333333333333,
+    "total_stops": 2,
+    "childcare_cost": 4200,
+    "total_score": 6751.236666666667,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-01",
+        "airline": "Lufthansa",
+        "price": 405.81,
+        "duration_hours": 12.666666666666666,
+        "stops": 1,
+        "source": "duffel"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-24",
+        "airline": "Etihad",
+        "price": 311.0,
+        "duration_hours": 11.583333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-31",
+        "airline": "American Airlines",
+        "price": 603.76,
+        "duration_hours": 17.283333333333335,
+        "stops": 0,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 12,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-05-01",
+    "return_date": "2026-05-31",
+    "europe_nights": 23,
+    "india_nights": 6,
+    "weekdays": 21,
+    "total_price": 1320.57,
+    "total_hours": 41.53333333333333,
+    "total_stops": 2,
+    "childcare_cost": 4200,
+    "total_score": 6751.236666666667,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-01",
+        "airline": "Lufthansa",
+        "price": 405.81,
+        "duration_hours": 12.666666666666666,
+        "stops": 1,
+        "source": "duffel"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-25",
+        "airline": "Etihad",
+        "price": 311.0,
+        "duration_hours": 11.583333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-31",
+        "airline": "American Airlines",
+        "price": 603.76,
+        "duration_hours": 17.283333333333335,
+        "stops": 0,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 13,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-05-01",
+    "return_date": "2026-05-28",
+    "europe_nights": 21,
+    "india_nights": 5,
+    "weekdays": 20,
+    "total_price": 1230.27,
+    "total_hours": 46.25,
+    "total_stops": 3,
+    "childcare_cost": 4000,
+    "total_score": 6755.27,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-01",
+        "airline": "Lufthansa",
+        "price": 405.81,
+        "duration_hours": 12.666666666666666,
+        "stops": 1,
+        "source": "duffel"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-23",
+        "airline": "Etihad",
+        "price": 340.0,
+        "duration_hours": 11.583333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-28",
+        "airline": "Singapore Airlines",
+        "price": 484.46,
+        "duration_hours": 22.0,
+        "stops": 1,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 14,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-05-02",
+    "return_date": "2026-05-31",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 20,
+    "total_price": 1437.59,
+    "total_hours": 46.03333333333334,
+    "total_stops": 2,
+    "childcare_cost": 4000,
+    "total_score": 6758.256666666666,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-02",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 13.166666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-25",
+        "airline": "British Airways",
+        "price": 364.33,
+        "duration_hours": 10.016666666666667,
+        "stops": 0,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-05-31",
+        "airline": "British Airways",
+        "price": 364.33,
+        "duration_hours": 10.016666666666667,
+        "stops": 0,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-06-01",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 12.833333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 15,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-05-08",
+    "return_date": "2026-06-06",
+    "europe_nights": 23,
+    "india_nights": 5,
+    "weekdays": 21,
+    "total_price": 1256.6200000000001,
+    "total_hours": 45.85,
+    "total_stops": 2,
+    "childcare_cost": 4200,
+    "total_score": 6773.62,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-08",
+        "airline": "British Airways",
+        "price": 395.0,
+        "duration_hours": 13.833333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-06-01",
+        "airline": "British Airways",
+        "price": 377.16,
+        "duration_hours": 10.016666666666667,
+        "stops": 0,
+        "source": "duffel"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-06-06",
+        "airline": "Singapore Airlines",
+        "price": 484.46,
+        "duration_hours": 22.0,
+        "stops": 1,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 16,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-05-08",
+    "return_date": "2026-06-05",
+    "europe_nights": 22,
+    "india_nights": 5,
+    "weekdays": 21,
+    "total_price": 1258.79,
+    "total_hours": 45.85,
+    "total_stops": 2,
+    "childcare_cost": 4200,
+    "total_score": 6775.79,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-08",
+        "airline": "British Airways",
+        "price": 395.0,
+        "duration_hours": 13.833333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-31",
+        "airline": "British Airways",
+        "price": 379.33,
+        "duration_hours": 10.016666666666667,
+        "stops": 0,
+        "source": "duffel"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-06-05",
+        "airline": "Singapore Airlines",
+        "price": 484.46,
+        "duration_hours": 22.0,
+        "stops": 1,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 17,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-05-08",
+    "return_date": "2026-06-06",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 21,
+    "total_price": 1258.79,
+    "total_hours": 45.85,
+    "total_stops": 2,
+    "childcare_cost": 4200,
+    "total_score": 6775.79,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-08",
+        "airline": "British Airways",
+        "price": 395.0,
+        "duration_hours": 13.833333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-31",
+        "airline": "British Airways",
+        "price": 379.33,
+        "duration_hours": 10.016666666666667,
+        "stops": 0,
+        "source": "duffel"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-06-06",
+        "airline": "Singapore Airlines",
+        "price": 484.46,
+        "duration_hours": 22.0,
+        "stops": 1,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 18,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-05-08",
+    "return_date": "2026-06-05",
+    "europe_nights": 21,
+    "india_nights": 6,
+    "weekdays": 21,
+    "total_price": 1265.42,
+    "total_hours": 45.85,
+    "total_stops": 2,
+    "childcare_cost": 4200,
+    "total_score": 6782.42,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-08",
+        "airline": "British Airways",
+        "price": 395.0,
+        "duration_hours": 13.833333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-30",
+        "airline": "British Airways",
+        "price": 385.96,
+        "duration_hours": 10.016666666666667,
+        "stops": 0,
+        "source": "duffel"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-06-05",
+        "airline": "Singapore Airlines",
+        "price": 484.46,
+        "duration_hours": 22.0,
+        "stops": 1,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 19,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-05-08",
+    "return_date": "2026-06-06",
+    "europe_nights": 21,
+    "india_nights": 7,
+    "weekdays": 21,
+    "total_price": 1265.42,
+    "total_hours": 45.85,
+    "total_stops": 2,
+    "childcare_cost": 4200,
+    "total_score": 6782.42,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-08",
+        "airline": "British Airways",
+        "price": 395.0,
+        "duration_hours": 13.833333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-30",
+        "airline": "British Airways",
+        "price": 385.96,
+        "duration_hours": 10.016666666666667,
+        "stops": 0,
+        "source": "duffel"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-06-06",
+        "airline": "Singapore Airlines",
+        "price": 484.46,
+        "duration_hours": 22.0,
+        "stops": 1,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 20,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-04-24",
+    "return_date": "2026-05-23",
+    "europe_nights": 23,
+    "india_nights": 5,
+    "weekdays": 21,
+    "total_price": 1277.9850000000001,
+    "total_hours": 46.11666666666667,
+    "total_stops": 2,
+    "childcare_cost": 4200,
+    "total_score": 6800.318333333334,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-04-24",
+        "airline": "Lufthansa",
+        "price": 353.88,
+        "duration_hours": 12.666666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-18",
+        "airline": "British Airways",
+        "price": 345.17,
+        "duration_hours": 10.016666666666667,
+        "stops": 0,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-05-23",
+        "airline": "British Airways",
+        "price": 345.17,
+        "duration_hours": 10.016666666666667,
+        "stops": 0,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-05-24",
+        "airline": "SAS",
+        "price": 233.765,
+        "duration_hours": 13.416666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 21,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-05-02",
+    "return_date": "2026-05-29",
+    "europe_nights": 21,
+    "india_nights": 5,
+    "weekdays": 20,
+    "total_price": 1239.29,
+    "total_hours": 48.16666666666667,
+    "total_stops": 3,
+    "childcare_cost": 4000,
+    "total_score": 6802.623333333333,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-02",
+        "airline": "Lufthansa",
+        "price": 418.06,
+        "duration_hours": 14.583333333333334,
+        "stops": 1,
+        "source": "duffel"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-24",
+        "airline": "Etihad",
+        "price": 311.0,
+        "duration_hours": 11.583333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-29",
+        "airline": "Singapore Airlines",
+        "price": 510.23,
+        "duration_hours": 22.0,
+        "stops": 1,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 22,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-05-02",
+    "return_date": "2026-05-30",
+    "europe_nights": 21,
+    "india_nights": 6,
+    "weekdays": 20,
+    "total_price": 1239.29,
+    "total_hours": 48.16666666666667,
+    "total_stops": 3,
+    "childcare_cost": 4000,
+    "total_score": 6802.623333333333,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-02",
+        "airline": "Lufthansa",
+        "price": 418.06,
+        "duration_hours": 14.583333333333334,
+        "stops": 1,
+        "source": "duffel"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-24",
+        "airline": "Etihad",
+        "price": 311.0,
+        "duration_hours": 11.583333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-30",
+        "airline": "Singapore Airlines",
+        "price": 510.23,
+        "duration_hours": 22.0,
+        "stops": 1,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 23,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-05-02",
+    "return_date": "2026-05-30",
+    "europe_nights": 22,
+    "india_nights": 5,
+    "weekdays": 20,
+    "total_price": 1239.29,
+    "total_hours": 48.16666666666667,
+    "total_stops": 3,
+    "childcare_cost": 4000,
+    "total_score": 6802.623333333333,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-02",
+        "airline": "Lufthansa",
+        "price": 418.06,
+        "duration_hours": 14.583333333333334,
+        "stops": 1,
+        "source": "duffel"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-25",
+        "airline": "Etihad",
+        "price": 311.0,
+        "duration_hours": 11.583333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-30",
+        "airline": "Singapore Airlines",
+        "price": 510.23,
+        "duration_hours": 22.0,
+        "stops": 1,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 24,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-04-25",
+    "return_date": "2026-05-23",
+    "europe_nights": 22,
+    "india_nights": 5,
+    "weekdays": 20,
+    "total_price": 1101.23,
+    "total_hours": 57.0,
+    "total_stops": 3,
+    "childcare_cost": 4000,
+    "total_score": 6841.23,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-04-25",
+        "airline": "United",
+        "price": 280.0,
+        "duration_hours": 23.416666666666668,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-18",
+        "airline": "Etihad",
+        "price": 311.0,
+        "duration_hours": 11.583333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-23",
+        "airline": "Singapore Airlines",
+        "price": 510.23,
+        "duration_hours": 22.0,
+        "stops": 1,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 25,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-04-24",
+    "return_date": "2026-05-23",
+    "europe_nights": 23,
+    "india_nights": 5,
+    "weekdays": 21,
+    "total_price": 1085.23,
+    "total_hours": 48.083333333333336,
+    "total_stops": 3,
+    "childcare_cost": 4200,
+    "total_score": 6846.8966666666665,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-04-24",
+        "airline": "Icelandair",
+        "price": 264.0,
+        "duration_hours": 14.5,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-18",
+        "airline": "Etihad",
+        "price": 311.0,
+        "duration_hours": 11.583333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-23",
+        "airline": "Singapore Airlines",
+        "price": 510.23,
+        "duration_hours": 22.0,
+        "stops": 1,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 26,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-04-24",
+    "return_date": "2026-05-22",
+    "europe_nights": 21,
+    "india_nights": 6,
+    "weekdays": 21,
+    "total_price": 1114.23,
+    "total_hours": 48.083333333333336,
+    "total_stops": 3,
+    "childcare_cost": 4200,
+    "total_score": 6875.8966666666665,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-04-24",
+        "airline": "Icelandair",
+        "price": 264.0,
+        "duration_hours": 14.5,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-16",
+        "airline": "Etihad",
+        "price": 340.0,
+        "duration_hours": 11.583333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-22",
+        "airline": "Singapore Airlines",
+        "price": 510.23,
+        "duration_hours": 22.0,
+        "stops": 1,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 27,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-04-24",
+    "return_date": "2026-05-23",
+    "europe_nights": 21,
+    "india_nights": 7,
+    "weekdays": 21,
+    "total_price": 1114.23,
+    "total_hours": 48.083333333333336,
+    "total_stops": 3,
+    "childcare_cost": 4200,
+    "total_score": 6875.8966666666665,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-04-24",
+        "airline": "Icelandair",
+        "price": 264.0,
+        "duration_hours": 14.5,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-16",
+        "airline": "Etihad",
+        "price": 340.0,
+        "duration_hours": 11.583333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-23",
+        "airline": "Singapore Airlines",
+        "price": 510.23,
+        "duration_hours": 22.0,
+        "stops": 1,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 28,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-05-01",
+    "return_date": "2026-05-30",
+    "europe_nights": 23,
+    "india_nights": 5,
+    "weekdays": 21,
+    "total_price": 1378.0900000000001,
+    "total_hours": 46.61666666666667,
+    "total_stops": 2,
+    "childcare_cost": 4200,
+    "total_score": 6910.423333333333,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-01",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 13.166666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-25",
+        "airline": "British Airways",
+        "price": 342.43,
+        "duration_hours": 10.016666666666667,
+        "stops": 0,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-05-30",
+        "airline": "British Airways",
+        "price": 342.43,
+        "duration_hours": 10.016666666666667,
+        "stops": 0,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-05-31",
+        "airline": "SAS",
+        "price": 338.765,
+        "duration_hours": 13.416666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 29,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-04-25",
+    "return_date": "2026-05-24",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 20,
+    "total_price": 1204.74,
+    "total_hours": 56.25,
+    "total_stops": 3,
+    "childcare_cost": 4000,
+    "total_score": 6929.74,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-04-25",
+        "airline": "United",
+        "price": 280.0,
+        "duration_hours": 23.416666666666668,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-18",
+        "airline": "Etihad",
+        "price": 311.0,
+        "duration_hours": 11.583333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-24",
+        "airline": "Lufthansa",
+        "price": 613.74,
+        "duration_hours": 21.25,
+        "stops": 1,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 30,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-05-08",
+    "return_date": "2026-06-07",
+    "europe_nights": 23,
+    "india_nights": 6,
+    "weekdays": 21,
+    "total_price": 1409.9799999999998,
+    "total_hours": 46.03333333333334,
+    "total_stops": 2,
+    "childcare_cost": 4200,
+    "total_score": 6930.6466666666665,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-08",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 13.166666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-06-01",
+        "airline": "British Airways",
+        "price": 350.525,
+        "duration_hours": 10.016666666666667,
+        "stops": 0,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-06-07",
+        "airline": "British Airways",
+        "price": 350.525,
+        "duration_hours": 10.016666666666667,
+        "stops": 0,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-06-08",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 12.833333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 31,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-04-24",
+    "return_date": "2026-05-24",
+    "europe_nights": 23,
+    "india_nights": 6,
+    "weekdays": 21,
+    "total_price": 1188.74,
+    "total_hours": 47.333333333333336,
+    "total_stops": 3,
+    "childcare_cost": 4200,
+    "total_score": 6935.406666666667,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-04-24",
+        "airline": "Icelandair",
+        "price": 264.0,
+        "duration_hours": 14.5,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-18",
+        "airline": "Etihad",
+        "price": 311.0,
+        "duration_hours": 11.583333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-24",
+        "airline": "Lufthansa",
+        "price": 613.74,
+        "duration_hours": 21.25,
+        "stops": 1,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 32,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-05-08",
+    "return_date": "2026-06-05",
+    "europe_nights": 22,
+    "india_nights": 5,
+    "weekdays": 21,
+    "total_price": 1416.31,
+    "total_hours": 46.03333333333334,
+    "total_stops": 2,
+    "childcare_cost": 4200,
+    "total_score": 6936.9766666666665,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-08",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 13.166666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-31",
+        "airline": "British Airways",
+        "price": 353.69,
+        "duration_hours": 10.016666666666667,
+        "stops": 0,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-06-05",
+        "airline": "British Airways",
+        "price": 353.69,
+        "duration_hours": 10.016666666666667,
+        "stops": 0,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-06-06",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 12.833333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 33,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-05-08",
+    "return_date": "2026-06-06",
+    "europe_nights": 23,
+    "india_nights": 5,
+    "weekdays": 21,
+    "total_price": 1421.25,
+    "total_hours": 46.03333333333334,
+    "total_stops": 2,
+    "childcare_cost": 4200,
+    "total_score": 6941.916666666666,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-08",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 13.166666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-06-01",
+        "airline": "British Airways",
+        "price": 356.16,
+        "duration_hours": 10.016666666666667,
+        "stops": 0,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-06-06",
+        "airline": "British Airways",
+        "price": 356.16,
+        "duration_hours": 10.016666666666667,
+        "stops": 0,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-06-07",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 12.833333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 34,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-04-24",
+    "return_date": "2026-05-24",
+    "europe_nights": 23,
+    "india_nights": 6,
+    "weekdays": 21,
+    "total_price": 1400.8200000000002,
+    "total_hours": 47.36666666666667,
+    "total_stops": 2,
+    "childcare_cost": 4200,
+    "total_score": 6948.153333333334,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-04-24",
+        "airline": "Lufthansa",
+        "price": 353.88,
+        "duration_hours": 12.666666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-18",
+        "airline": "British Airways",
+        "price": 346.53,
+        "duration_hours": 10.016666666666667,
+        "stops": 0,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-05-24",
+        "airline": "British Airways",
+        "price": 346.53,
+        "duration_hours": 10.016666666666667,
+        "stops": 0,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-05-25",
+        "airline": "Lufthansa",
+        "price": 353.88,
+        "duration_hours": 14.666666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 35,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-05-01",
+    "return_date": "2026-05-29",
+    "europe_nights": 22,
+    "india_nights": 5,
+    "weekdays": 21,
+    "total_price": 1227.04,
+    "total_hours": 46.25,
+    "total_stops": 3,
+    "childcare_cost": 4200,
+    "total_score": 6952.04,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-01",
+        "airline": "Lufthansa",
+        "price": 405.81,
+        "duration_hours": 12.666666666666666,
+        "stops": 1,
+        "source": "duffel"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-24",
+        "airline": "Etihad",
+        "price": 311.0,
+        "duration_hours": 11.583333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-29",
+        "airline": "Singapore Airlines",
+        "price": 510.23,
+        "duration_hours": 22.0,
+        "stops": 1,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 36,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-05-01",
+    "return_date": "2026-05-30",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 21,
+    "total_price": 1227.04,
+    "total_hours": 46.25,
+    "total_stops": 3,
+    "childcare_cost": 4200,
+    "total_score": 6952.04,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-01",
+        "airline": "Lufthansa",
+        "price": 405.81,
+        "duration_hours": 12.666666666666666,
+        "stops": 1,
+        "source": "duffel"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-24",
+        "airline": "Etihad",
+        "price": 311.0,
+        "duration_hours": 11.583333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-30",
+        "airline": "Singapore Airlines",
+        "price": 510.23,
+        "duration_hours": 22.0,
+        "stops": 1,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 37,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-05-01",
+    "return_date": "2026-05-30",
+    "europe_nights": 23,
+    "india_nights": 5,
+    "weekdays": 21,
+    "total_price": 1227.04,
+    "total_hours": 46.25,
+    "total_stops": 3,
+    "childcare_cost": 4200,
+    "total_score": 6952.04,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-01",
+        "airline": "Lufthansa",
+        "price": 405.81,
+        "duration_hours": 12.666666666666666,
+        "stops": 1,
+        "source": "duffel"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-25",
+        "airline": "Etihad",
+        "price": 311.0,
+        "duration_hours": 11.583333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-30",
+        "airline": "Singapore Airlines",
+        "price": 510.23,
+        "duration_hours": 22.0,
+        "stops": 1,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 38,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-04-25",
+    "return_date": "2026-05-22",
+    "europe_nights": 21,
+    "india_nights": 5,
+    "weekdays": 20,
+    "total_price": 1101.23,
+    "total_hours": 62.66666666666667,
+    "total_stops": 3,
+    "childcare_cost": 4000,
+    "total_score": 6954.5633333333335,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-04-25",
+        "airline": "United",
+        "price": 280.0,
+        "duration_hours": 23.416666666666668,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-17",
+        "airline": "Etihad",
+        "price": 311.0,
+        "duration_hours": 17.25,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-22",
+        "airline": "Singapore Airlines",
+        "price": 510.23,
+        "duration_hours": 22.0,
+        "stops": 1,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 39,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-04-25",
+    "return_date": "2026-05-23",
+    "europe_nights": 21,
+    "india_nights": 6,
+    "weekdays": 20,
+    "total_price": 1101.23,
+    "total_hours": 62.66666666666667,
+    "total_stops": 3,
+    "childcare_cost": 4000,
+    "total_score": 6954.5633333333335,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-04-25",
+        "airline": "United",
+        "price": 280.0,
+        "duration_hours": 23.416666666666668,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-17",
+        "airline": "Etihad",
+        "price": 311.0,
+        "duration_hours": 17.25,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-23",
+        "airline": "Singapore Airlines",
+        "price": 510.23,
+        "duration_hours": 22.0,
+        "stops": 1,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 40,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-04-25",
+    "return_date": "2026-05-24",
+    "europe_nights": 23,
+    "india_nights": 5,
+    "weekdays": 20,
+    "total_price": 1204.74,
+    "total_hours": 57.5,
+    "total_stops": 3,
+    "childcare_cost": 4000,
+    "total_score": 6954.74,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-04-25",
+        "airline": "United",
+        "price": 280.0,
+        "duration_hours": 23.416666666666668,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-19",
+        "airline": "Qatar Airways",
+        "price": 311.0,
+        "duration_hours": 12.833333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-24",
+        "airline": "Lufthansa",
+        "price": 613.74,
+        "duration_hours": 21.25,
+        "stops": 1,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 41,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-05-01",
+    "return_date": "2026-05-31",
+    "europe_nights": 23,
+    "india_nights": 6,
+    "weekdays": 21,
+    "total_price": 1437.59,
+    "total_hours": 46.03333333333334,
+    "total_stops": 2,
+    "childcare_cost": 4200,
+    "total_score": 6958.256666666666,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-01",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 13.166666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-25",
+        "airline": "British Airways",
+        "price": 364.33,
+        "duration_hours": 10.016666666666667,
+        "stops": 0,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-05-31",
+        "airline": "British Airways",
+        "price": 364.33,
+        "duration_hours": 10.016666666666667,
+        "stops": 0,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-06-01",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 12.833333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 42,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-04-24",
+    "return_date": "2026-05-22",
+    "europe_nights": 22,
+    "india_nights": 5,
+    "weekdays": 21,
+    "total_price": 1085.23,
+    "total_hours": 53.75,
+    "total_stops": 3,
+    "childcare_cost": 4200,
+    "total_score": 6960.23,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-04-24",
+        "airline": "Icelandair",
+        "price": 264.0,
+        "duration_hours": 14.5,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-17",
+        "airline": "Etihad",
+        "price": 311.0,
+        "duration_hours": 17.25,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-22",
+        "airline": "Singapore Airlines",
+        "price": 510.23,
+        "duration_hours": 22.0,
+        "stops": 1,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 43,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-04-24",
+    "return_date": "2026-05-23",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 21,
+    "total_price": 1085.23,
+    "total_hours": 53.75,
+    "total_stops": 3,
+    "childcare_cost": 4200,
+    "total_score": 6960.23,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-04-24",
+        "airline": "Icelandair",
+        "price": 264.0,
+        "duration_hours": 14.5,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-17",
+        "airline": "Etihad",
+        "price": 311.0,
+        "duration_hours": 17.25,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-23",
+        "airline": "Singapore Airlines",
+        "price": 510.23,
+        "duration_hours": 22.0,
+        "stops": 1,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 44,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-05-08",
+    "return_date": "2026-06-08",
+    "europe_nights": 23,
+    "india_nights": 7,
+    "weekdays": 22,
+    "total_price": 1256.6200000000001,
+    "total_hours": 45.85,
+    "total_stops": 2,
+    "childcare_cost": 4400,
+    "total_score": 6973.62,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-08",
+        "airline": "British Airways",
+        "price": 395.0,
+        "duration_hours": 13.833333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-06-01",
+        "airline": "British Airways",
+        "price": 377.16,
+        "duration_hours": 10.016666666666667,
+        "stops": 0,
+        "source": "duffel"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-06-08",
+        "airline": "Singapore Airlines",
+        "price": 484.46,
+        "duration_hours": 22.0,
+        "stops": 1,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 45,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-05-02",
+    "return_date": "2026-06-01",
+    "europe_nights": 22,
+    "india_nights": 7,
+    "weekdays": 21,
+    "total_price": 1213.52,
+    "total_hours": 48.16666666666667,
+    "total_stops": 3,
+    "childcare_cost": 4200,
+    "total_score": 6976.8533333333335,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-02",
+        "airline": "Lufthansa",
+        "price": 418.06,
+        "duration_hours": 14.583333333333334,
+        "stops": 1,
+        "source": "duffel"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-25",
+        "airline": "Etihad",
+        "price": 311.0,
+        "duration_hours": 11.583333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-06-01",
+        "airline": "Singapore Airlines",
+        "price": 484.46,
+        "duration_hours": 22.0,
+        "stops": 1,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 46,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-05-02",
+    "return_date": "2026-06-01",
+    "europe_nights": 23,
+    "india_nights": 6,
+    "weekdays": 21,
+    "total_price": 1213.52,
+    "total_hours": 48.16666666666667,
+    "total_stops": 3,
+    "childcare_cost": 4200,
+    "total_score": 6976.8533333333335,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-02",
+        "airline": "Lufthansa",
+        "price": 418.06,
+        "duration_hours": 14.583333333333334,
+        "stops": 1,
+        "source": "duffel"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-26",
+        "airline": "Etihad",
+        "price": 311.0,
+        "duration_hours": 11.583333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-06-01",
+        "airline": "Singapore Airlines",
+        "price": 484.46,
+        "duration_hours": 22.0,
+        "stops": 1,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 47,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-05-01",
+    "return_date": "2026-05-29",
+    "europe_nights": 21,
+    "india_nights": 6,
+    "weekdays": 21,
+    "total_price": 1256.04,
+    "total_hours": 46.25,
+    "total_stops": 3,
+    "childcare_cost": 4200,
+    "total_score": 6981.04,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-01",
+        "airline": "Lufthansa",
+        "price": 405.81,
+        "duration_hours": 12.666666666666666,
+        "stops": 1,
+        "source": "duffel"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-23",
+        "airline": "Etihad",
+        "price": 340.0,
+        "duration_hours": 11.583333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-29",
+        "airline": "Singapore Airlines",
+        "price": 510.23,
+        "duration_hours": 22.0,
+        "stops": 1,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 48,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-05-01",
+    "return_date": "2026-05-30",
+    "europe_nights": 21,
+    "india_nights": 7,
+    "weekdays": 21,
+    "total_price": 1256.04,
+    "total_hours": 46.25,
+    "total_stops": 3,
+    "childcare_cost": 4200,
+    "total_score": 6981.04,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-01",
+        "airline": "Lufthansa",
+        "price": 405.81,
+        "duration_hours": 12.666666666666666,
+        "stops": 1,
+        "source": "duffel"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-23",
+        "airline": "Etihad",
+        "price": 340.0,
+        "duration_hours": 11.583333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-30",
+        "airline": "Singapore Airlines",
+        "price": 510.23,
+        "duration_hours": 22.0,
+        "stops": 1,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 49,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-04-25",
+    "return_date": "2026-05-25",
+    "europe_nights": 22,
+    "india_nights": 7,
+    "weekdays": 21,
+    "total_price": 1101.23,
+    "total_hours": 57.0,
+    "total_stops": 3,
+    "childcare_cost": 4200,
+    "total_score": 7041.23,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-04-25",
+        "airline": "United",
+        "price": 280.0,
+        "duration_hours": 23.416666666666668,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-18",
+        "airline": "Etihad",
+        "price": 311.0,
+        "duration_hours": 11.583333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-25",
+        "airline": "Singapore Airlines",
+        "price": 510.23,
+        "duration_hours": 22.0,
+        "stops": 1,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 50,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-04-25",
+    "return_date": "2026-05-24",
+    "europe_nights": 21,
+    "india_nights": 7,
+    "weekdays": 20,
+    "total_price": 1204.74,
+    "total_hours": 61.91666666666667,
+    "total_stops": 3,
+    "childcare_cost": 4000,
+    "total_score": 7043.073333333334,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-04-25",
+        "airline": "United",
+        "price": 280.0,
+        "duration_hours": 23.416666666666668,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-17",
+        "airline": "Etihad",
+        "price": 311.0,
+        "duration_hours": 17.25,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-24",
+        "airline": "Lufthansa",
+        "price": 613.74,
+        "duration_hours": 21.25,
+        "stops": 1,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 51,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-04-24",
+    "return_date": "2026-05-25",
+    "europe_nights": 23,
+    "india_nights": 7,
+    "weekdays": 22,
+    "total_price": 1085.23,
+    "total_hours": 48.083333333333336,
+    "total_stops": 3,
+    "childcare_cost": 4400,
+    "total_score": 7046.8966666666665,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-04-24",
+        "airline": "Icelandair",
+        "price": 264.0,
+        "duration_hours": 14.5,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-18",
+        "airline": "Etihad",
+        "price": 311.0,
+        "duration_hours": 11.583333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-25",
+        "airline": "Singapore Airlines",
+        "price": 510.23,
+        "duration_hours": 22.0,
+        "stops": 1,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 52,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-04-24",
+    "return_date": "2026-05-24",
+    "europe_nights": 22,
+    "india_nights": 7,
+    "weekdays": 21,
+    "total_price": 1188.74,
+    "total_hours": 53.0,
+    "total_stops": 3,
+    "childcare_cost": 4200,
+    "total_score": 7048.74,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-04-24",
+        "airline": "Icelandair",
+        "price": 264.0,
+        "duration_hours": 14.5,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-17",
+        "airline": "Etihad",
+        "price": 311.0,
+        "duration_hours": 17.25,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-24",
+        "airline": "Lufthansa",
+        "price": 613.74,
+        "duration_hours": 21.25,
+        "stops": 1,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 53,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-04-25",
+    "return_date": "2026-05-25",
+    "europe_nights": 23,
+    "india_nights": 6,
+    "weekdays": 21,
+    "total_price": 1101.23,
+    "total_hours": 58.25,
+    "total_stops": 3,
+    "childcare_cost": 4200,
+    "total_score": 7066.23,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-04-25",
+        "airline": "United",
+        "price": 280.0,
+        "duration_hours": 23.416666666666668,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-19",
+        "airline": "Qatar Airways",
+        "price": 311.0,
+        "duration_hours": 12.833333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-25",
+        "airline": "Singapore Airlines",
+        "price": 510.23,
+        "duration_hours": 22.0,
+        "stops": 1,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 54,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-04-25",
+    "return_date": "2026-05-25",
+    "europe_nights": 22,
+    "india_nights": 7,
+    "weekdays": 21,
+    "total_price": 1248.255,
+    "total_hours": 52.266666666666666,
+    "total_stops": 3,
+    "childcare_cost": 4200,
+    "total_score": 7093.588333333333,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-04-25",
+        "airline": "Lufthansa",
+        "price": 353.495,
+        "duration_hours": 14.583333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-18",
+        "airline": "British Airways",
+        "price": 341.205,
+        "duration_hours": 10.016666666666667,
+        "stops": 0,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-05-25",
+        "airline": "Lufthansa",
+        "price": 319.79,
+        "duration_hours": 14.25,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-05-26",
+        "airline": "SAS",
+        "price": 233.765,
+        "duration_hours": 13.416666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 55,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-04-24",
+    "return_date": "2026-05-21",
+    "europe_nights": 21,
+    "india_nights": 5,
+    "weekdays": 20,
+    "total_price": 1193.0100000000002,
+    "total_hours": 55.166666666666664,
+    "total_stops": 4,
+    "childcare_cost": 4000,
+    "total_score": 7096.343333333333,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-04-24",
+        "airline": "Lufthansa",
+        "price": 347.365,
+        "duration_hours": 12.666666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-16",
+        "airline": "Saudi Arabian Airlines",
+        "price": 305.94,
+        "duration_hours": 14.083333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-05-21",
+        "airline": "Saudi Arabian Airlines",
+        "price": 305.94,
+        "duration_hours": 15.0,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-05-22",
+        "airline": "SAS",
+        "price": 233.765,
+        "duration_hours": 13.416666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 56,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-04-25",
+    "return_date": "2026-05-23",
+    "europe_nights": 21,
+    "india_nights": 6,
+    "weekdays": 20,
+    "total_price": 1200.1100000000001,
+    "total_hours": 55.5,
+    "total_stops": 4,
+    "childcare_cost": 4000,
+    "total_score": 7110.110000000001,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-04-25",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 13.0,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-17",
+        "airline": "Saudi Arabian Airlines",
+        "price": 305.94,
+        "duration_hours": 14.083333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-05-23",
+        "airline": "Saudi Arabian Airlines",
+        "price": 305.94,
+        "duration_hours": 15.0,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-05-24",
+        "airline": "SAS",
+        "price": 233.765,
+        "duration_hours": 13.416666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 57,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-05-01",
+    "return_date": "2026-06-01",
+    "europe_nights": 23,
+    "india_nights": 7,
+    "weekdays": 22,
+    "total_price": 1201.27,
+    "total_hours": 46.25,
+    "total_stops": 3,
+    "childcare_cost": 4400,
+    "total_score": 7126.27,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-01",
+        "airline": "Lufthansa",
+        "price": 405.81,
+        "duration_hours": 12.666666666666666,
+        "stops": 1,
+        "source": "duffel"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-25",
+        "airline": "Etihad",
+        "price": 311.0,
+        "duration_hours": 11.583333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-06-01",
+        "airline": "Singapore Airlines",
+        "price": 484.46,
+        "duration_hours": 22.0,
+        "stops": 1,
+        "source": "duffel"
+      }
+    ]
+  },
+  {
+    "rank": 58,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-04-25",
+    "return_date": "2026-05-22",
+    "europe_nights": 21,
+    "india_nights": 5,
+    "weekdays": 20,
+    "total_price": 1223.0900000000001,
+    "total_hours": 55.416666666666664,
+    "total_stops": 4,
+    "childcare_cost": 4000,
+    "total_score": 7131.423333333333,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-04-25",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 13.0,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-17",
+        "airline": "Air India",
+        "price": 327.68,
+        "duration_hours": 14.083333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-05-22",
+        "airline": "Air India",
+        "price": 307.18,
+        "duration_hours": 14.916666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-05-23",
+        "airline": "SAS",
+        "price": 233.765,
+        "duration_hours": 13.416666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 59,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-05-02",
+    "return_date": "2026-06-01",
+    "europe_nights": 22,
+    "india_nights": 7,
+    "weekdays": 21,
+    "total_price": 1360.525,
+    "total_hours": 50.85,
+    "total_stops": 3,
+    "childcare_cost": 4200,
+    "total_score": 7177.525,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-02",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 13.166666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-25",
+        "airline": "British Airways",
+        "price": 352.505,
+        "duration_hours": 10.016666666666667,
+        "stops": 0,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-06-01",
+        "airline": "Lufthansa",
+        "price": 319.79,
+        "duration_hours": 14.25,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-06-02",
+        "airline": "SAS",
+        "price": 333.765,
+        "duration_hours": 13.416666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 60,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-04-25",
+    "return_date": "2026-05-24",
+    "europe_nights": 21,
+    "india_nights": 7,
+    "weekdays": 20,
+    "total_price": 1325.665,
+    "total_hours": 53.416666666666664,
+    "total_stops": 4,
+    "childcare_cost": 4000,
+    "total_score": 7193.998333333333,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-04-25",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 13.0,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-17",
+        "airline": "Lufthansa",
+        "price": 309.555,
+        "duration_hours": 12.666666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-05-24",
+        "airline": "Air India",
+        "price": 307.18,
+        "duration_hours": 14.916666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-05-25",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 12.833333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 61,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-05-02",
+    "return_date": "2026-05-31",
+    "europe_nights": 21,
+    "india_nights": 7,
+    "weekdays": 20,
+    "total_price": 1325.665,
+    "total_hours": 53.583333333333336,
+    "total_stops": 4,
+    "childcare_cost": 4000,
+    "total_score": 7197.331666666667,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-02",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 13.166666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-24",
+        "airline": "Lufthansa",
+        "price": 309.555,
+        "duration_hours": 12.666666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-05-31",
+        "airline": "Air India",
+        "price": 307.18,
+        "duration_hours": 14.916666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-06-01",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 12.833333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 62,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-05-01",
+    "return_date": "2026-05-28",
+    "europe_nights": 21,
+    "india_nights": 5,
+    "weekdays": 20,
+    "total_price": 1305.1100000000001,
+    "total_hours": 55.666666666666664,
+    "total_stops": 4,
+    "childcare_cost": 4000,
+    "total_score": 7218.443333333334,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-01",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 13.166666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-23",
+        "airline": "Saudi Arabian Airlines",
+        "price": 305.94,
+        "duration_hours": 14.083333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-05-28",
+        "airline": "Saudi Arabian Airlines",
+        "price": 305.94,
+        "duration_hours": 15.0,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-05-29",
+        "airline": "SAS",
+        "price": 338.765,
+        "duration_hours": 13.416666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 63,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-05-02",
+    "return_date": "2026-05-30",
+    "europe_nights": 21,
+    "india_nights": 6,
+    "weekdays": 20,
+    "total_price": 1305.1100000000001,
+    "total_hours": 55.666666666666664,
+    "total_stops": 4,
+    "childcare_cost": 4000,
+    "total_score": 7218.443333333334,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-02",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 13.166666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-24",
+        "airline": "Saudi Arabian Airlines",
+        "price": 305.94,
+        "duration_hours": 14.083333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-05-30",
+        "airline": "Saudi Arabian Airlines",
+        "price": 305.94,
+        "duration_hours": 15.0,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-05-31",
+        "airline": "SAS",
+        "price": 338.765,
+        "duration_hours": 13.416666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 64,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-04-25",
+    "return_date": "2026-05-24",
+    "europe_nights": 23,
+    "india_nights": 5,
+    "weekdays": 20,
+    "total_price": 1323.29,
+    "total_hours": 54.833333333333336,
+    "total_stops": 4,
+    "childcare_cost": 4000,
+    "total_score": 7219.956666666667,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-04-25",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 13.0,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-19",
+        "airline": "Air India",
+        "price": 307.18,
+        "duration_hours": 14.083333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-05-24",
+        "airline": "Air India",
+        "price": 307.18,
+        "duration_hours": 14.916666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-05-25",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 12.833333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 65,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-05-08",
+    "return_date": "2026-06-04",
+    "europe_nights": 21,
+    "india_nights": 5,
+    "weekdays": 20,
+    "total_price": 1320.81,
+    "total_hours": 55.083333333333336,
+    "total_stops": 4,
+    "childcare_cost": 4000,
+    "total_score": 7222.476666666667,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-08",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 13.166666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-30",
+        "airline": "Saudi Arabian Airlines",
+        "price": 305.94,
+        "duration_hours": 14.083333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-06-04",
+        "airline": "Saudi Arabian Airlines",
+        "price": 305.94,
+        "duration_hours": 15.0,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-06-05",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 12.833333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 66,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-05-02",
+    "return_date": "2026-05-31",
+    "europe_nights": 23,
+    "india_nights": 5,
+    "weekdays": 20,
+    "total_price": 1323.29,
+    "total_hours": 55.0,
+    "total_stops": 4,
+    "childcare_cost": 4000,
+    "total_score": 7223.29,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-02",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 13.166666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-26",
+        "airline": "Air India",
+        "price": 307.18,
+        "duration_hours": 14.083333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-05-31",
+        "airline": "Air India",
+        "price": 307.18,
+        "duration_hours": 14.916666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-06-01",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 12.833333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 67,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-05-02",
+    "return_date": "2026-05-29",
+    "europe_nights": 21,
+    "india_nights": 5,
+    "weekdays": 20,
+    "total_price": 1328.0900000000001,
+    "total_hours": 55.58333333333333,
+    "total_stops": 4,
+    "childcare_cost": 4000,
+    "total_score": 7239.756666666666,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-02",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 13.166666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-24",
+        "airline": "Air India",
+        "price": 327.68,
+        "duration_hours": 14.083333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-05-29",
+        "airline": "Air India",
+        "price": 307.18,
+        "duration_hours": 14.916666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-05-30",
+        "airline": "SAS",
+        "price": 338.765,
+        "duration_hours": 13.416666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 68,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-04-24",
+    "return_date": "2026-05-25",
+    "europe_nights": 23,
+    "india_nights": 7,
+    "weekdays": 22,
+    "total_price": 1242.125,
+    "total_hours": 50.35,
+    "total_stops": 3,
+    "childcare_cost": 4400,
+    "total_score": 7249.125,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-04-24",
+        "airline": "Lufthansa",
+        "price": 347.365,
+        "duration_hours": 12.666666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-18",
+        "airline": "British Airways",
+        "price": 341.205,
+        "duration_hours": 10.016666666666667,
+        "stops": 0,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-05-25",
+        "airline": "Lufthansa",
+        "price": 319.79,
+        "duration_hours": 14.25,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-05-26",
+        "airline": "SAS",
+        "price": 233.765,
+        "duration_hours": 13.416666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 69,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-04-24",
+    "return_date": "2026-05-22",
+    "europe_nights": 21,
+    "india_nights": 6,
+    "weekdays": 21,
+    "total_price": 1206.755,
+    "total_hours": 52.99999999999999,
+    "total_stops": 4,
+    "childcare_cost": 4200,
+    "total_score": 7266.755,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-04-24",
+        "airline": "Lufthansa",
+        "price": 353.88,
+        "duration_hours": 12.666666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-16",
+        "airline": "Lufthansa",
+        "price": 309.555,
+        "duration_hours": 12.666666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-05-22",
+        "airline": "Lufthansa",
+        "price": 309.555,
+        "duration_hours": 14.25,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-05-23",
+        "airline": "SAS",
+        "price": 233.765,
+        "duration_hours": 13.416666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 70,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-05-02",
+    "return_date": "2026-06-02",
+    "europe_nights": 23,
+    "india_nights": 7,
+    "weekdays": 22,
+    "total_price": 1338.06,
+    "total_hours": 47.833333333333336,
+    "total_stops": 3,
+    "childcare_cost": 4400,
+    "total_score": 7294.726666666667,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-02",
+        "airline": "Lufthansa",
+        "price": 418.06,
+        "duration_hours": 14.583333333333334,
+        "stops": 1,
+        "source": "duffel"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-26",
+        "airline": "Etihad",
+        "price": 311.0,
+        "duration_hours": 11.583333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-06-02",
+        "airline": "Lufthansa",
+        "price": 609.0,
+        "duration_hours": 21.666666666666668,
+        "stops": 1,
+        "source": "google"
+      }
+    ]
+  },
+  {
+    "rank": 71,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-04-24",
+    "return_date": "2026-05-23",
+    "europe_nights": 21,
+    "india_nights": 7,
+    "weekdays": 21,
+    "total_price": 1199.525,
+    "total_hours": 55.166666666666664,
+    "total_stops": 4,
+    "childcare_cost": 4200,
+    "total_score": 7302.858333333334,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-04-24",
+        "airline": "Lufthansa",
+        "price": 353.88,
+        "duration_hours": 12.666666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-16",
+        "airline": "Saudi Arabian Airlines",
+        "price": 305.94,
+        "duration_hours": 14.083333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-05-23",
+        "airline": "Saudi Arabian Airlines",
+        "price": 305.94,
+        "duration_hours": 15.0,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-05-24",
+        "airline": "SAS",
+        "price": 233.765,
+        "duration_hours": 13.416666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 72,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-04-24",
+    "return_date": "2026-05-23",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 21,
+    "total_price": 1199.525,
+    "total_hours": 55.166666666666664,
+    "total_stops": 4,
+    "childcare_cost": 4200,
+    "total_score": 7302.858333333334,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-04-24",
+        "airline": "Lufthansa",
+        "price": 353.88,
+        "duration_hours": 12.666666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-17",
+        "airline": "Saudi Arabian Airlines",
+        "price": 305.94,
+        "duration_hours": 14.083333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-05-23",
+        "airline": "Saudi Arabian Airlines",
+        "price": 305.94,
+        "duration_hours": 15.0,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-05-24",
+        "airline": "SAS",
+        "price": 233.765,
+        "duration_hours": 13.416666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 73,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-04-25",
+    "return_date": "2026-05-25",
+    "europe_nights": 23,
+    "india_nights": 6,
+    "weekdays": 21,
+    "total_price": 1192.495,
+    "total_hours": 56.333333333333336,
+    "total_stops": 4,
+    "childcare_cost": 4200,
+    "total_score": 7319.161666666667,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-04-25",
+        "airline": "Lufthansa",
+        "price": 353.495,
+        "duration_hours": 14.583333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-19",
+        "airline": "Air India",
+        "price": 295.68,
+        "duration_hours": 14.083333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-05-25",
+        "airline": "Lufthansa",
+        "price": 309.555,
+        "duration_hours": 14.25,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-05-26",
+        "airline": "SAS",
+        "price": 233.765,
+        "duration_hours": 13.416666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 74,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-04-24",
+    "return_date": "2026-05-22",
+    "europe_nights": 22,
+    "india_nights": 5,
+    "weekdays": 21,
+    "total_price": 1222.505,
+    "total_hours": 55.08333333333333,
+    "total_stops": 4,
+    "childcare_cost": 4200,
+    "total_score": 7324.171666666667,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-04-24",
+        "airline": "Lufthansa",
+        "price": 353.88,
+        "duration_hours": 12.666666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-17",
+        "airline": "Air India",
+        "price": 327.68,
+        "duration_hours": 14.083333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-05-22",
+        "airline": "Air India",
+        "price": 307.18,
+        "duration_hours": 14.916666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-05-23",
+        "airline": "SAS",
+        "price": 233.765,
+        "duration_hours": 13.416666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 75,
+    "strategy": "one_way_x3",
+    "depart_date": "2026-04-25",
+    "return_date": "2026-05-26",
+    "europe_nights": 23,
+    "india_nights": 7,
+    "weekdays": 22,
+    "total_price": 1200.0,
+    "total_hours": 57.91666666666667,
+    "total_stops": 3,
+    "childcare_cost": 4400,
+    "total_score": 7358.333333333334,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-04-25",
+        "airline": "United",
+        "price": 280.0,
+        "duration_hours": 23.416666666666668,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-19",
+        "airline": "Qatar Airways",
+        "price": 311.0,
+        "duration_hours": 12.833333333333334,
+        "stops": 1,
+        "source": "google"
+      },
+      {
+        "origin": "HYD",
+        "destination": "SEA",
+        "date": "2026-05-26",
+        "airline": "Lufthansa",
+        "price": 609.0,
+        "duration_hours": 21.666666666666668,
+        "stops": 1,
+        "source": "google"
+      }
+    ]
+  },
+  {
+    "rank": 76,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-05-08",
+    "return_date": "2026-06-08",
+    "europe_nights": 23,
+    "india_nights": 7,
+    "weekdays": 22,
+    "total_price": 1356.2999999999997,
+    "total_hours": 50.85,
+    "total_stops": 3,
+    "childcare_cost": 4400,
+    "total_score": 7373.3,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-08",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 13.166666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-06-01",
+        "airline": "British Airways",
+        "price": 348.28,
+        "duration_hours": 10.016666666666667,
+        "stops": 0,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-06-08",
+        "airline": "Lufthansa",
+        "price": 319.79,
+        "duration_hours": 14.25,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-06-09",
+        "airline": "SAS",
+        "price": 333.765,
+        "duration_hours": 13.416666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 77,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-05-01",
+    "return_date": "2026-06-01",
+    "europe_nights": 23,
+    "india_nights": 7,
+    "weekdays": 22,
+    "total_price": 1360.525,
+    "total_hours": 50.85,
+    "total_stops": 3,
+    "childcare_cost": 4400,
+    "total_score": 7377.525,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-01",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 13.166666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-25",
+        "airline": "British Airways",
+        "price": 352.505,
+        "duration_hours": 10.016666666666667,
+        "stops": 0,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-06-01",
+        "airline": "Lufthansa",
+        "price": 319.79,
+        "duration_hours": 14.25,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-06-02",
+        "airline": "SAS",
+        "price": 333.765,
+        "duration_hours": 13.416666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 78,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-05-01",
+    "return_date": "2026-05-29",
+    "europe_nights": 21,
+    "india_nights": 6,
+    "weekdays": 21,
+    "total_price": 1312.3400000000001,
+    "total_hours": 53.49999999999999,
+    "total_stops": 4,
+    "childcare_cost": 4200,
+    "total_score": 7382.34,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-01",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 13.166666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-23",
+        "airline": "Lufthansa",
+        "price": 309.555,
+        "duration_hours": 12.666666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-05-29",
+        "airline": "Lufthansa",
+        "price": 309.555,
+        "duration_hours": 14.25,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-05-30",
+        "airline": "SAS",
+        "price": 338.765,
+        "duration_hours": 13.416666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 79,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-05-08",
+    "return_date": "2026-06-05",
+    "europe_nights": 21,
+    "india_nights": 6,
+    "weekdays": 21,
+    "total_price": 1328.04,
+    "total_hours": 52.916666666666664,
+    "total_stops": 4,
+    "childcare_cost": 4200,
+    "total_score": 7386.373333333333,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-08",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 13.166666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-30",
+        "airline": "Lufthansa",
+        "price": 309.555,
+        "duration_hours": 12.666666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-06-05",
+        "airline": "Lufthansa",
+        "price": 309.555,
+        "duration_hours": 14.25,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-06-06",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 12.833333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 80,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-05-08",
+    "return_date": "2026-06-07",
+    "europe_nights": 22,
+    "india_nights": 7,
+    "weekdays": 21,
+    "total_price": 1328.04,
+    "total_hours": 52.916666666666664,
+    "total_stops": 4,
+    "childcare_cost": 4200,
+    "total_score": 7386.373333333333,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-08",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 13.166666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-31",
+        "airline": "Lufthansa",
+        "price": 309.555,
+        "duration_hours": 12.666666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-06-07",
+        "airline": "Lufthansa",
+        "price": 309.555,
+        "duration_hours": 14.25,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-06-08",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 12.833333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 81,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-05-02",
+    "return_date": "2026-06-01",
+    "europe_nights": 23,
+    "india_nights": 6,
+    "weekdays": 21,
+    "total_price": 1293.4650000000001,
+    "total_hours": 54.916666666666664,
+    "total_stops": 4,
+    "childcare_cost": 4200,
+    "total_score": 7391.798333333333,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-02",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 13.166666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-26",
+        "airline": "Air India",
+        "price": 295.68,
+        "duration_hours": 14.083333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-06-01",
+        "airline": "Lufthansa",
+        "price": 309.555,
+        "duration_hours": 14.25,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-06-02",
+        "airline": "SAS",
+        "price": 333.765,
+        "duration_hours": 13.416666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 82,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-05-01",
+    "return_date": "2026-05-31",
+    "europe_nights": 22,
+    "india_nights": 7,
+    "weekdays": 21,
+    "total_price": 1325.665,
+    "total_hours": 53.583333333333336,
+    "total_stops": 4,
+    "childcare_cost": 4200,
+    "total_score": 7397.331666666667,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-01",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 13.166666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-24",
+        "airline": "Lufthansa",
+        "price": 309.555,
+        "duration_hours": 12.666666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-05-31",
+        "airline": "Air India",
+        "price": 307.18,
+        "duration_hours": 14.916666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-06-01",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 12.833333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 83,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-05-01",
+    "return_date": "2026-05-30",
+    "europe_nights": 21,
+    "india_nights": 7,
+    "weekdays": 21,
+    "total_price": 1305.1100000000001,
+    "total_hours": 55.666666666666664,
+    "total_stops": 4,
+    "childcare_cost": 4200,
+    "total_score": 7418.443333333334,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-01",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 13.166666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-23",
+        "airline": "Saudi Arabian Airlines",
+        "price": 305.94,
+        "duration_hours": 14.083333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-05-30",
+        "airline": "Saudi Arabian Airlines",
+        "price": 305.94,
+        "duration_hours": 15.0,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-05-31",
+        "airline": "SAS",
+        "price": 338.765,
+        "duration_hours": 13.416666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 84,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-05-01",
+    "return_date": "2026-05-30",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 21,
+    "total_price": 1305.1100000000001,
+    "total_hours": 55.666666666666664,
+    "total_stops": 4,
+    "childcare_cost": 4200,
+    "total_score": 7418.443333333334,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-01",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 13.166666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-24",
+        "airline": "Saudi Arabian Airlines",
+        "price": 305.94,
+        "duration_hours": 14.083333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-05-30",
+        "airline": "Saudi Arabian Airlines",
+        "price": 305.94,
+        "duration_hours": 15.0,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-05-31",
+        "airline": "SAS",
+        "price": 338.765,
+        "duration_hours": 13.416666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 85,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-05-08",
+    "return_date": "2026-06-06",
+    "europe_nights": 21,
+    "india_nights": 7,
+    "weekdays": 21,
+    "total_price": 1320.81,
+    "total_hours": 55.083333333333336,
+    "total_stops": 4,
+    "childcare_cost": 4200,
+    "total_score": 7422.476666666667,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-08",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 13.166666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-30",
+        "airline": "Saudi Arabian Airlines",
+        "price": 305.94,
+        "duration_hours": 14.083333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-06-06",
+        "airline": "Saudi Arabian Airlines",
+        "price": 305.94,
+        "duration_hours": 15.0,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-06-07",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 12.833333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 86,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-05-08",
+    "return_date": "2026-06-06",
+    "europe_nights": 22,
+    "india_nights": 6,
+    "weekdays": 21,
+    "total_price": 1320.81,
+    "total_hours": 55.083333333333336,
+    "total_stops": 4,
+    "childcare_cost": 4200,
+    "total_score": 7422.476666666667,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-08",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 13.166666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-31",
+        "airline": "Saudi Arabian Airlines",
+        "price": 305.94,
+        "duration_hours": 14.083333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-06-06",
+        "airline": "Saudi Arabian Airlines",
+        "price": 305.94,
+        "duration_hours": 15.0,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-06-07",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 12.833333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 87,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-04-24",
+    "return_date": "2026-05-24",
+    "europe_nights": 22,
+    "india_nights": 7,
+    "weekdays": 21,
+    "total_price": 1324.495,
+    "total_hours": 54.916666666666664,
+    "total_stops": 4,
+    "childcare_cost": 4200,
+    "total_score": 7422.828333333333,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-04-24",
+        "airline": "Lufthansa",
+        "price": 353.88,
+        "duration_hours": 12.666666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-17",
+        "airline": "Lufthansa",
+        "price": 309.555,
+        "duration_hours": 12.666666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-05-24",
+        "airline": "Air India",
+        "price": 307.18,
+        "duration_hours": 14.916666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-05-25",
+        "airline": "Lufthansa",
+        "price": 353.88,
+        "duration_hours": 14.666666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 88,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-05-01",
+    "return_date": "2026-05-29",
+    "europe_nights": 22,
+    "india_nights": 5,
+    "weekdays": 21,
+    "total_price": 1328.0900000000001,
+    "total_hours": 55.58333333333333,
+    "total_stops": 4,
+    "childcare_cost": 4200,
+    "total_score": 7439.756666666666,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-01",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 13.166666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-24",
+        "airline": "Air India",
+        "price": 327.68,
+        "duration_hours": 14.083333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-05-29",
+        "airline": "Air India",
+        "price": 307.18,
+        "duration_hours": 14.916666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-05-30",
+        "airline": "SAS",
+        "price": 338.765,
+        "duration_hours": 13.416666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 89,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-05-02",
+    "return_date": "2026-06-02",
+    "europe_nights": 23,
+    "india_nights": 7,
+    "weekdays": 22,
+    "total_price": 1300.29,
+    "total_hours": 55.0,
+    "total_stops": 4,
+    "childcare_cost": 4400,
+    "total_score": 7600.29,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-05-02",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 13.166666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-26",
+        "airline": "Air India",
+        "price": 295.68,
+        "duration_hours": 14.083333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-06-02",
+        "airline": "Air India",
+        "price": 295.68,
+        "duration_hours": 14.916666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-06-03",
+        "airline": "Condor Flugdienst",
+        "price": 354.465,
+        "duration_hours": 12.833333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  },
+  {
+    "rank": 90,
+    "strategy": "round_trip_x2",
+    "depart_date": "2026-04-25",
+    "return_date": "2026-05-26",
+    "europe_nights": 23,
+    "india_nights": 7,
+    "weekdays": 22,
+    "total_price": 1298.35,
+    "total_hours": 58.25,
+    "total_stops": 4,
+    "childcare_cost": 4400,
+    "total_score": 7663.35,
+    "legs": [
+      {
+        "origin": "SEA",
+        "destination": "MXP",
+        "date": "2026-04-25",
+        "airline": "Lufthansa",
+        "price": 353.495,
+        "duration_hours": 14.583333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "HYD",
+        "date": "2026-05-19",
+        "airline": "Air India",
+        "price": 295.68,
+        "duration_hours": 14.083333333333334,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "HYD",
+        "destination": "MXP",
+        "date": "2026-05-26",
+        "airline": "Air India",
+        "price": 295.68,
+        "duration_hours": 14.916666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      },
+      {
+        "origin": "MXP",
+        "destination": "SEA",
+        "date": "2026-05-27",
+        "airline": "Lufthansa",
+        "price": 353.495,
+        "duration_hours": 14.666666666666666,
+        "stops": 1,
+        "source": "duffel_rt"
+      }
+    ]
+  }
+]
