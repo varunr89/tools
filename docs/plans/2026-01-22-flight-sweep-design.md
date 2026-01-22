@@ -31,6 +31,7 @@ Comprehensive sweep across date combinations to find optimal Seattle - Milan - H
 | Max 1 stop per leg | Filter out 2+ stop flights |
 | Max 4 hour layover | Filter out flights with layover > 4 hours |
 | Single carrier per leg | Filter out multi-carrier legs (comma in airline name) |
+| Real airlines only | Filter out airlines containing "Duffel" or "Test" (synthetic data) |
 
 ## Scoring Formula
 
