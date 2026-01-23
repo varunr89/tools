@@ -409,6 +409,41 @@ const INJECTED_CSS = `
 }
 .viewer-search-bar .search-dropdown-item p strong { color: var(--primary, #e94560); }
 
+/* Filter toggle buttons */
+.filter-toggles {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.filter-btn {
+  padding: 0.35rem 0.6rem;
+  font-size: 0.75rem;
+  border: 1px solid var(--border, #333);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-muted, #888);
+  cursor: pointer;
+  opacity: 0.5;
+  transition: all 0.15s ease;
+}
+.filter-btn:hover {
+  opacity: 0.8;
+  border-color: var(--primary, #e94560);
+}
+.filter-btn.active {
+  opacity: 1;
+  background: var(--surface, #16213e);
+  border-color: var(--primary, #e94560);
+  color: var(--text, #eee);
+}
+
+/* Filter visibility classes - applied to body */
+body.hide-user .message.user { display: none !important; }
+body.hide-assistant .message.assistant { display: none !important; }
+body.hide-tool-use .tool-use { display: none !important; }
+body.hide-tool-reply .message.tool-reply { display: none !important; }
+body.hide-thinking .thinking { display: none !important; }
+
 /* Performance optimization - removed content-visibility from .message to allow proper collapse sizing */
 .cell {
   content-visibility: auto;
@@ -646,6 +681,25 @@ const INJECTED_JS = `
     detectTotalPages();
     setupInfiniteScroll();
     setupSearchBar();
+    setupFilters();
+  }
+
+  // Filter toggle functionality
+  function setupFilters() {
+    const filterContainer = document.getElementById('filter-toggles');
+    if (!filterContainer) return;
+
+    filterContainer.addEventListener('click', (e) => {
+      const btn = e.target.closest('.filter-btn');
+      if (!btn) return;
+
+      const filter = btn.dataset.filter;
+      btn.classList.toggle('active');
+
+      // Toggle body class for CSS filtering
+      const isActive = btn.classList.contains('active');
+      document.body.classList.toggle('hide-' + filter, !isActive);
+    });
   }
 
   // Search bar functionality
@@ -745,6 +799,13 @@ const SEARCH_BAR_HTML = `
   <div class="search-wrapper">
     <input type="search" id="viewer-search-input" placeholder="Search all conversations..." autocomplete="off" />
     <div id="viewer-search-dropdown" class="search-dropdown"></div>
+  </div>
+  <div class="filter-toggles" id="filter-toggles">
+    <button class="filter-btn active" data-filter="user" title="User messages">👤 User</button>
+    <button class="filter-btn active" data-filter="assistant" title="Assistant responses">🤖 Assistant</button>
+    <button class="filter-btn active" data-filter="tool-use" title="Tool calls">🔧 Tools</button>
+    <button class="filter-btn active" data-filter="tool-reply" title="Tool results">📋 Results</button>
+    <button class="filter-btn active" data-filter="thinking" title="Thinking blocks">💭 Thinking</button>
   </div>
 </div>
 `;
