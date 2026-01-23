@@ -277,6 +277,67 @@ async function initializeSearch() {
 // CSS to inject for progressive disclosure and search bar
 const INJECTED_CSS = `
 <style id="viewer-enhancements">
+/* Dark mode support - follows system preference */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-color: #1a1a2e !important;
+    --card-bg: #16213e !important;
+    --user-bg: #1e3a5f !important;
+    --user-border: #4fc3f7 !important;
+    --assistant-bg: #16213e !important;
+    --assistant-border: #9e9e9e !important;
+    --thinking-bg: #2d2a1e !important;
+    --thinking-border: #ffc107 !important;
+    --thinking-text: #ccc !important;
+    --tool-bg: #2a1f3d !important;
+    --tool-border: #ce93d8 !important;
+    --tool-result-bg: #1e3d2f !important;
+    --tool-error-bg: #3d1e1e !important;
+    --text-color: #eee !important;
+    --text-muted: #888 !important;
+    --code-bg: #0d1117 !important;
+    --code-text: #aed581 !important;
+    --bg: #1a1a2e;
+    --surface: #16213e;
+    --primary: #e94560;
+    --text: #eee;
+    --border: #333;
+  }
+  body {
+    background: var(--bg-color) !important;
+    color: var(--text-color) !important;
+  }
+  .message.user { background: var(--user-bg) !important; }
+  .message.assistant { background: var(--card-bg) !important; }
+  .index-item { background: var(--card-bg) !important; }
+  pre { background: var(--code-bg) !important; }
+  code { background: rgba(255,255,255,0.1) !important; }
+  .expand-btn, .message-expand-btn {
+    background: rgba(255,255,255,0.1) !important;
+    color: var(--text-muted) !important;
+    border-color: rgba(255,255,255,0.2) !important;
+  }
+  .pagination a {
+    background: var(--card-bg) !important;
+    border-color: var(--user-border) !important;
+  }
+  .pagination .current { background: var(--user-border) !important; }
+  /* Fix gradients for dark mode */
+  .message-content.collapsed::after,
+  .index-item-content.collapsed::after {
+    background: linear-gradient(to bottom, transparent, var(--card-bg)) !important;
+  }
+  .message.user .message-content.collapsed::after {
+    background: linear-gradient(to bottom, transparent, var(--user-bg)) !important;
+  }
+  .truncatable.truncated::after {
+    background: linear-gradient(to bottom, transparent, var(--card-bg)) !important;
+  }
+  .message.user .truncatable.truncated::after {
+    background: linear-gradient(to bottom, transparent, var(--user-bg)) !important;
+  }
+}
+
 /* Global search bar styles */
 .viewer-search-bar {
   position: sticky;
@@ -355,19 +416,23 @@ const INJECTED_CSS = `
   contain-intrinsic-size: 1px 400px;
 }
 
-/* Message content collapsing */
-.message-content.collapsed {
-  max-height: 300px;
+/* Content collapsing - line-based (messages and index items) */
+.message-content.collapsed,
+.index-item-content.collapsed {
+  --collapse-lines: 10;
+  --line-height: 1.5em;
+  max-height: calc(var(--collapse-lines) * var(--line-height));
   overflow: hidden;
   position: relative;
 }
-.message-content.collapsed::after {
+.message-content.collapsed::after,
+.index-item-content.collapsed::after {
   content: '';
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 60px;
+  height: 3em;
   background: linear-gradient(to bottom, transparent, var(--card-bg, #fff));
   pointer-events: none;
 }
@@ -411,29 +476,41 @@ const INJECTED_CSS = `
 const INJECTED_JS = `
 <script id="viewer-enhancements-js">
 (function() {
-  // Collapse long message content - can be called multiple times for new content
-  const MAX_HEIGHT = 300;
-  function collapseMessages(root) {
+  // Collapse long content - line-based collapsing
+  // Applies to both message pages (.message-content) and index pages (.index-item-content)
+  const MAX_LINES = 10;
+  const MIN_HIDDEN_LINES = 5; // Only collapse if hiding at least this many lines
+
+  function collapseContent(root) {
     const container = root || document;
-    container.querySelectorAll('.message-content').forEach(function(content) {
+    // Target both message content and index item content
+    container.querySelectorAll('.message-content, .index-item-content').forEach(function(content) {
       // Skip if already processed or has truncatable handling
       if (content.dataset.collapseProcessed) return;
       if (content.closest('.truncatable')) return;
       content.dataset.collapseProcessed = 'true';
 
-      if (content.scrollHeight > MAX_HEIGHT + 50) {
+      // Calculate line height and total lines
+      const style = window.getComputedStyle(content);
+      const lineHeight = parseFloat(style.lineHeight) || parseFloat(style.fontSize) * 1.5;
+      const totalHeight = content.scrollHeight;
+      const totalLines = Math.ceil(totalHeight / lineHeight);
+      const hiddenLines = totalLines - MAX_LINES;
+
+      if (hiddenLines >= MIN_HIDDEN_LINES) {
         content.classList.add('collapsed');
+        content.style.setProperty('--line-height', lineHeight + 'px');
 
         const btn = document.createElement('button');
         btn.className = 'message-expand-btn';
-        btn.textContent = 'Show more';
+        btn.textContent = 'Show ' + hiddenLines + ' more lines';
         btn.addEventListener('click', function() {
           if (content.classList.contains('collapsed')) {
             content.classList.remove('collapsed');
             btn.textContent = 'Show less';
           } else {
             content.classList.add('collapsed');
-            btn.textContent = 'Show more';
+            btn.textContent = 'Show ' + hiddenLines + ' more lines';
           }
         });
         content.parentNode.insertBefore(btn, content.nextSibling);
@@ -442,19 +519,21 @@ const INJECTED_JS = `
   }
 
   // Initial collapse
-  collapseMessages();
+  collapseContent();
 
   // Export for use by infinite scroll
-  window.collapseMessages = collapseMessages;
+  window.collapseContent = collapseContent;
 
-  // Infinite scroll state
-  let currentPage = 1;
-  let totalPages = 1;
-  let isLoading = false;
-  const pageMatch = window.location.pathname.match(/page-(\\d+)\\.html/);
-  if (pageMatch) {
-    currentPage = parseInt(pageMatch[1], 10);
+  // Infinite scroll state - use window to persist across any script re-execution
+  if (typeof window.__infiniteScrollState === 'undefined') {
+    const pageMatch = window.location.pathname.match(/page-([0-9]+)\\.html/);
+    window.__infiniteScrollState = {
+      currentPage: pageMatch ? parseInt(pageMatch[1], 10) : 1,
+      totalPages: 1,
+      isLoading: false
+    };
   }
+  const state = window.__infiniteScrollState;
 
   // Detect total pages from pagination
   function detectTotalPages() {
@@ -462,10 +541,10 @@ const INJECTED_JS = `
     if (pagination) {
       const links = pagination.querySelectorAll('a[href^="page-"]');
       links.forEach(link => {
-        const match = link.href.match(/page-(\\d+)\\.html/);
+        const match = link.href.match(/page-([0-9]+)\\.html/);
         if (match) {
           const pageNum = parseInt(match[1], 10);
-          if (pageNum > totalPages) totalPages = pageNum;
+          if (pageNum > state.totalPages) state.totalPages = pageNum;
         }
       });
     }
@@ -473,16 +552,20 @@ const INJECTED_JS = `
 
   // Load next page content
   async function loadNextPage() {
-    if (isLoading || currentPage >= totalPages) return;
+    // Set isLoading and increment currentPage IMMEDIATELY to prevent race conditions
+    if (state.isLoading || state.currentPage >= state.totalPages) {
+      return;
+    }
+    state.isLoading = true;
+    state.currentPage++;  // Increment synchronously BEFORE any async work
 
-    isLoading = true;
+    const pageToLoad = state.currentPage;
     const loader = document.getElementById('infinite-scroll-loader');
     if (loader) loader.className = 'loading';
 
-    const nextPage = currentPage + 1;
     const nextUrl = window.location.pathname.replace(
-      /page-\\d+\\.html/,
-      'page-' + String(nextPage).padStart(3, '0') + '.html'
+      /page-[0-9]+\\.html/,
+      'page-' + String(pageToLoad).padStart(3, '0') + '.html'
     );
 
     try {
@@ -496,48 +579,50 @@ const INJECTED_JS = `
       // Get messages from next page
       const messages = doc.querySelectorAll('.message');
       const container = document.querySelector('.container');
-      const pagination = document.querySelector('.pagination');
+      const loader = document.getElementById('infinite-scroll-loader');
 
       if (container && messages.length > 0) {
         messages.forEach(msg => {
           const clone = document.importNode(msg, true);
-          container.insertBefore(clone, pagination || loader);
+          // Always insert before loader to maintain correct order
+          container.insertBefore(clone, loader);
         });
 
-        currentPage = nextPage;
-
         // Collapse newly loaded messages
-        if (window.collapseMessages) {
-          window.collapseMessages();
+        if (window.collapseContent) {
+          window.collapseContent();
         }
       }
     } catch (err) {
-      console.error('Failed to load next page:', err);
+      console.error('Failed to load page', pageToLoad, ':', err);
+      // Rollback on error
+      state.currentPage--;
     } finally {
-      isLoading = false;
+      state.isLoading = false;
       const loader = document.getElementById('infinite-scroll-loader');
       if (loader) {
-        loader.className = currentPage >= totalPages ? 'done' : '';
+        loader.className = state.currentPage >= state.totalPages ? 'done' : '';
       }
     }
   }
 
   // Set up infinite scroll observer
   function setupInfiniteScroll() {
-    // Add loader element
+    // Check if already set up by looking for the loader element (most reliable guard)
+    if (document.getElementById('infinite-scroll-loader')) {
+      return;  // Already set up
+    }
+
     const container = document.querySelector('.container');
-    const pagination = document.querySelector('.pagination');
+    const paginations = document.querySelectorAll('.pagination');
 
     if (container) {
+      // Hide ALL pagination elements
+      paginations.forEach(p => p.style.display = 'none');
+
       const loader = document.createElement('div');
       loader.id = 'infinite-scroll-loader';
-      // Only use insertBefore if pagination is a direct child of container
-      if (pagination && pagination.parentNode === container) {
-        container.insertBefore(loader, pagination);
-        pagination.style.display = 'none'; // Hide pagination
-      } else {
-        container.appendChild(loader);
-      }
+      container.appendChild(loader);
 
       // Observe loader for infinite scroll
       const observer = new IntersectionObserver((entries) => {
@@ -681,7 +766,16 @@ function enhanceHtml(html: string): string {
 }
 
 // Serve enhanced HTML files
+// Redirect session index.html to page-001.html for direct navigation
 app.get(/.*\.html$/, (req: Request, res: Response) => {
+  // Redirect session index.html to page-001.html
+  // Pattern: /project/uuid/index.html -> /project/uuid/page-001.html
+  const sessionIndexMatch = req.path.match(/^\/([^/]+)\/([a-f0-9-]{36})\/index\.html$/);
+  if (sessionIndexMatch) {
+    const [, project, session] = sessionIndexMatch;
+    return res.redirect(`/${project}/${session}/page-001.html`);
+  }
+
   const filePath = join(ARCHIVE_DIR, req.path);
 
   if (!existsSync(filePath)) {
@@ -703,13 +797,24 @@ app.get(/.*\.html$/, (req: Request, res: Response) => {
 app.use(express.static(ARCHIVE_DIR, { index: false }));
 
 // Serve project directory index.html files (since we disabled automatic index serving)
+// Rewrite session links to go directly to page-001.html instead of session index.html
 app.get("/:project/", (req: Request, res: Response) => {
   const project = req.params.project as string;
   const projectDir = join(ARCHIVE_DIR, project);
   const indexPath = resolve(projectDir, "index.html");
 
   if (existsSync(indexPath)) {
-    res.sendFile(indexPath);
+    try {
+      let html = readFileSync(indexPath, "utf-8");
+      // Rewrite session links: href="uuid/index.html" -> href="uuid/page-001.html"
+      html = html.replace(/href="([a-f0-9-]{36})\/index\.html"/g, 'href="$1/page-001.html"');
+      // Inject our enhancements (dark mode, etc.)
+      html = enhanceHtml(html);
+      res.type("html").send(html);
+    } catch (err) {
+      console.error("Error serving project index:", err);
+      res.status(500).send("Error serving file");
+    }
   } else {
     res.status(404).send("Project not found");
   }
