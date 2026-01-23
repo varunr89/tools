@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import express, { Request, Response } from "express";
 import { readFileSync, existsSync, readdirSync, mkdirSync } from "fs";
 import { join, dirname, resolve } from "path";

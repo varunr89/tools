@@ -1,25 +1,40 @@
 {
   "name": "claude-transcript-viewer",
-  "version": "1.0.0",
-  "description": "Enhanced viewer for Claude Code transcripts with collapsing, previews, and infinite scroll",
+  "version": "1.1.0",
+  "description": "Enhanced viewer for Claude Code transcripts with dark mode, infinite scroll, message filtering, and search",
   "main": "dist/server.js",
   "type": "module",
+  "bin": {
+    "claude-transcript-viewer": "./dist/server.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
     "index": "tsx src/indexer/index.ts",
+    "prepublishOnly": "npm run build",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage"
   },
   "keywords": [
     "claude",
+    "claude-code",
     "transcript",
-    "viewer"
+    "viewer",
+    "anthropic"
   ],
-  "author": "",
+  "author": "Varun R",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/varunr89/tools.git",
+    "directory": "claude-transcript-viewer"
+  },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.71.2",
     "@types/express": "^5.0.6",
