@@ -634,9 +634,9 @@ const INJECTED_JS = `
           window.collapseContent();
         }
 
-        // Apply filters to newly loaded content
-        if (window.markInsightBlocks) window.markInsightBlocks();
+        // Apply filters to newly loaded content (order: wrap, then extract insights)
         if (window.wrapAssistantText) window.wrapAssistantText();
+        if (window.markInsightBlocks) window.markInsightBlocks();
         if (window.applyFilters) window.applyFilters();
       }
     } catch (err) {
@@ -700,11 +700,12 @@ const INJECTED_JS = `
     const filterContainer = document.getElementById('filter-toggles');
     if (!filterContainer) return;
 
-    // Mark insight blocks on load
-    markInsightBlocks();
-
-    // Wrap assistant text content (excluding thinking, tool-use, insights)
+    // Order matters: wrap first, then extract insights
+    // 1. Wrap assistant text (excluding thinking, tool-use - insights handled after)
     wrapAssistantText();
+
+    // 2. Extract insight blocks from assistant-text and move them out
+    markInsightBlocks();
 
     filterContainer.addEventListener('click', (e) => {
       const btn = e.target.closest('.filter-btn');
@@ -715,19 +716,76 @@ const INJECTED_JS = `
     });
   }
 
-  // Mark insight blocks with a class
+  // Extract insight blocks from assistant-text and wrap them properly
   function markInsightBlocks() {
-    document.querySelectorAll('code, pre').forEach(el => {
-      if (el.textContent.includes('★ Insight') || el.textContent.includes('Insight ─')) {
-        el.classList.add('insight-block');
-      }
+    document.querySelectorAll('.message.assistant .message-content').forEach(content => {
+      if (content.dataset.insightProcessed) return;
+      content.dataset.insightProcessed = 'true';
+
+      // Find all code/pre elements that contain insight markers
+      const insightStarts = Array.from(content.querySelectorAll('code, pre')).filter(el => {
+        if (!el.textContent.includes('★ Insight')) return false;
+        // Skip if already inside an insight-block
+        if (el.closest('.insight-block')) return false;
+        return true;
+      });
+
+      insightStarts.forEach(startEl => {
+        // Find the container we need to work within (either assistant-text or message-content)
+        const assistantText = startEl.closest('.assistant-text');
+        const container = assistantText || content;
+
+        // Find the parent block element (usually a <p> tag) that is a direct child of container
+        let startBlock = startEl;
+        while (startBlock.parentElement && startBlock.parentElement !== container) {
+          startBlock = startBlock.parentElement;
+        }
+
+        // If startBlock is not a direct child of container, skip
+        if (startBlock.parentElement !== container) return;
+
+        // Collect all sibling elements until we find the closing dashes
+        const elementsToWrap = [startBlock];
+        let current = startBlock.nextElementSibling;
+
+        while (current) {
+          elementsToWrap.push(current);
+
+          // Check if this element contains the closing dashes (────)
+          const hasClosingDashes = current.textContent && current.textContent.includes('────') &&
+            !current.textContent.includes('★ Insight');
+
+          if (hasClosingDashes) {
+            break;
+          }
+          current = current.nextElementSibling;
+        }
+
+        // Create the insight wrapper
+        if (elementsToWrap.length > 0) {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'insight-block';
+
+          // Insert wrapper before the first element in the container
+          container.insertBefore(wrapper, startBlock);
+
+          // Move all elements into the wrapper
+          elementsToWrap.forEach(el => wrapper.appendChild(el));
+
+          // If we extracted from assistant-text, move the wrapper to message-content level
+          if (assistantText && content !== assistantText) {
+            // Insert the insight wrapper after assistant-text in message-content
+            content.insertBefore(wrapper, assistantText.nextSibling);
+          }
+        }
+      });
     });
   }
 
   // Wrap non-special content in assistant messages
   function wrapAssistantText() {
     document.querySelectorAll('.message.assistant .message-content').forEach(content => {
-      if (content.querySelector('.assistant-text')) return; // Already wrapped
+      if (content.querySelector(':scope > .assistant-text')) return; // Already wrapped at this level
 
       const children = [...content.childNodes];
       const wrapper = document.createElement('div');
@@ -796,12 +854,21 @@ const INJECTED_JS = `
       const content = msg.querySelector('.message-content');
       if (!content) return;
 
-      // Check if any visible content remains
-      const hasVisibleContent = [...content.children].some(child => {
-        if (child.classList.contains('filter-hidden')) return false;
-        if (child.offsetHeight === 0) return false;
-        return true;
-      });
+      // Check if any visible filterable content remains
+      const hasVisibleThinking = filters.thinking && content.querySelector('.thinking:not(.filter-hidden)');
+      const hasVisibleToolUse = filters['tool-use'] && content.querySelector('.tool-use:not(.filter-hidden)');
+      const hasVisibleInsight = filters.insight && content.querySelector('.insight-block:not(.filter-hidden)');
+
+      // For assistant text, also check it has meaningful content (not just whitespace)
+      let hasVisibleText = false;
+      if (filters.assistant) {
+        const assistantText = content.querySelector('.assistant-text:not(.filter-hidden)');
+        if (assistantText && assistantText.textContent.trim().length > 0) {
+          hasVisibleText = true;
+        }
+      }
+
+      const hasVisibleContent = hasVisibleThinking || hasVisibleToolUse || hasVisibleInsight || hasVisibleText;
 
       msg.classList.toggle('filter-hidden', !hasVisibleContent);
     });
