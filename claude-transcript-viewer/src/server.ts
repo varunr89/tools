@@ -437,12 +437,18 @@ const INJECTED_CSS = `
   color: var(--text, #eee);
 }
 
-/* Filter visibility classes - applied to body */
-body.hide-user .message.user { display: none !important; }
-body.hide-assistant .message.assistant { display: none !important; }
-body.hide-tool-use .tool-use { display: none !important; }
-body.hide-tool-reply .message.tool-reply { display: none !important; }
-body.hide-thinking .thinking { display: none !important; }
+/* Filter visibility - elements get .filter-hidden class from JS */
+.filter-hidden { display: none !important; }
+
+/* Assistant text wrapper (dynamically added) */
+.assistant-text { display: block; }
+
+/* Insight blocks */
+.insight-block {
+  border-left: 3px solid #ffd700;
+  padding-left: 0.5rem;
+  margin: 0.5rem 0;
+}
 
 /* Performance optimization - removed content-visibility from .message to allow proper collapse sizing */
 .cell {
@@ -627,6 +633,11 @@ const INJECTED_JS = `
         if (window.collapseContent) {
           window.collapseContent();
         }
+
+        // Apply filters to newly loaded content
+        if (window.markInsightBlocks) window.markInsightBlocks();
+        if (window.wrapAssistantText) window.wrapAssistantText();
+        if (window.applyFilters) window.applyFilters();
       }
     } catch (err) {
       console.error('Failed to load page', pageToLoad, ':', err);
@@ -689,18 +700,117 @@ const INJECTED_JS = `
     const filterContainer = document.getElementById('filter-toggles');
     if (!filterContainer) return;
 
+    // Mark insight blocks on load
+    markInsightBlocks();
+
+    // Wrap assistant text content (excluding thinking, tool-use, insights)
+    wrapAssistantText();
+
     filterContainer.addEventListener('click', (e) => {
       const btn = e.target.closest('.filter-btn');
       if (!btn) return;
 
-      const filter = btn.dataset.filter;
       btn.classList.toggle('active');
-
-      // Toggle body class for CSS filtering
-      const isActive = btn.classList.contains('active');
-      document.body.classList.toggle('hide-' + filter, !isActive);
+      applyFilters();
     });
   }
+
+  // Mark insight blocks with a class
+  function markInsightBlocks() {
+    document.querySelectorAll('code, pre').forEach(el => {
+      if (el.textContent.includes('★ Insight') || el.textContent.includes('Insight ─')) {
+        el.classList.add('insight-block');
+      }
+    });
+  }
+
+  // Wrap non-special content in assistant messages
+  function wrapAssistantText() {
+    document.querySelectorAll('.message.assistant .message-content').forEach(content => {
+      if (content.querySelector('.assistant-text')) return; // Already wrapped
+
+      const children = [...content.childNodes];
+      const wrapper = document.createElement('div');
+      wrapper.className = 'assistant-text';
+
+      children.forEach(child => {
+        // Skip special blocks - they stay outside the wrapper
+        if (child.nodeType === 1) { // Element node
+          const el = child;
+          if (el.classList.contains('thinking') ||
+              el.classList.contains('tool-use') ||
+              el.classList.contains('insight-block')) {
+            return;
+          }
+        }
+        // Move to wrapper
+        wrapper.appendChild(child);
+      });
+
+      // Insert wrapper at the beginning
+      if (wrapper.childNodes.length > 0) {
+        content.insertBefore(wrapper, content.firstChild);
+      }
+    });
+  }
+
+  // Apply current filter state
+  function applyFilters() {
+    const filters = {};
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      filters[btn.dataset.filter] = btn.classList.contains('active');
+    });
+
+    // Apply to user messages
+    document.querySelectorAll('.message.user').forEach(el => {
+      el.classList.toggle('filter-hidden', !filters.user);
+    });
+
+    // Apply to tool results
+    document.querySelectorAll('.message.tool-reply').forEach(el => {
+      el.classList.toggle('filter-hidden', !filters['tool-reply']);
+    });
+
+    // Apply to thinking blocks
+    document.querySelectorAll('.thinking').forEach(el => {
+      el.classList.toggle('filter-hidden', !filters.thinking);
+    });
+
+    // Apply to tool-use blocks
+    document.querySelectorAll('.tool-use').forEach(el => {
+      el.classList.toggle('filter-hidden', !filters['tool-use']);
+    });
+
+    // Apply to insight blocks
+    document.querySelectorAll('.insight-block').forEach(el => {
+      el.classList.toggle('filter-hidden', !filters.insight);
+    });
+
+    // Apply to assistant text
+    document.querySelectorAll('.assistant-text').forEach(el => {
+      el.classList.toggle('filter-hidden', !filters.assistant);
+    });
+
+    // Hide assistant messages that are now empty
+    document.querySelectorAll('.message.assistant').forEach(msg => {
+      const content = msg.querySelector('.message-content');
+      if (!content) return;
+
+      // Check if any visible content remains
+      const hasVisibleContent = [...content.children].some(child => {
+        if (child.classList.contains('filter-hidden')) return false;
+        if (child.offsetHeight === 0) return false;
+        return true;
+      });
+
+      msg.classList.toggle('filter-hidden', !hasVisibleContent);
+    });
+  }
+
+  // Re-apply filters when new content is loaded (infinite scroll)
+  window.applyFilters = applyFilters;
+  window.markInsightBlocks = markInsightBlocks;
+  window.wrapAssistantText = wrapAssistantText;
 
   // Search bar functionality
   function setupSearchBar() {
@@ -802,10 +912,11 @@ const SEARCH_BAR_HTML = `
   </div>
   <div class="filter-toggles" id="filter-toggles">
     <button class="filter-btn active" data-filter="user" title="User messages">👤 User</button>
-    <button class="filter-btn active" data-filter="assistant" title="Assistant responses">🤖 Assistant</button>
+    <button class="filter-btn active" data-filter="assistant" title="Assistant text">🤖 Assistant</button>
     <button class="filter-btn active" data-filter="tool-use" title="Tool calls">🔧 Tools</button>
     <button class="filter-btn active" data-filter="tool-reply" title="Tool results">📋 Results</button>
     <button class="filter-btn active" data-filter="thinking" title="Thinking blocks">💭 Thinking</button>
+    <button class="filter-btn active" data-filter="insight" title="Insight blocks">★ Insight</button>
   </div>
 </div>
 `;
