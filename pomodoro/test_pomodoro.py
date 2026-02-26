@@ -1,7 +1,7 @@
 """Tests for PomodoroSession phase transitions and sound mapping."""
 
 import unittest
-from pomodoro.pomodoro import PomodoroSession
+from pomodoro import PomodoroSession
 
 
 class TestPomodoroSessionAdvance(unittest.TestCase):
