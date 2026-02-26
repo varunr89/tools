@@ -1,5 +1,6 @@
 {
   "name": "codex-collab",
+  "version": "1.0.0",
   "description": "Automated Codex reviews during design and implementation. Seamlessly integrates Claude Code and Codex CLI via Stop hooks.",
   "author": {
     "name": "Varun R"
