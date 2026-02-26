@@ -1,7 +1,7 @@
 """Tests for PomodoroSession phase transitions and sound mapping."""
 
 import unittest
-from pomodoro import PomodoroSession
+from pomodoro.pomodoro import PomodoroSession
 
 
 class TestPomodoroSessionAdvance(unittest.TestCase):
@@ -9,21 +9,21 @@ class TestPomodoroSessionAdvance(unittest.TestCase):
 
     def test_starts_in_work_phase(self):
         s = PomodoroSession(25, 5, 15, 4)
-        assert s.phase == s.WORK
-        assert s.current_session == 1
-        assert not s.is_complete()
+        self.assertEqual(s.phase, s.WORK)
+        self.assertEqual(s.current_session, 1)
+        self.assertFalse(s.is_complete())
 
     def test_work_to_short_break(self):
         s = PomodoroSession(25, 5, 15, 4)
         s.advance()  # session 1 work -> short break
-        assert s.phase == s.SHORT_BREAK
+        self.assertEqual(s.phase, s.SHORT_BREAK)
 
     def test_short_break_to_work(self):
         s = PomodoroSession(25, 5, 15, 4)
         s.advance()  # work -> short break
         s.advance()  # short break -> work (session 2)
-        assert s.phase == s.WORK
-        assert s.current_session == 2
+        self.assertEqual(s.phase, s.WORK)
+        self.assertEqual(s.current_session, 2)
 
     def test_long_break_after_4th_session(self):
         s = PomodoroSession(25, 5, 15, 8)
@@ -33,29 +33,29 @@ class TestPomodoroSessionAdvance(unittest.TestCase):
             s.advance()  # short break -> work
         # Now on session 4, advance from work
         s.advance()
-        assert s.phase == s.LONG_BREAK
+        self.assertEqual(s.phase, s.LONG_BREAK)
 
     def test_final_session_sets_done(self):
         s = PomodoroSession(25, 5, 15, 2)
         s.advance()  # session 1 work -> short break
         s.advance()  # short break -> session 2 work
         result = s.advance()  # session 2 work -> done
-        assert result is False
-        assert s.is_complete()
+        self.assertFalse(result)
+        self.assertTrue(s.is_complete())
 
     def test_single_session_completes_immediately(self):
         s = PomodoroSession(25, 5, 15, 1)
         result = s.advance()  # only session -> done
-        assert result is False
-        assert s.is_complete()
+        self.assertFalse(result)
+        self.assertTrue(s.is_complete())
 
     def test_no_trailing_break(self):
         """Final work session ends the cycle -- no break after it."""
         s = PomodoroSession(25, 5, 15, 1)
         s.advance()
-        assert s.is_complete()
+        self.assertTrue(s.is_complete())
         # Phase should still be WORK (advance doesn't change it on completion)
-        assert s.phase == s.WORK
+        self.assertEqual(s.phase, s.WORK)
 
 
 class TestSoundForCompletedPhase(unittest.TestCase):
@@ -63,29 +63,29 @@ class TestSoundForCompletedPhase(unittest.TestCase):
 
     def test_work_done_sound(self):
         s = PomodoroSession(25, 5, 15, 4)
-        assert s.sound_for_completed_phase(s.WORK) == "work_done"
+        self.assertEqual(s.sound_for_completed_phase(s.WORK), "work_done")
 
     def test_break_done_sound(self):
         s = PomodoroSession(25, 5, 15, 4)
-        assert s.sound_for_completed_phase(s.SHORT_BREAK) == "break_done"
+        self.assertEqual(s.sound_for_completed_phase(s.SHORT_BREAK), "break_done")
 
     def test_long_break_done_sound(self):
         s = PomodoroSession(25, 5, 15, 4)
-        assert s.sound_for_completed_phase(s.LONG_BREAK) == "break_done"
+        self.assertEqual(s.sound_for_completed_phase(s.LONG_BREAK), "break_done")
 
     def test_all_done_on_final_work_session(self):
         s = PomodoroSession(25, 5, 15, 1)
         # Before advance -- should still detect final session
-        assert s.sound_for_completed_phase(s.WORK) == "all_done"
+        self.assertEqual(s.sound_for_completed_phase(s.WORK), "all_done")
 
     def test_all_done_after_advance(self):
         s = PomodoroSession(25, 5, 15, 1)
         s.advance()  # sets _done
-        assert s.sound_for_completed_phase(s.WORK) == "all_done"
+        self.assertEqual(s.sound_for_completed_phase(s.WORK), "all_done")
 
     def test_not_all_done_on_non_final_session(self):
         s = PomodoroSession(25, 5, 15, 4)
-        assert s.sound_for_completed_phase(s.WORK) == "work_done"
+        self.assertEqual(s.sound_for_completed_phase(s.WORK), "work_done")
 
     def test_order_independence(self):
         """sound_for_completed_phase works before or after advance()."""
@@ -102,8 +102,8 @@ class TestSoundForCompletedPhase(unittest.TestCase):
         s2.advance()  # session 2 work -> done
         sound_after = s2.sound_for_completed_phase(s2.WORK)
 
-        assert sound_before == "all_done"
-        assert sound_after == "all_done"
+        self.assertEqual(sound_before, "all_done")
+        self.assertEqual(sound_after, "all_done")
 
 
 if __name__ == "__main__":
