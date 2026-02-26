@@ -107,8 +107,12 @@ class PomodoroSession:
         return self._done
 
     def sound_for_completed_phase(self, completed_phase: str) -> str:
-        """Return the sound to play after a phase completes."""
-        if self._done:
+        """Return the sound to play after a phase completes.
+
+        Determines completion from session counts rather than _done flag,
+        so this is safe to call before or after advance().
+        """
+        if completed_phase == self.WORK and self.current_session >= self.total_sessions:
             return "all_done"
         if completed_phase == self.WORK:
             return "work_done"
