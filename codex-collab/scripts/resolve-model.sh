@@ -11,7 +11,7 @@ FALLBACK_MODEL="gpt-5.2-codex"
 
 # Check for user override in local.md frontmatter
 if [[ -f "$STATE_FILE" ]]; then
-  OVERRIDE=$(sed -n '/^---$/,/^---$/{ /^---$/d; p; }' "$STATE_FILE" | grep '^model_override:' | sed 's/model_override: *//' | sed 's/^"\(.*\)"$/\1/')
+  OVERRIDE=$(sed -n '/^---$/,/^---$/{ /^---$/d; p; }' "$STATE_FILE" | grep '^model_override:' | sed 's/model_override: *//' | sed 's/^"\(.*\)"$/\1/' || true)
   if [[ -n "${OVERRIDE:-}" ]] && [[ "$OVERRIDE" != "null" ]]; then
     echo "$OVERRIDE"
     exit 0
@@ -20,7 +20,7 @@ fi
 
 # Try to get model from codex config
 if command -v codex &>/dev/null; then
-  CONFIGURED_MODEL=$(codex config get model 2>/dev/null || echo "")
+  CONFIGURED_MODEL=$(codex config get model 2>/dev/null || true)
   if [[ -n "$CONFIGURED_MODEL" ]] && [[ "$CONFIGURED_MODEL" == *-codex* ]]; then
     echo "$CONFIGURED_MODEL"
     exit 0

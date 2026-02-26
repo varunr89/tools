@@ -7,7 +7,6 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PLUGIN_ROOT="$(dirname "$SCRIPT_DIR")"
 REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
 STATE_FILE="$REPO_ROOT/.claude/codex-collab.local.md"
 
@@ -45,7 +44,7 @@ if [[ "$PAUSED" = "true" ]]; then
 fi
 
 # Read state
-PHASE=$(echo "$FRONTMATTER" | grep '^phase:' | sed 's/phase: *//')
+PHASE=$(echo "$FRONTMATTER" | grep '^phase:' | sed 's/phase: *//' || true)
 TASK_INDEX=$(echo "$FRONTMATTER" | grep '^task_index:' | sed 's/task_index: *//' || echo "0")
 GIT_CHECKPOINT=$(echo "$FRONTMATTER" | grep '^git_checkpoint:' | sed 's/git_checkpoint: *//' || echo "")
 PLAN_FILE=$(echo "$FRONTMATTER" | grep '^plan_file:' | sed 's/plan_file: *//' | sed 's/^"\(.*\)"$/\1/' || echo "")
@@ -86,7 +85,7 @@ case "$PHASE" in
     fi
 
     # Run design review (|| true so set -e does not kill us)
-    REVIEW=$("$PLUGIN_ROOT/scripts/design-review.sh" "$PLAN_FILE" 2>/dev/null || true)
+    REVIEW=$("$SCRIPT_DIR/design-review.sh" "$PLAN_FILE" 2>/dev/null || true)
     if [[ -z "$REVIEW" ]]; then
       REVIEW="Design review failed. Proceeding without review."
     fi
@@ -130,7 +129,7 @@ case "$PHASE" in
     TASK_DESC=$(git log --oneline "$GIT_CHECKPOINT"..HEAD 2>/dev/null | head -5 | paste -sd '; ' - || echo "Implementation task")
 
     # Run task review (|| true so set -e does not kill us)
-    REVIEW=$("$PLUGIN_ROOT/scripts/task-review.sh" "$GIT_CHECKPOINT" "$TASK_DESC" 2>/dev/null || true)
+    REVIEW=$("$SCRIPT_DIR/task-review.sh" "$GIT_CHECKPOINT" "$TASK_DESC" 2>/dev/null || true)
     if [[ -z "$REVIEW" ]]; then
       REVIEW="Task review unavailable. Proceeding."
     fi
