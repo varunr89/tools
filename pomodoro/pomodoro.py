@@ -106,12 +106,13 @@ class PomodoroSession:
     def is_complete(self) -> bool:
         return self._done
 
-    def sound_type(self) -> str:
+    def sound_for_completed_phase(self, completed_phase: str) -> str:
+        """Return the sound to play after a phase completes."""
         if self._done:
             return "all_done"
-        if self.phase == self.WORK:
-            return "break_done"
-        return "work_done"
+        if completed_phase == self.WORK:
+            return "work_done"
+        return "break_done"
 
 
 # ── Display ──────────────────────────────────────────────────────────
@@ -195,14 +196,15 @@ def main():
                 display.render(session, timer.remaining())
                 time.sleep(0.5)
 
-            sound = session.sound_type()
-            notify(sound)
-            display.phase_complete(session)
-
-            if session.phase == session.WORK:
+            completed_phase = session.phase
+            if completed_phase == session.WORK:
                 completed_work += 1
 
             session.advance()
+
+            sound = session.sound_for_completed_phase(completed_phase)
+            notify(sound)
+            display.phase_complete(session)
 
     except KeyboardInterrupt:
         display.clear_line()
