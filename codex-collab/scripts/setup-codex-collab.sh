@@ -1,13 +1,25 @@
 #!/bin/bash
 # Initializes a codex-collab session.
-# Creates the state file and prints activation message.
+# Creates the per-session state file and prints activation message.
 # Args: $@ = task description (all remaining args joined)
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
-STATE_FILE="$REPO_ROOT/.claude/codex-collab.local.md"
+
+# ── Session ID resolution ───────────────────────────────────────────
+
+SESSION_ID="${CODEX_COLLAB_SESSION_ID:-${CLAUDE_SESSION_ID:-}}"
+if [[ -z "$SESSION_ID" ]]; then
+  echo "ERROR: No session ID available. CLAUDE_SESSION_ID must be set by the SessionStart hook." >&2
+  echo "This usually means the session-start-hook.sh is not registered in ~/.claude/settings.json." >&2
+  exit 1
+fi
+
+# Session-scoped paths
+SESSIONS_DIR="$REPO_ROOT/.claude/codex-collab/sessions"
+STATE_FILE="$SESSIONS_DIR/${SESSION_ID}.md"
 
 # Check if already active
 if [[ -f "$STATE_FILE" ]]; then
@@ -41,8 +53,21 @@ GIT_SHA=$(git rev-parse HEAD 2>/dev/null || echo "unknown")
 TASK_DESC="${*:-}"
 
 # Create state directories
-mkdir -p "$REPO_ROOT/.claude"
+mkdir -p "$SESSIONS_DIR"
 mkdir -p "$REPO_ROOT/.claude/codex-collab/reviews"
+
+# ── Migrate old state file if present ───────────────────────────────
+
+OLD_STATE="$REPO_ROOT/.claude/codex-collab.local.md"
+if [[ -f "$OLD_STATE" ]]; then
+  echo "WARNING: Found old state file at .claude/codex-collab.local.md"
+  echo "         Per-session state is now at .claude/codex-collab/sessions/"
+  echo "         Removing old file."
+  rm -f "$OLD_STATE"
+  rm -f "$REPO_ROOT/.claude/codex-collab.skip"
+fi
+
+# ── Create session state ────────────────────────────────────────────
 
 cat > "$STATE_FILE" <<EOF
 ---
@@ -62,6 +87,7 @@ EOF
 cat <<EOF
 Codex Collab session activated!
 
+Session: ${SESSION_ID:0:12}...
 Model: $MODEL
 Reasoning: high/xhigh (context-dependent)
 Git checkpoint: ${GIT_SHA:0:8}

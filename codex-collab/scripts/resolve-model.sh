@@ -6,15 +6,21 @@
 set -euo pipefail
 
 REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
-STATE_FILE="$REPO_ROOT/.claude/codex-collab.local.md"
 FALLBACK_MODEL="gpt-5.2-codex"
 
-# Check for user override in local.md frontmatter
-if [[ -f "$STATE_FILE" ]]; then
-  OVERRIDE=$(sed -n '/^---$/,/^---$/{ /^---$/d; p; }' "$STATE_FILE" | grep '^model_override:' | sed 's/model_override: *//' | sed 's/^"\(.*\)"$/\1/' || true)
-  if [[ -n "${OVERRIDE:-}" ]] && [[ "$OVERRIDE" != "null" ]]; then
-    echo "$OVERRIDE"
-    exit 0
+# ── Session ID resolution ───────────────────────────────────────────
+
+SESSION_ID="${CODEX_COLLAB_SESSION_ID:-${CLAUDE_SESSION_ID:-}}"
+
+# Check for user override in session state frontmatter
+if [[ -n "${SESSION_ID:-}" ]]; then
+  STATE_FILE="$REPO_ROOT/.claude/codex-collab/sessions/${SESSION_ID}.md"
+  if [[ -f "$STATE_FILE" ]]; then
+    OVERRIDE=$(sed -n '/^---$/,/^---$/{ /^---$/d; p; }' "$STATE_FILE" | grep '^model_override:' | sed 's/model_override: *//' | sed 's/^"\(.*\)"$/\1/' || true)
+    if [[ -n "${OVERRIDE:-}" ]] && [[ "$OVERRIDE" != "null" ]]; then
+      echo "$OVERRIDE"
+      exit 0
+    fi
   fi
 fi
 

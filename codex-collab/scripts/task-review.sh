@@ -11,6 +11,10 @@ REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
 CHECKPOINT="${1:?Usage: task-review.sh <git-checkpoint-sha> [task-description]}"
 TASK_DESC="${2:-Implementation task}"
 
+# ── Session ID resolution ───────────────────────────────────────────
+
+SESSION_ID="${CODEX_COLLAB_SESSION_ID:-${CLAUDE_SESSION_ID:-}}"
+
 # Get the diff
 DIFF=$(git diff "$CHECKPOINT"..HEAD 2>/dev/null || echo "")
 if [[ -z "$DIFF" ]]; then
@@ -37,11 +41,13 @@ fi
 REVIEW_DIR="$REPO_ROOT/.claude/codex-collab/reviews"
 mkdir -p "$REVIEW_DIR"
 
-# Determine task index from state file
+# Determine task index from session-scoped state file
 TASK_INDEX="0"
-STATE_FILE="$REPO_ROOT/.claude/codex-collab.local.md"
-if [[ -f "$STATE_FILE" ]]; then
-  TASK_INDEX=$(sed -n '/^---$/,/^---$/{ /^---$/d; p; }' "$STATE_FILE" | grep '^task_index:' | sed 's/task_index: *//' || echo "0")
+if [[ -n "${SESSION_ID:-}" ]]; then
+  STATE_FILE="$REPO_ROOT/.claude/codex-collab/sessions/${SESSION_ID}.md"
+  if [[ -f "$STATE_FILE" ]]; then
+    TASK_INDEX=$(sed -n '/^---$/,/^---$/{ /^---$/d; p; }' "$STATE_FILE" | grep '^task_index:' | sed 's/task_index: *//' || echo "0")
+  fi
 fi
 
 TIMESTAMP=$(date +%Y%m%d-%H%M%S)

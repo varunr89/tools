@@ -8,7 +8,6 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd)
-STATE_FILE="$REPO_ROOT/.claude/codex-collab.local.md"
 
 # Read hook input from stdin (advanced stop hook API)
 HOOK_INPUT=$(cat)
@@ -21,11 +20,28 @@ if ! command -v jq &>/dev/null; then
   exit 0
 fi
 
+# ── Session ID resolution ───────────────────────────────────────────
+
+# Extract session_id from hook input JSON
+SESSION_ID=$(echo "$HOOK_INPUT" | jq -r '.session_id // empty')
+if [[ -z "${SESSION_ID:-}" ]]; then
+  # No session ID -- cannot determine which session's state to use
+  exit 0
+fi
+
+# Export for child scripts (task-review.sh, resolve-model.sh, design-review.sh)
+export CODEX_COLLAB_SESSION_ID="$SESSION_ID"
+
+# Session-scoped paths
+SESSIONS_DIR="$REPO_ROOT/.claude/codex-collab/sessions"
+STATE_FILE="$SESSIONS_DIR/${SESSION_ID}.md"
+SKIP_FLAG="$SESSIONS_DIR/${SESSION_ID}.skip"
+
 # ── Escape hatches ──────────────────────────────────────────────────
 
 # Skip flag: allow this one stop, then delete flag
-if [[ -f "$REPO_ROOT/.claude/codex-collab.skip" ]]; then
-  rm -f "$REPO_ROOT/.claude/codex-collab.skip"
+if [[ -f "$SKIP_FLAG" ]]; then
+  rm -f "$SKIP_FLAG"
   exit 0
 fi
 
