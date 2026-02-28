@@ -24,7 +24,7 @@ except ImportError:
     print("Warning: fast-flights not available, Google Flights data will be skipped")
 
 # Configuration
-DUFFEL_API_KEY = os.environ.get('DUFFEL_API_KEY', 'REDACTED')
+DUFFEL_API_KEY = os.environ.get('DUFFEL_API_KEY', '')
 DUFFEL_BASE_URL = 'https://api.duffel.com'
 CACHE_DIR = Path(__file__).parent / 'flight_cache'
 RATE_LIMIT_DELAY = 0.5  # seconds between Duffel requests

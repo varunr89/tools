@@ -31,7 +31,7 @@ except ImportError:
     FAST_FLIGHTS_AVAILABLE = False
 
 # Duffel API configuration
-DUFFEL_API_KEY = os.environ.get('DUFFEL_API_KEY', 'REDACTED')
+DUFFEL_API_KEY = os.environ.get('DUFFEL_API_KEY', '')
 DUFFEL_BASE_URL = 'https://api.duffel.com'
 
 
